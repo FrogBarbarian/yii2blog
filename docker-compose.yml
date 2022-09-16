@@ -13,7 +13,7 @@ services:
       - "composer"
       - "install"
     volumes:
-      - './:/app'
+      - './:/web'
   server:
     container_name: nginx-yii2
     image: nginx
@@ -23,7 +23,7 @@ services:
       - '80:80'
     volumes:
       - './:/var/www/html'
-      - './app/config:/etc/nginx/conf.d'
+      - './web/config:/etc/nginx/conf.d'
   database:
     container_name: postgre-yii2
     image: postgres

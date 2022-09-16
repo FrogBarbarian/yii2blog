@@ -3,6 +3,7 @@
 return [
     'id' => 'console',
     'basePath' => dirname(__DIR__),
+    'defaultRoute' => '',
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',

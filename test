@@ -1,28 +1,3 @@
-<?php
-
-use yii\di\ServiceLocator;
-
-defined('YII_DEBUG') or define('YII_DEBUG', false);
-defined('YII_ENV') or define('YII_ENV', 'dev');
-
-//Composer autoload
-require __DIR__ . '/vendor/autoload.php';
-
-//Yii
-require 'vendor/yiisoft/yii2/Yii.php';
-
-error_reporting(E_ALL & ~E_DEPRECATED);
-
-$config = require __DIR__ . '/common/config/console.php';
-
-$app = new \yii\web\Application($config);
-$app->db->open();
-
-$app->run();
-
-
-?>
-
 <b>Консольные команды (контроллеры) ./yii</b>
 <p>
     Для реализации функционала необходимо создать файл (по умолчанию yii в ./)
