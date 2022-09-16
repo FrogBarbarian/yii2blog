@@ -21,6 +21,7 @@ return [
             'rules' => [
                 '<action>' => 'main/<action>',
                 '/' => 'main/index',
+                '<controller>/<action>' => '<controller>/<action>',
             ],
         ],
         'log' => [
