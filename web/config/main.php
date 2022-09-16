@@ -3,13 +3,15 @@
 return [
     'id' => 'main',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
-    'defaultRoute' => '/',
+    'defaultRoute' => 'main/index',
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'components' => [
+        'request' => [
+            'baseUrl' => '',
+        ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
-            'cachePath' => '/../cache',
+            'cachePath' => dirname(__DIR__, 2) . '/cache',
             ],
         'db' => require __DIR__ . '/db.php',
         'urlManager' => [
@@ -17,7 +19,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '/' => '/index',
+                '<action>' => 'main/<action>',
+                '/' => 'main/index',
             ],
         ],
         'log' => [

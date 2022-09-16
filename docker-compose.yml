@@ -23,7 +23,8 @@ services:
       - '80:80'
     volumes:
       - './:/var/www/html'
-      - './web/config:/etc/nginx/conf.d'
+      - './web/config/default.conf:/etc/nginx/conf.d/default.conf'
+      - './web/config/nginx.conf:/etc/nginx/nginx.conf'
   database:
     container_name: postgre-yii2
     image: postgres

@@ -16,5 +16,5 @@ $config = require 'config/main.php';
 $app = new \yii\web\Application($config);
 $app->db->open();
 
-$app->run();
 
+$app->run();
