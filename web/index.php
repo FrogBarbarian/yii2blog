@@ -18,5 +18,3 @@ $app->db->open();
 
 $app->run();
 
-//var_dump(Yii::$web->urlManager->ruleConfig);
-

@@ -3,7 +3,8 @@
 return [
     'id' => 'main',
     'basePath' => dirname(__DIR__),
-    'defaultRoute' => 'main/index',
+    'bootstrap' => ['log'],
+    'defaultRoute' => '/',
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'components' => [
         'cache' => [
@@ -19,5 +20,13 @@ return [
                 '/' => '/index',
             ],
         ],
-    ],
-];
+        'log' => [
+            'class' => 'yii\log\FileTarget',
+            'levels' => ['error', 'warning'],
+            'categories' => [
+                'yii\db\*',
+                'yii\web\HttpException:*',
+                ],
+            ],
+        ],
+    ];
