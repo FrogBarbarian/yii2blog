@@ -1,0 +1,40 @@
+version: '3.0'
+services:
+  php:
+    container_name: php-yii2
+    build: ./
+    volumes:
+      - './:/var/www/html'
+    
+  composer:
+    container_name: composer-yii2
+    image: composer
+    command:
+      - "composer"
+      - "install"
+    volumes:
+      - './:/app'
+  server:
+    container_name: nginx-yii2
+    image: nginx
+    depends_on:
+      - php
+    ports:
+      - '80:80'
+    volumes:
+      - './:/var/www/html'
+      - './app/config:/etc/nginx/conf.d'
+  database:
+    container_name: postgre-yii2
+    image: postgres
+    depends_on:
+      - server
+    restart: on-failure
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: db
+      PGDATA: /var/lib/postgresql/data/db
+      PGCLIENTENCODING: UTF8
+    ports:
+      - '5432:5432'

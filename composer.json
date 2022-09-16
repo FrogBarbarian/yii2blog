@@ -1,0 +1,28 @@
+{
+  "name": "fatfrogbarbarian/yii2test",
+  "description": "test of yii2",
+  "minimum-stability": "dev",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "fatfrog",
+      "email": "olenxdxd@icloud.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+
+    }
+  },
+  "require": {
+    "php": "*",
+    "ext-pdo": "*",
+    "ext-json": "*",
+    "ext-curl": "*",
+    "yiisoft/yii2": "*",
+    "league/flysystem": "*"
+  },
+  "config": {
+    "allow-plugins": true
+  }
+}
