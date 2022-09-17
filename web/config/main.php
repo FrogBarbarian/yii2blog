@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'id' => 'main',
+    'id' => 'yii2test',
     'basePath' => dirname(__DIR__),
     'defaultRoute' => 'main/index',
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
@@ -19,7 +19,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '<action>' => 'main/<action>',
+                'register' => 'user/register',
+                'profile' => 'user/profile',
                 '/' => 'main/index',
                 '<controller>/<action>' => '<controller>/<action>',
             ],

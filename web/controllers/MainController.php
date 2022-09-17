@@ -1,17 +1,12 @@
 <?php
 
-namespace Web\Controllers;
+namespace app\controllers;
+
 
 class MainController extends AppController
 {
     public function actionIndex()
     {
-        $this->render('index');
+        //Отвечает за главную страницу
     }
-
-    public function actionAbout()
-    {
-        $this->render('about');
-    }
-
 }
