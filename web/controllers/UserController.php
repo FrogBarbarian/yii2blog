@@ -2,24 +2,21 @@
 
 namespace app\controllers;
 
-use app\models\User;
+use app\models\RegistryForm;
 
 class UserController extends AppController
 {
     public function actionRegister(): string
     {
-        if (isset($_POST['login'])) {
-            $model = new User();
+        $registryForm = new RegistryForm();
+        if ($registryForm->load(\Yii::$app->request->post()) && $registryForm->validate()) {
+            //Создаем запись в БД, логинимся, переводим на profile
         }
-
-
-        $this->view->title = 'Регистрация';
-        return $this->render('register');
+        return $this->render('register', ['model' => $registryForm]);
     }
 
     public function actionProfile()
     {
-        $this->view->title = 'Профиль';
         return $this->render('profile');
     }
 
