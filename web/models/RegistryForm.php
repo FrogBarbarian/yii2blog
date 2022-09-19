@@ -48,4 +48,9 @@ class RegistryForm extends ActiveRecord
             $this->addError($attribute, "Данный $field уже занят");
         }
     }
+
+    public function getRegisterData(): array
+    {
+        return ['login' => $this->login, 'email' => $this->email, 'password' => $this->password];
+    }
 }

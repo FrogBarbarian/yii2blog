@@ -4,7 +4,7 @@
             <span class="btn btn-outline-warning rounded">&udhar;</span>
         </button>
         <div class="collapse navbar-collapse me-auto" id="navbarSupportedContent">
-        <?php if (isset($_SESSION['login'])): ?>
+        <?php if (isset(Yii::$app->session['login'])): ?>
             <button>Мои счета</button>
             <button>Добавить сделку</button>
             <button>Профиль</button>

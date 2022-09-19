@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\RegistryForm;
+use app\models\User;
 
 class UserController extends AppController
 {
@@ -10,13 +11,20 @@ class UserController extends AppController
     {
         $registryForm = new RegistryForm();
         if ($registryForm->load(\Yii::$app->request->post()) && $registryForm->validate()) {
-            //Создаем запись в БД, логинимся, переводим на profile
+            $model = new User();
+            //Здесь стоит шифровать пароль
+            $model->registerUser($registryForm->getRegisterData());
+            $session = \Yii::$app->session;
+            $session->open();
+            $session['login'] = $registryForm->login;
+            \Yii::$app->response->redirect(['/profile']);
         }
         return $this->render('register', ['model' => $registryForm]);
     }
 
     public function actionProfile()
     {
+        $this->view->params = ['menubar' => 1];
         return $this->render('profile');
     }
 
@@ -27,6 +35,8 @@ class UserController extends AppController
 
     public function actionLogout()
     {
-        //Здесь только редирект и выход
+        \Yii::$app->session->remove('login');
+        \Yii::$app->session->destroy();
+        \Yii::$app->response->redirect(['/']);
     }
 }
