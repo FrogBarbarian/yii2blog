@@ -12,7 +12,8 @@
   "autoload": {
     "psr-4": {
       "app\\controllers\\": "web/controllers",
-      "app\\models\\": "web/models"
+      "app\\models\\": "web/models",
+      "app\\assets\\": "web/assets"
     }
   },
   "require": {

@@ -1,5 +1,4 @@
-<?php
-
+<?
 return [
     'id' => 'yii2test',
     'basePath' => dirname(__DIR__),
@@ -8,6 +7,7 @@ return [
     'components' => [
         'request' => [
             'baseUrl' => '',
+            'cookieValidationKey' => 'Mgw2YR5XFMuUXvBkNHQ0qwYeKJiDsQ',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
@@ -19,6 +19,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'main/<action>' => 'bad route',
                 'register' => 'user/register',
                 'profile' => 'user/profile',
                 '/' => 'main/index',

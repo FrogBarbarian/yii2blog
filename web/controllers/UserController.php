@@ -2,16 +2,25 @@
 
 namespace app\controllers;
 
+use app\models\User;
+
 class UserController extends AppController
 {
-    public function actionRegister()
+    public function actionRegister(): string
     {
-        //Открывает страницу с формой регистрации
+        if (isset($_POST['login'])) {
+            $model = new User();
+        }
+
+
+        $this->view->title = 'Регистрация';
+        return $this->render('register');
     }
 
     public function actionProfile()
     {
-        //Загружает профиль пользователя
+        $this->view->title = 'Профиль';
+        return $this->render('profile');
     }
 
     public function actionLogin()
