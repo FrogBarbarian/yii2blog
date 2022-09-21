@@ -3,6 +3,9 @@ return [
     'id' => 'yii2test',
     'basePath' => dirname(__DIR__),
     'defaultRoute' => 'main/index',
+    'bootstrap' => [
+        'log',
+    ],
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'components' => [
         'request' => [
@@ -21,7 +24,7 @@ return [
             'rules' => [
                 'main/<action>' => 'bad route',
                 'register' => 'user/register',
-                'profile' => 'user/profile',
+                'profile' => 'profile/index',
                 '/' => 'main/index',
                 '<controller>/<action>' => '<controller>/<action>',
             ],
@@ -34,5 +37,6 @@ return [
                 'yii\web\HttpException:*',
                 ],
             ],
+
         ],
     ];

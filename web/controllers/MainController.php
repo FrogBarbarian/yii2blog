@@ -3,12 +3,14 @@
 namespace app\controllers;
 
 
+use app\models\LoginForm;
+
 class MainController extends AppController
 {
     public function actionIndex(): string
     {
+        $loginForm = new LoginForm();
         $this->view->params = ['menubar' => 1];
-        $this->view->title = 'Главная страница';
-        return $this->render('index');
+        return $this->render('index', ['loginFormClass' => $loginForm]);
     }
 }

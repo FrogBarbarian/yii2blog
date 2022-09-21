@@ -4,7 +4,7 @@
 use yii\widgets\ActiveForm;
 
 $this->title = 'Регистрация';
-$inputClass = 'd-flex border border-2 rounded-2 bg-black opacity-50 text-warning mt-2 placeholder-wave';
+$inputClass = 'form-control border border-2 rounded-2 bg-dark opacity-75 text-warning mt-2 placeholder-wave';
 $inputOptions = [
     'errorOptions' => ['class' => 'text-danger small'],
 ];
@@ -13,13 +13,15 @@ $inputOptions = [
 <!--TODO: прикрутить анимацию потряхивания при возникновении ошибки-->
 <div class="align-items-center vstack justify-content-center"
      style="background-image: url(/images/reg-bg.jpg);height: 100vh;">
-    <div class="rounded-4 p-4 bg-opacity-75 bg-dark">
+    <div class="rounded-4 p-4 bg-opacity-75 bg-black">
         <a class="d-flex vstack mb-3 btn btn-outline-warning" href="/">Вернуться на главную</a>
         <hr style="color: #d0e0dc">
-        <p>
-            <span class="align-middle text-opacity-50 text-warning">Уже зарегистрированы?</span>
-            <a class="btn btn-outline-warning my-1">Войти</a>
-        </p>
+        <div class="hstack">
+            <span class="align-middle text-opacity-50 text-warning me-3">Уже зарегистрированы?</span>
+            <a class="btn btn-outline-warning my-1" data-bs-toggle="modal" data-bs-target="#loginModal">Войти</a>
+        </div>
+        <?php require 'widgets/login-form.php' ?>
+
         <?php $form = ActiveForm::begin(['id' => 'registry-form']); ?>
             <div class="vstack">
                 <?=$form->field($model, 'login', $inputOptions)->textInput([

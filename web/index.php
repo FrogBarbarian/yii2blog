@@ -6,7 +6,6 @@ defined('YII_ENV') or define('YII_ENV', 'dev');
 //Composer autoload
 require dirname(__DIR__) . '/vendor/autoload.php';
 
-
 //Yii
 require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
@@ -18,6 +17,5 @@ $app = new \yii\web\Application($config);
 $app->db->open();
 
 $app->run();
-
 
 
