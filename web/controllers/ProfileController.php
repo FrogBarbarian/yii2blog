@@ -30,4 +30,13 @@ class ProfileController extends AppController
 
         return $this->render('profile', ['bills' => $bills, 'model' => $billsForm]);
     }
+
+    public function actionBills()
+    {
+        $billsForm = new Bills();
+        $investmentsModel = new Investments();
+        $bills = $investmentsModel->getBills();
+        $this->view->params = ['menubar' => 1];
+        return $this->render('bills', ['bills' => $bills, 'model' => $billsForm]);
+    }
 }

@@ -11,7 +11,14 @@
     <script src="../../js/jquery.js"></script>
 </head>
 <body>
-<div>
+<div style="
+    background-image: url(/images/reg-bg.jpg);
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+">
+
 <?php if (isset($this->params['menubar'])) require 'widgets/menubar.php'; ?>
 
 <main>

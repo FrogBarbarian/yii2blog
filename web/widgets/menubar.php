@@ -4,7 +4,7 @@
         </button>
         <div class="collapse navbar-collapse me-auto" id="navbarSupportedContent">
         <?php if (isset(Yii::$app->session['login'])): ?>
-            <a class="ms-1 btn btn-outline-warning mt-1">Мои счета</a></li>
+            <a class="ms-1 btn btn-outline-warning mt-1" href="/profile/bills">Мои счета</a></li>
             <a class="ms-1 btn btn-outline-warning mt-1">Добавить сделку</a></li>
             <a class="ms-1 btn btn-outline-warning mt-1" href="/profile">Профиль</a></li>
             <a class="ms-1 btn btn-outline-warning mt-1" href="/user/logout">Выйти</a></li>

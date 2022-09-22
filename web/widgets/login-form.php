@@ -1,31 +1,10 @@
 <?php
 
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 $loginInputClass = 'form-control border border-2 rounded-2 bg-dark opacity-75 text-warning placeholder-wave';
 ?>
-
-<script>
-    $(function login() {
-        $('#loginB').click(function () {
-            let loginData = {
-                login: $('#login').val(),
-                password: $('#password').val()
-            };
-            $.ajax({
-                url: '/user/login',
-                type: 'post',
-                data: loginData,
-                success: function (res) {
-                    alert('All okay')
-                },
-                error: function () {
-                    console.log(loginData);
-                    alert('Something go wrong');
-                }
-            })
-        })
-    })
-</script>
+<!--TODO: все это не работает!-->
 
 <div class="modal fade" id="loginModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered justify-content-center">
@@ -36,36 +15,56 @@ $loginInputClass = 'form-control border border-2 rounded-2 bg-dark opacity-75 te
             </div>
             <div class="modal-body">
                 <?php $form = ActiveForm::begin([
-                        'id' => 'login-form',
-                        'enableAjaxValidation' => true,
-                        'validationUrl' => \yii\helpers\Url::to(['/user/login']),
+                    'id' => 'login-form',
+                    'action' => Url::to('/user/login'),
+                    'options' => ['class' => 'form'],
+                    'enableAjaxValidation' => true,
+                    'validateOnType' => true,
+                    'validationUrl' => Url::to('/user/login'),
                     ]); ?>
-                    <?=$form->field($loginFormClass, 'login')->textInput([
+                    <?=$form
+                        ->field($loginFormClass, 'login')
+                        ->input('text',[
                             'class' => $loginInputClass,
-                            'name' => 'login',
-                            'id' => 'login',
                             'placeholder' => 'Логин',
-                            'value' => $_POST['LoginForm']['login'] ?? '',
-                    ])->label(false)?>
+                        ])
+                        ->label(false)?>
                     <?=$form->field($loginFormClass, 'password')->passwordInput([
                             'class' => $loginInputClass . ' mt-2',
-                            'name' => 'password',
-                            'id' => 'password',
                             'placeholder' => 'Пароль',
-                            'value' => $_POST['LoginForm']['password'] ?? '',
                         ])->label(false) ?>
             </div>
-            <div class="d-grid gap-2 d-md-flex mb-2 justify-content-between">
+            <div class="d-grid d-md-flex mb-2 justify-content-between">
                 <div class="hstack">
-                    <span class="ms-3 small text-opacity-75 text-warning">Запомнить меня</span>
+                    <span class="ms-3 small text-opacity-75 text-warning row-cols-2">Запомнить меня</span>
                     <?=$form->field($loginFormClass, 'isRemember')->checkbox([
-                            'class' => 'form-check-input ms-2',
-                            'label' => '',
-                        ])?>
+                        'class' => 'form-check-input ms-1',
+                        'label' => '',
+                    ])
+                    ?>
                 </div>
-                    <input type="button" class=" btn btn-outline-warning btn-sm mx-3" value="Войти" id="loginB">
+                <div>
+<!--                   TODO: реализовать восстановление пароля -->
+                    <a class="ms-3 small text-opacity-75 text-warning" href="#">Забыли пароль?</a>
+                </div>
+                <input type="submit" id="loginButton" class="btn btn-outline-warning btn-sm mx-3" value="Войти">
             </div>
-                <?php ActiveForm::end(); ?>
+                <?php ActiveForm::end() ?>
         </div>
     </div>
 </div>
+
+<!--<script>-->
+<!--    $('#loginButton').click(function () {-->
+<!--        $.ajax({-->
+<!--            url: '/user/login',-->
+<!--            success: function (res) {-->
+<!--                alert('Success: ' + res)-->
+<!--            },-->
+<!--            error: function () {-->
+<!--                alert('Error')-->
+<!--            }-->
+<!--        })-->
+<!--    })-->
+<!--</script>-->
+
