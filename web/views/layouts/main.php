@@ -32,9 +32,21 @@
                         </li>
                     </ul>
                     <!--TODO: Реализовать систему поиска по статьям-->
-                    <!--TODO: Реализовать вход, если не залогинен/выход, если залогинен-->
+                    <?php if (isset(Yii::$app->session['login'])): ?>
+                        <!--TODO: Реализовать страницу с профилем пользователя-->
+                        <div class="nav-item me-2">
+                            <a class="nav-link" href="/profile">
+                                Профиль
+                            </a>
+                        </div>
+                        <div class="nav-item">
+                            <a class="nav-link" href="/logout">
+                                Выйти
+                            </a>
+                        </div>
+                    <?php else: ?>
                     <div class="nav-item me-2">
-                        <a class="nav-link" href="#login" data-bs-toggle="modal">
+                        <a class="nav-link" href="/login">
                             Вход
                             </a>
                     </div>
@@ -43,6 +55,7 @@
                             Зарегистрироваться
                         </a>
                     </div>
+                    <?php endif ?>
                 </div>
             </div>
         </nav>

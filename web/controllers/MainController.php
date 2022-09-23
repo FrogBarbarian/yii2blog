@@ -2,12 +2,19 @@
 
 namespace app\controllers;
 
+use app\models\LoginForm;
 use app\models\Posts;
 use app\models\RegisterForm;
 use Yii;
+use yii\db\Exception;
+use yii\web\Response;
 
 class MainController extends AppController
 {
+    /**
+     * @return string Главная страница.
+     * @throws Exception
+     */
     public function actionIndex(): string
     {
         $model = new Posts();
@@ -15,6 +22,11 @@ class MainController extends AppController
         return $this->render('index', ['posts' => $posts, 'model' => $model]);
     }
 
+    /**
+     * Отображает страницу с выбранным (по ID из $_GET) постом, если поста с таким ID нет, то перенаправляет на главную.
+     * @return string|void
+     * @throws Exception
+     */
     public function actionPost()
     {
         if (isset($_GET['id'])) {
@@ -28,6 +40,11 @@ class MainController extends AppController
         $this->goHome();
     }
 
+    /**
+     * Находит рандомный пост и открывает страничку с ним.
+     * @return void
+     * @throws Exception
+     */
     public function actionRandom(): void
     {
         $model = new Posts();
@@ -35,18 +52,66 @@ class MainController extends AppController
         $this->redirect('/post?id=' . $post['id']);
     }
 
-    public function actionAbout()
+    /**
+     * @return string Страница о владельце блога.
+     */
+    public function actionAbout(): string
     {
         return $this->render('about');
     }
 
-    public function actionRegister()
+    /**
+     * Если данные из формы провалидированы, то создается запись в БД с пользователем.
+     * @return Response|string Переадресация на страницу пользователя | Страница регистрации нового пользователя.
+     * @throws Exception
+     */
+    public function actionRegister(): Response|string
     {
         $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
+            $model->registerUser($model->getRegistryData());
+            $session = Yii::$app->session;
+            $session->open();
+            $session['login'] = $model->email;
+            return $this->redirect('/profile');
         }
 
         return $this->render('register', ['model' => $model]);
+    }
+
+    /**
+     * Разлогинивает пользователя и отправляет на главную страницу.
+     * @return Response
+     */
+    public function actionLogout(): Response
+    {
+        $session = Yii::$app->session;
+        if ($session->has('login')) {
+            $session->removeAll();
+            $session->destroy();
+            return $this->goHome();
+        }
+        return $this->goHome();
+    }
+
+    /**
+     * Логинит пользователя, если данные для входа корректны.
+     * @return Response|string Переадресация на страницу пользователя | Страница входа пользователя.
+     */
+    public function actionLogin(): Response|string
+    {
+        $model = new LoginForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $session = Yii::$app->session;
+            $session->open();
+            $session['login'] = $model->email;
+            return $this->redirect('/profile');
+        }
+        return $this->render('login', ['model' => $model]);
+    }
+
+    public function actionProfile(): string
+    {
+        return $this->render('profile');
     }
 }

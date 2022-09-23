@@ -18,6 +18,9 @@ $options = ['options' => ['class' => 'form-floating mb-2'],'errorOptions' => ['c
                     'class' => 'form-control placeholder-wave',
                     'id' => 'loginInput',
                     'placeholder' => 'login',
+                    'data-toggle' => 'tooltip',
+                    'data-placement' => 'top',
+                    'title' => 'псевдоним должен начинаться с буквы, можно использовать буквы латинского алфавита, цифры и _. От 3 до 20 символов.',
                     'style' => 'background-color: #899aa2;',
                 ])->label('Псевдоним', ['class' => false]) ?>
             <?=$activeForm->field($model, 'email', $options)
@@ -34,8 +37,12 @@ $options = ['options' => ['class' => 'form-floating mb-2'],'errorOptions' => ['c
                     'id' => 'passwordInput',
                     'placeholder' => 'password',
                     'autocomplete' => 'new-password',
+                    'data-toggle' => 'tooltip',
+                    'data-placement' => 'top',
+                    'title' => 'Пароль может содержать буквы латинского алфавита, цифры, - и _. От 5 до 30 символов.',
                     'style' => 'background-color: #899aa2;',
-                ])->label('Пароль', ['class' => false]) ?><?=$activeForm->field($model, 'confirmPassword', $options)
+                ])->label('Пароль', ['class' => false]) ?>
+            <?=$activeForm->field($model, 'confirmPassword', $options)
                 ->input('password', [
                     'class' => 'form-control placeholder-wave',
                     'id' => 'confirmPasswordInput',
