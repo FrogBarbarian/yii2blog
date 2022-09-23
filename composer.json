@@ -13,16 +13,12 @@
     "psr-4": {
       "app\\controllers\\": "web/controllers",
       "app\\models\\": "web/models",
-      "app\\assets\\": "web/assets"
     }
   },
   "require": {
     "php": "*",
     "ext-pdo": "*",
-    "ext-json": "*",
-    "ext-curl": "*",
     "yiisoft/yii2": "*",
-    "league/flysystem": "*"
   },
   "config": {
     "allow-plugins": true

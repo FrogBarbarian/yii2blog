@@ -22,11 +22,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                'main/<action>' => 'bad route',
-                'register' => 'user/register',
-                'profile' => 'profile/index',
                 '/' => 'main/index',
-                '<controller>/<action>' => '<controller>/<action>',
+                '/<action>' => 'main/<action>',
             ],
         ],
         'log' => [

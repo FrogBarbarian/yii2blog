@@ -1,13 +1,13 @@
 version: '3.0'
 services:
   php:
-    container_name: php-yii2
+    container_name: php-yii2blog
     build: ./
     volumes:
       - './:/var/www/html'
     
   composer:
-    container_name: composer-yii2
+    container_name: composer-yii2blog
     image: composer
     command:
       - "composer"
@@ -15,7 +15,7 @@ services:
     volumes:
       - './:/web'
   server:
-    container_name: nginx-yii2
+    container_name: nginx-yii2blog
     image: nginx
     depends_on:
       - php
@@ -23,10 +23,9 @@ services:
       - '80:80'
     volumes:
       - './:/var/www/html'
-      - './web/config/default.conf:/etc/nginx/conf.d/default.conf'
       - './web/config/nginx.conf:/etc/nginx/nginx.conf'
   database:
-    container_name: postgre-yii2
+    container_name: postgre-yii2blog
     image: postgres
     depends_on:
       - server
