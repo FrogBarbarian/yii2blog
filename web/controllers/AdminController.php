@@ -17,8 +17,19 @@ class AdminController extends AppController
         }
 
         $model = new Admin();
-        $post = $model->getUserTmpPost();
+        $post = $model->getUserTmpPost($_GET['id']);
         $user = $model->getUser();
-        return $this->render('user-post', ['post' => $post, 'user' => $user]);
+        return $this->render('user-post', ['model' => $model, 'post' => $post, 'user' => $user]);
+    }
+
+    public function actionConfirm()
+    {
+        if (!isset($_POST['Admin']['id'])) {
+            throw new NotFoundHttpException();
+        }
+        $model = new Admin();
+        $model->initPost();
+        return $this->redirect('/profile');
+        //TODO: Публикуем статью, отправляем email создателю о публикации
     }
 }

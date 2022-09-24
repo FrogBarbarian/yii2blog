@@ -1,6 +1,10 @@
 <?php
 /** @var array $post */
 /** @var array $user */
+/** @var \app\models\Admin $model */
+
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 $this->title = ($post['isNew'] ? 'Новый' : 'Редакция') . ' пост ' . $post['title'];
 ?>
@@ -16,7 +20,17 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Редакция') . ' пост
                 <div>
                     Отправлен: <b>дата</b>. Автор - <?=$user['login']?>
                     <!--TODO: Функционал одобрения статьи-->
-                    <a href="" class="btn btn-outline-dark">Одобрить</a>
+                    <?php $activeForm = ActiveForm::begin([
+                        'id' => 'user-confirm-form',
+                        'action' => Url::to('/admin/confirm'),
+                    ]) ?>
+                    <?= $activeForm->field($model, 'id')
+                        ->hiddenInput(['value' => $post['id']])
+                        ->label(false)->error(false) ?>
+                    <button type="submit" class="btn btn-outline-dark">Одобрить</button>
+                    <?php ActiveForm::end() ?>
+                    <!--TODO: Функционал неодобрения статьи (открывается модальное окно с комментарием создателю)-->
+                    <a href="" class="btn btn-outline-dark">Отказать</a>
                 </div>
             </div>
         </div>

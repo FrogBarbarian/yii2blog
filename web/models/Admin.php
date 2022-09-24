@@ -10,9 +10,17 @@ use yii\db\Exception;
 class Admin extends ActiveRecord implements UserData
 {
     /**
+     * @var string ID из hidden input.
+     */
+    public string $id = '';
+    /**
      * @var string Таблица с временным хранением постов.
      */
     private string $_postsTmp = 'posts_tmp';
+    /**
+     * @var string Таблица с постами.
+     */
+    private string $_posts = 'posts';
     /**
      * @var string Таблица с пользователями.
      */
@@ -33,14 +41,15 @@ class Admin extends ActiveRecord implements UserData
 
     /**
      * Получает пост по ID из GET параметра.
+     * @param mixed $id ID поста.
      * @return array
      * @throws Exception
      */
-    public function getUserTmpPost(): array
+    public function getUserTmpPost(mixed $id): array
     {
         return Yii::$app
             ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->_postsTmp . ' WHERE id = ' . $_GET['id'])
+            ->createCommand('SELECT * FROM ' . $this->_postsTmp . ' WHERE id = ' . $id)
             ->queryOne();
     }
 
@@ -55,5 +64,32 @@ class Admin extends ActiveRecord implements UserData
             ->getDb()
             ->createCommand('SELECT * FROM ' . $this->_users . ' WHERE id = ' . $_GET['id'])
             ->queryOne();
+    }
+
+    /**
+     * Создает новый или изменяет старый пост в таблице постов, удаляет запись из хранилища постов.
+     * @return void
+     * @throws Exception
+     */
+    public function initPost(): void
+    {
+        $command = Yii::$app
+            ->getDb()
+            ->createCommand();
+        $post = $this->getUserTmpPost($_POST['Admin']['id']);
+        $params = [
+            'title' => $post['title'],
+            'body' => $post['body'],
+            'author' => $post['author'],
+        ];
+        if ($_POST['Admin']['id']) {
+            $command->insert($this->_posts, $params)->execute();
+        } else {
+            $command->update($this->_posts, $params)->execute();
+        }
+
+        $command
+            ->delete($this->_postsTmp, 'id = ' . $post['id'])
+            ->execute();
     }
 }
