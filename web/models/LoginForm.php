@@ -8,7 +8,13 @@ use yii\db\Exception;
 
 class LoginForm extends ActiveRecord
 {
+    /**
+     * @var string Email, введенный в форму логина.
+     */
     public string $email = '';
+    /**
+     * @var string Пароль, введенный в форму логина.
+     */
     public string $password = '';
 
     /**
@@ -45,8 +51,22 @@ class LoginForm extends ActiveRecord
             ->getDb()
             ->createCommand('SELECT * FROM ' . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
             ->queryOne();
-        if (!password_verify($this->password, $user['password'])) {
+        if (!$user || !password_verify($this->password, $user['password'])) {
             $this->addError($attribute, "Почта или пароль введены не верно");
         }
+    }
+
+    /**
+     * Проверяет, является ли залогиненный админом.
+     * @return bool
+     * @throws Exception
+     */
+    public function getAdmin(): bool
+    {
+        $user = Yii::$app
+            ->getDb()
+            ->createCommand("SELECT * FROM " . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
+            ->queryOne();
+        return $user['isAdmin'];
     }
 }

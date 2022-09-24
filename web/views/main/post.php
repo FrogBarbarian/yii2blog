@@ -10,8 +10,17 @@ $this->title = $post['title'];
                 <h5 class="card-title"><?=$post['title']?></h5>
                 <p class="card-text"><?=$post['body']?></p>
             </div>
-            <div class="card-footer">Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?></div>
+            <div class="card-footer">
+                <div>
+                    Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?>
+                </div>
+            <?php if (Yii::$app->session->has('admin')): ?>
+                <!--TODO: Реализовать возможность редактировать пост-->
+                <div>
+                    <button class="btn" style="float: right;">Отредактировать</button>
+                </div>
+            <?php endif ?>
+            </div>
         </div>
-        </div>
-</div>
+    </div>
 </div>

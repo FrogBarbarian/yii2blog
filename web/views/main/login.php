@@ -9,7 +9,7 @@ $options = ['options' => ['class' => 'form-floating mb-2'],'errorOptions' => ['c
 <div class="align-items-center vstack justify-content-center" style="height: 90vh">
 
     <div class="col-md-6 rounded-4 p-4" style="background-color: rgba(185,146,69,0.84)">
-        <h3 class="mb-5">Регистрация</h3>
+        <h3 class="mb-5">Вход</h3>
         <?php $activeForm = ActiveForm::begin([
             'id' => 'login-form',
         ]) ?>

@@ -8,9 +8,21 @@ use yii\db\Exception;
 
 class RegisterForm extends ActiveRecord
 {
+    /**
+     * @var string Псевдоним, введенный в форму регистрации.
+     */
     public string $login = '';
+    /**
+     * @var string Email, введенный в форму регистрации.
+     */
     public string $email = '';
+    /**
+     * @var string Пароль, введенный в форму регистрации.
+     */
     public string $password = '';
+    /**
+     * @var string Подтверждающий пароль, введенный в форму регистрации.
+     */
     public string $confirmPassword = '';
 
     /**
@@ -51,7 +63,10 @@ class RegisterForm extends ActiveRecord
      */
     public function registerUser(array $params): void
     {
-        Yii::$app->getDB()->createCommand()->insert('users', $params)->execute();
+        Yii::$app->getDB()
+            ->createCommand()
+            ->insert(self::tableName(), $params)
+            ->execute();
     }
 
     /**
@@ -62,8 +77,10 @@ class RegisterForm extends ActiveRecord
      */
     public function uniqueCaseInsensitiveValidation(string $attribute): void
     {
-        if (Yii::$app->getDb()->createCommand(
-            "SELECT id FROM users WHERE $attribute ILIKE '{$this->attributes[$attribute]}'")
+        if (
+            Yii::$app->getDb()->createCommand(
+            "SELECT id FROM " . self::tableName() . " WHERE $attribute ILIKE '{$this->attributes[$attribute]}'"
+            )
             ->queryOne()
         ) {
             $field = match ($attribute) {

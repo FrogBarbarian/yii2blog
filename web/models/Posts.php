@@ -42,7 +42,7 @@ class Posts extends ActiveRecord
     }
 
     /**
-     * Возвращает данные поста по искомому id.
+     * Возвращает данные поста по искомому ID.
      * @param int $id Искомый id.
      * @return array|bool Результат выборки|false.
      * @throws Exception

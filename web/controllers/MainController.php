@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\models\LoginForm;
 use app\models\Posts;
+use app\models\Profile;
 use app\models\RegisterForm;
 use Yii;
 use yii\db\Exception;
@@ -97,6 +98,7 @@ class MainController extends AppController
     /**
      * Логинит пользователя, если данные для входа корректны.
      * @return Response|string Переадресация на страницу пользователя | Страница входа пользователя.
+     * @throws Exception
      */
     public function actionLogin(): Response|string
     {
@@ -105,13 +107,34 @@ class MainController extends AppController
             $session = Yii::$app->session;
             $session->open();
             $session['login'] = $model->email;
+            if ($model->getAdmin()) {
+                $session['admin'] = true;
+            }
             return $this->redirect('/profile');
         }
         return $this->render('login', ['model' => $model]);
     }
 
+    /**
+     * Отображает профиль пользователя и позволяет взаимодействовать со своими данными и постами.
+     * @return string Страница пользователя.
+     * @throws Exception
+     */
     public function actionProfile(): string
     {
-        return $this->render('profile');
+        $model = new Profile();
+        $user = $model->getUser();
+        $posts = $model->getUserPosts($user['id']);
+        return $this->render('profile', ['model' => $model, 'user' => $user, 'posts' => $posts]);
+    }
+
+    public function actionNewPost()
+    {
+        return $this->render('new-post');
+    }
+
+
+    public function actionEditPost()
+    {
     }
 }

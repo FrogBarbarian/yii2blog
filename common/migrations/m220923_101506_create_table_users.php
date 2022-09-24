@@ -14,6 +14,7 @@ class m220923_101506_create_table_users extends Migration
             'login' => $this->string(30)->notNull()->unique(),
             'email' => $this->text()->notNull()->unique(),
             'password' => $this->text()->notNull(),
+            'isAdmin' => $this->boolean()->defaultValue(false),
         ]);
     }
 
