@@ -17,7 +17,7 @@ class Posts extends ActiveRecord
     }
 
     /**
-     * Получает все посты отсортированные в обратном порядке по id.
+     * Получает все посты отсортированные в обратном порядке по ID.
      * @return array
      * @throws Exception
      */
@@ -39,46 +39,5 @@ class Posts extends ActiveRecord
     {
         $position = mb_strpos($text, ' ', $offset);
         return mb_strimwidth($text, 0, $position) . '...';
-    }
-
-    /**
-     * Возвращает данные поста по искомому ID.
-     * @param int $id Искомый id.
-     * @return array|bool Результат выборки|false.
-     * @throws Exception
-     */
-    public function getPostById(int $id): array|bool
-    {
-        return Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . self::tableName() . ' WHERE id = ' . $id)
-            ->queryOne();
-    }
-
-    /**
-     * Увеличивает количество просмотров у поста с указанным ID.
-     * @param string $id ID поста.
-     * @return void
-     * @throws Exception
-     */
-    public function increasePostViews(string $id): void
-    {
-        Yii::$app
-            ->getDB()
-            ->createCommand('UPDATE ' . self::tableName() . ' SET viewed = viewed + 1 WHERE id = ' . $id )
-            ->execute();
-    }
-
-    /**
-     * Получает случайный пост.
-     * @return array|bool Результат выборки|false.
-     * @throws Exception
-     */
-    public function getRandomPost(): array|bool
-    {
-        return Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . self::tableName() . ' ORDER BY random() LIMIT 1')
-            ->queryOne();
     }
 }

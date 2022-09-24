@@ -2,11 +2,12 @@
 
 namespace app\models;
 
+use app\interfaces\UserData;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Exception;
 
-class LoginForm extends ActiveRecord
+class LoginForm extends ActiveRecord implements UserData
 {
     /**
      * @var string Email, введенный в форму логина.
@@ -57,16 +58,15 @@ class LoginForm extends ActiveRecord
     }
 
     /**
-     * Проверяет, является ли залогиненный админом.
-     * @return bool
+     * Получает данные пользователя.
+     * @return array Результат выборки.
      * @throws Exception
      */
-    public function getAdmin(): bool
+    public function getUser(): array
     {
-        $user = Yii::$app
+        return Yii::$app
             ->getDb()
             ->createCommand("SELECT * FROM " . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
             ->queryOne();
-        return $user['isAdmin'];
     }
 }

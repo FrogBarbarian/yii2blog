@@ -30,10 +30,14 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/about" style="color: #a4001b">Об авторе</a>
                         </li>
+                        <?php if (isset(Yii::$app->session['login'])): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
+                            </li>
+                        <?php endif ?>
                     </ul>
                     <!--TODO: Реализовать систему поиска по статьям-->
                     <?php if (isset(Yii::$app->session['login'])): ?>
-                        <!--TODO: Реализовать страницу с профилем пользователя-->
                         <div class="nav-item me-2">
                             <a class="nav-link" href="/profile">
                                 Профиль

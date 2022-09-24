@@ -2,7 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\Admin;
 use app\models\LoginForm;
+use app\models\NewPostForm;
+use app\models\Post;
 use app\models\Posts;
 use app\models\Profile;
 use app\models\RegisterForm;
@@ -31,11 +34,12 @@ class MainController extends AppController
     public function actionPost()
     {
         if (isset($_GET['id'])) {
-            $model = new Posts();
+            $model = new Post();
             $model->increasePostViews($_GET['id']);
             $post = $model->getPostById($_GET['id']);
+            $user = $model->getUser();
             if ($post) {
-                return $this->render('post',['post' => $post, 'model' => $model]);
+                return $this->render('post',['model' => $model, 'post' => $post, 'user' => $user]);
             }
         }
         $this->goHome();
@@ -48,7 +52,7 @@ class MainController extends AppController
      */
     public function actionRandom(): void
     {
-        $model = new Posts();
+        $model = new Post();
         $post = $model->getRandomPost();
         $this->redirect('/post?id=' . $post['id']);
     }
@@ -74,6 +78,7 @@ class MainController extends AppController
             $session = Yii::$app->session;
             $session->open();
             $session['login'] = $model->email;
+            $session['id'] = $model->getUser()['id'];
             return $this->redirect('/profile');
         }
 
@@ -107,7 +112,8 @@ class MainController extends AppController
             $session = Yii::$app->session;
             $session->open();
             $session['login'] = $model->email;
-            if ($model->getAdmin()) {
+            $session['id'] = $model->getUser()['id'];
+            if ($model->getUser()['isAdmin']) {
                 $session['admin'] = true;
             }
             return $this->redirect('/profile');
@@ -125,12 +131,38 @@ class MainController extends AppController
         $model = new Profile();
         $user = $model->getUser();
         $posts = $model->getUserPosts($user['id']);
-        return $this->render('profile', ['model' => $model, 'user' => $user, 'posts' => $posts]);
+        if (Yii::$app->session->has('admin')) {
+            $params['admin'] = new Admin();
+            $params['tmpPosts'] = $params['admin']->getUsersTmpPosts();
+            $params['users'] = $model->getUsers();
+        }
+        return $this->render('profile', [
+            'model' => $model,
+            'user' => $user,
+            'posts' => $posts,
+            'params' => $params ?? null,
+        ]);
     }
 
-    public function actionNewPost()
+    /**
+     * Создает новый пост и публикует/отправляет админу на проверку.
+     * @return Response|string Переадресация на пост|домашнюю страницу | Страница нового поста.
+     * @throws Exception
+     */
+    public function actionNewPost(): Response|string
     {
-        return $this->render('new-post');
+        $model = new NewPostForm();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->createPost();
+            if (Yii::$app->session->has('admin')) {
+                return $this->redirect('/post?id=' . $model->getLastPost()['id']);
+            } else {
+                //TODO: Админу приходит на почту сообщение о новом посте
+                return $this->goHome();
+            }
+
+        }
+        return $this->render('new-post', ['model' => $model]);
     }
 
 

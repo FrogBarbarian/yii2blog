@@ -2,11 +2,12 @@
 
 namespace app\models;
 
+use app\interfaces\UserData;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Exception;
 
-class RegisterForm extends ActiveRecord
+class RegisterForm extends ActiveRecord implements UserData
 {
     /**
      * @var string Псевдоним, введенный в форму регистрации.
@@ -99,5 +100,18 @@ class RegisterForm extends ActiveRecord
     {
         $password = password_hash($this->password, PASSWORD_DEFAULT);
         return ['login' => $this->login, 'email' => $this->email, 'password' => $password];
+    }
+
+    /**
+     * Получает данные пользователя.
+     * @return array Результат выборки.
+     * @throws Exception
+     */
+    public function getUser(): array
+    {
+        return Yii::$app
+            ->getDb()
+            ->createCommand("SELECT * FROM " . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
+            ->queryOne();
     }
 }

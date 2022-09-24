@@ -7,6 +7,9 @@ use yii\db\Migration;
  */
 class m220923_101506_create_table_users extends Migration
 {
+    /**
+     * {@inheritdoc}
+     */
     public function up()
     {
         $this->createTable('users', [
@@ -18,6 +21,9 @@ class m220923_101506_create_table_users extends Migration
         ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function down()
     {
         $this->dropTable('users');

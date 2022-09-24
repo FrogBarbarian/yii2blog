@@ -1,4 +1,4 @@
-<?
+<?php
 return [
     'id' => 'yii2test',
     'basePath' => dirname(__DIR__),
@@ -24,6 +24,7 @@ return [
             'rules' => [
                 '/' => 'main/index',
                 '/<action>' => 'main/<action>',
+                '<controller>/<action>' => '<controller>/<action>',
             ],
         ],
         'log' => [

@@ -2,11 +2,12 @@
 
 namespace app\models;
 
+use app\interfaces\UserData;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Exception;
 
-class Profile extends ActiveRecord
+class Profile extends ActiveRecord implements UserData
 {
     /**
      * @var string Таблица с пользователями.
@@ -19,10 +20,10 @@ class Profile extends ActiveRecord
 
     /**
      * Возвращает данные пользователя по email из сессии.
-     * @return array|bool Результат выборки|false.
+     * @return array Результат выборки.
      * @throws Exception
      */
-    public function getUser(): array|bool
+    public function getUser(): array
     {
         return Yii::$app
             ->getDb()
@@ -42,5 +43,22 @@ class Profile extends ActiveRecord
             ->getDb()
             ->createCommand('SELECT * FROM ' . $this->posts . ' WHERE author = ' . $id)
             ->queryAll();
+    }
+
+    /**
+     * Возвращает данные всех пользователей.
+     * @return array Результат выборки.
+     * @throws Exception
+     */
+    public function getUsers(): array
+    {
+         $_users = Yii::$app
+            ->getDb()
+            ->createCommand('SELECT * FROM ' . $this->users)
+            ->queryAll();
+         foreach ($_users as $user) {
+             $users[$user['id']] = $user;
+         }
+         return $users ?? [];
     }
 }

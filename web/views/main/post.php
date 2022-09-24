@@ -1,4 +1,6 @@
 <?php
+/** @var array $post */
+/** @var array $user */
 
 $this->title = $post['title'];
 ?>
@@ -14,11 +16,13 @@ $this->title = $post['title'];
                 <div>
                     Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?>
                 </div>
-            <?php if (Yii::$app->session->has('admin')): ?>
-                <!--TODO: Реализовать возможность редактировать пост-->
-                <div>
-                    <button class="btn" style="float: right;">Отредактировать</button>
-                </div>
+            <?php if (Yii::$app->session->has('login')): ?>
+                <?php if (Yii::$app->session->has('admin') || $post['author'] == $user['id']): ?>
+                    <!--TODO: Реализовать возможность редактировать пост-->
+                    <div>
+                        <button class="btn" style="float: right;">Отредактировать</button>
+                    </div>
+                <?php endif ?>
             <?php endif ?>
             </div>
         </div>

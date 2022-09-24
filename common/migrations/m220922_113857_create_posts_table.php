@@ -20,9 +20,7 @@ class m220922_113857_create_posts_table extends Migration
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function down()
     {
         $this->dropTable('posts');

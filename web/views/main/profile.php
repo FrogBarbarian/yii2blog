@@ -1,4 +1,8 @@
 <?php
+/** @var array $user */
+/** @var array $posts */
+/** @var array $params */
+
 
 $this->title = 'Профиль';
 ?>
@@ -8,7 +12,7 @@ $this->title = 'Профиль';
         <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
             <div class="card-body">
                 <!--TODO: Добавить функционал изменения личных данных-->
-                <h5 class="card-title"><?=$user['login']?></h5>
+                <h5 class="card-title"><?= $user['login']?></h5>
                 <p class="card-text">Email: <?=$user['email']?></p>
                 <hr>
                 <?php if ($posts): ?>
@@ -20,10 +24,20 @@ $this->title = 'Профиль';
                 <?php endforeach ?>
                 <?php endif ?>
                 <a type="button" href="/new-post" class="btn btn-outline-dark my-2">Создать новый пост</a>
-                <?php if (Yii::$app->session->has('admin')): ?>
+                <?php if (isset($params['admin'])): ?>
                     <hr>
                     <!--TODO: Админский функционал-->
                     <div>
+                    <?php if ($params['tmpPosts']): ?>
+                        <?php foreach ($params['tmpPosts'] as $post): ?>
+                            <a href="/admin/user-post?id=<?=$post['id']?>">
+                                <?=$post['title']?>
+                                | Автор: <?=$params['users'][$post['author']]['login']?>
+                                | <?=$post['isNew'] ? 'Новый' : 'Отредактированный'?>
+                            </a>
+                        <?php endforeach ?>
+                    <?php endif ?>
+                        <br>
                         Админский функционал
                     </div>
                 <?php endif ?>

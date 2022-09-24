@@ -3,7 +3,11 @@
 use yii\widgets\ActiveForm;
 
 $this->title = 'Вход';
-$options = ['options' => ['class' => 'form-floating mb-2'],'errorOptions' => ['class' => 'text-danger small'], 'template' => "{input}\n{label}\n{error}"];
+$options = [
+    'options' => ['class' => 'form-floating mb-2'],
+    'errorOptions' => ['class' => 'text-danger small'],
+    'template' => "{input}\n{label}\n{error}",
+];
 ?>
 
 <div class="align-items-center vstack justify-content-center" style="height: 90vh">
@@ -44,7 +48,7 @@ $options = ['options' => ['class' => 'form-floating mb-2'],'errorOptions' => ['c
     const confirmPassword = document.querySelector('#confirmPasswordInput');
 
 
-    togglePassword.addEventListener('click', function (e) {
+    togglePassword.addEventListener('click', function () {
         const typeP = password.getAttribute('type') === 'password' ? 'text' : 'password';
         password.setAttribute('type', typeP);
     });

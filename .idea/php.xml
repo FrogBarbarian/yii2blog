@@ -10,8 +10,6 @@
       <path value="$PROJECT_DIR$/vendor/yiisoft/yii2-composer" />
       <path value="$PROJECT_DIR$/vendor/cebe/markdown" />
       <path value="$PROJECT_DIR$/vendor/yiisoft/yii2" />
-      <path value="$PROJECT_DIR$/vendor/league/mime-type-detection" />
-      <path value="$PROJECT_DIR$/vendor/league/flysystem" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

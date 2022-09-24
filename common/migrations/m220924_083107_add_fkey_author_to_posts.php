@@ -7,6 +7,9 @@ use yii\db\Migration;
  */
 class m220924_083107_add_fkey_author_to_posts extends Migration
 {
+    /**
+     * {@inheritdoc}
+     */
     public function up()
     {
         $this->addColumn(
@@ -23,6 +26,9 @@ class m220924_083107_add_fkey_author_to_posts extends Migration
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function down()
     {
         $this->dropForeignKey(
