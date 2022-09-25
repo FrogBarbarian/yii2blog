@@ -7,7 +7,7 @@ use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Exception;
 
-class RegisterForm extends ActiveRecord implements UserData
+class RegisterForm extends ActiveRecord
 {
     /**
      * @var string Псевдоним, введенный в форму регистрации.
@@ -58,15 +58,14 @@ class RegisterForm extends ActiveRecord implements UserData
 
     /**
      * Регистрирует нового юзера.
-     * @param array $params Параметры для регистрации.
      * @return void
      * @throws Exception
      */
-    public function registerUser(array $params): void
+    public function registerUser(): void
     {
         Yii::$app->getDB()
             ->createCommand()
-            ->insert(self::tableName(), $params)
+            ->insert(self::tableName(), $this->getRegistryData())
             ->execute();
     }
 
@@ -96,22 +95,9 @@ class RegisterForm extends ActiveRecord implements UserData
      * Получает и форматирует данные из формы для записи в БД.
      * @return array
      */
-    public function getRegistryData(): array
+    private function getRegistryData(): array
     {
         $password = password_hash($this->password, PASSWORD_DEFAULT);
         return ['login' => $this->login, 'email' => $this->email, 'password' => $password];
-    }
-
-    /**
-     * Получает данные пользователя.
-     * @return array Результат выборки.
-     * @throws Exception
-     */
-    public function getUser(): array
-    {
-        return Yii::$app
-            ->getDb()
-            ->createCommand("SELECT * FROM " . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
-            ->queryOne();
     }
 }

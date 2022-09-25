@@ -1,5 +1,5 @@
 <?php
-/** @var \app\models\NewPostForm $model */
+/** @var \app\models\PostInteractionsForm $model */
 
 use yii\widgets\ActiveForm;
 
@@ -14,18 +14,23 @@ $options = [
 <div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vh;margin-right: 1vh;max-height: 90vh">
     <div class="mx-3 py-2">
         <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
+            <div class="alert alert-warning rounded-4" role="alert">
+                Название должно содержать от 10 до 100 символов. <br>
+                Текст поста должен содержать от 300 до 10000 символов. <br>
+                Остальные правила - бла бла бла бла.
+            </div>
             <?php $activeForm = ActiveForm::begin([
                 'id' => 'new-post-form',
             ]) ?>
             <div class="card-body">
-                <?= $activeForm->field($model, 'title', $options)
+                <?=$activeForm->field($model, 'title', $options)
                     ->input('text', [
                         'class' => 'form-control placeholder-wave',
                         'id' => 'titleInput',
                         'placeholder' => 'title',
                         'style' => 'background-color: #899aa2;',
                     ])->label('Название', ['class' => false]) ?>
-                <?= $activeForm->field($model, 'body', $options)
+                <?=$activeForm->field($model, 'body', $options)
                     ->textarea([
                         'class' => 'form-control placeholder-wave',
                         'id' => 'bodyInput',

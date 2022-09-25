@@ -2,17 +2,12 @@
 
 namespace app\models;
 
-use app\interfaces\UserData;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 use Yii;
 
-class Post extends ActiveRecord implements UserData
+class Post extends ActiveRecord
 {
-    /**
-     * @var string Таблица с пользователями.
-     */
-    private string $_users = 'users';
     /**
      * @var string Таблица с постами пользователей.
      */
@@ -56,18 +51,5 @@ class Post extends ActiveRecord implements UserData
             ->getDB()
             ->createCommand('UPDATE ' . $this->_posts . ' SET viewed = viewed + 1 WHERE id = ' . $id )
             ->execute();
-    }
-
-    /**
-     * Возвращает данные пользователя по email из сессии.
-     * @return array|bool Результат выборки|false.
-     * @throws Exception
-     */
-    public function getUser(): array|bool
-    {
-        return Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->_users . ' WHERE email = \'' . Yii::$app->session['login'] .  '\'')
-            ->queryOne();
     }
 }

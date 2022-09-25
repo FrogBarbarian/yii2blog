@@ -18,7 +18,7 @@ class AdminController extends AppController
 
         $model = new Admin();
         $post = $model->getUserTmpPost($_GET['id']);
-        $user = $model->getUser();
+        $user = $model->getUser($post['author']);
         return $this->render('user-post', ['model' => $model, 'post' => $post, 'user' => $user]);
     }
 
@@ -31,5 +31,18 @@ class AdminController extends AppController
         $model->initPost();
         return $this->redirect('/profile');
         //TODO: Публикуем статью, отправляем email создателю о публикации
+    }
+
+    public function actionAdminPanel()
+    {
+        if (!Yii::$app->session->has('admin')) {
+            throw new NotFoundHttpException();
+        }
+
+//        if (Yii::$app->session->has('admin')) {
+//            $params['admin'] = new Admin();
+//            $params['tmpPosts'] = $params['admin']->getUsersTmpPosts();
+//            $params['users'] = $model->getUsers();
+//        }
     }
 }

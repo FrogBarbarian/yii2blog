@@ -15,14 +15,14 @@ class m220924_083107_add_fkey_author_to_posts extends Migration
         $this->addColumn(
             'posts',
             'author',
-            $this->integer()->notNull(),
+            $this->string(30)->notNull(),
         );
         $this->addForeignKey(
             'author',
             'posts',
             'author',
             'users',
-            'id',
+            'login',
         );
     }
 

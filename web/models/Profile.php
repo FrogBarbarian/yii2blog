@@ -20,45 +20,28 @@ class Profile extends ActiveRecord implements UserData
 
     /**
      * Возвращает данные пользователя по email из сессии.
-     * @return array Результат выборки.
+     * @return array|bool Результат выборки|false.
      * @throws Exception
      */
-    public function getUser(): array
+    public function getUser(): array|bool
     {
         return Yii::$app
             ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->users . ' WHERE email = \'' . Yii::$app->session['login'] .  '\'')
+            ->createCommand('SELECT * FROM ' . $this->users . ' WHERE login = \'' . Yii::$app->session['login'] .  '\'')
             ->queryOne();
     }
 
     /**
-     * Возвращает посты пользователя с указанным ID.
-     * @param int $id ID пользователя.
+     * Возвращает посты пользователя по логину.
+     * @param string $login Логин пользователя.
      * @return array|bool Результат выборки|false.
      * @throws Exception
      */
-    public function getUserPosts(int $id): array|bool
+    public function getUserPosts(string $login): array|bool
     {
         return Yii::$app
             ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->posts . ' WHERE author = ' . $id)
+            ->createCommand('SELECT * FROM ' . $this->posts . ' WHERE author = \'' . $login . '\'')
             ->queryAll();
-    }
-
-    /**
-     * Возвращает данные всех пользователей.
-     * @return array Результат выборки.
-     * @throws Exception
-     */
-    public function getUsers(): array
-    {
-         $_users = Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->users)
-            ->queryAll();
-         foreach ($_users as $user) {
-             $users[$user['id']] = $user;
-         }
-         return $users ?? [];
     }
 }

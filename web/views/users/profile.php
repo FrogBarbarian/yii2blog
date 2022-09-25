@@ -16,12 +16,14 @@ $this->title = 'Профиль';
                 <p class="card-text">Email: <?=$user['email']?></p>
                 <hr>
                 <?php if ($posts): ?>
-                Список Ваших постов: <br>
+                    Список Ваших постов: <br>
                 <!--TODO: Добавить пагинацию и выбор сколько постов отображать на странице-->
                 <?php foreach ($posts as $post): ?>
                         <a href="/post?id=<?=$post['id']?>"><?=$post['title']?></a>
                         | Просмотров: <?=$post['viewed']?><br>
                 <?php endforeach ?>
+                <?php else: ?>
+                    Похоже, что Вы еще не написали ни одного поста. <br>
                 <?php endif ?>
                 <a type="button" href="/new-post" class="btn btn-outline-dark my-2">Создать новый пост</a>
                 <?php if (isset($params['admin'])): ?>

@@ -14,13 +14,12 @@ $this->title = $post['title'];
             </div>
             <div class="card-footer">
                 <div>
-                    Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?>
+                    Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?>. Автор - <?=$post['author']?>
                 </div>
             <?php if (Yii::$app->session->has('login')): ?>
-                <?php if (Yii::$app->session->has('admin') || $post['author'] == $user['id']): ?>
-                    <!--TODO: Реализовать возможность редактировать пост-->
+                <?php if ($post['author'] == $user): ?>
                     <div>
-                        <button class="btn" style="float: right;">Отредактировать</button>
+                        <a type="button" href="/edit-post?id=<?=$post['id']?>" class="btn" style="float: right;">Отредактировать</a>
                     </div>
                 <?php endif ?>
             <?php endif ?>

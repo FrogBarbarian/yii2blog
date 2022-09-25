@@ -58,11 +58,11 @@ class Admin extends ActiveRecord implements UserData
      * @return array|bool Результат выборки|false.
      * @throws Exception
      */
-    public function getUser(): array|bool
+    public function getUser(mixed $id): array|bool
     {
         return Yii::$app
             ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->_users . ' WHERE id = ' . $_GET['id'])
+            ->createCommand('SELECT * FROM ' . $this->_users . ' WHERE id = ' . $id)
             ->queryOne();
     }
 
@@ -82,6 +82,7 @@ class Admin extends ActiveRecord implements UserData
             'body' => $post['body'],
             'author' => $post['author'],
         ];
+        var_dump($_POST); die();
         if ($_POST['Admin']['id']) {
             $command->insert($this->_posts, $params)->execute();
         } else {
@@ -92,4 +93,6 @@ class Admin extends ActiveRecord implements UserData
             ->delete($this->_postsTmp, 'id = ' . $post['id'])
             ->execute();
     }
+
+
 }

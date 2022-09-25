@@ -6,7 +6,7 @@
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-$this->title = ($post['isNew'] ? 'Новый' : 'Редакция') . ' пост ' . $post['title'];
+$this->title = ($post['isNew'] ? 'Новый' : 'Отредактированный') . ' пост ' . $post['title'];
 ?>
 
 <div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vh;margin-right: 1vh;">
@@ -14,7 +14,7 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Редакция') . ' пост
         <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
             <div class="card-body">
                 <h5 class="card-title"><?=$post['title']?></h5>
-                <p class="card-text"><?=$post['body']?></p>
+                <p class="card-text"><?php var_dump($post);//echo $post['body']?></p>
             </div>
             <div class="card-footer">
                 <div>
@@ -27,10 +27,17 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Редакция') . ' пост
                     <?= $activeForm->field($model, 'id')
                         ->hiddenInput(['value' => $post['id']])
                         ->label(false)->error(false) ?>
+                    <?= $activeForm->field($model, 'isNew')
+                        ->hiddenInput(['value' => $post['isNew']])
+                        ->label(false)->error(false) ?>
                     <button type="submit" class="btn btn-outline-dark">Одобрить</button>
                     <?php ActiveForm::end() ?>
                     <!--TODO: Функционал неодобрения статьи (открывается модальное окно с комментарием создателю)-->
                     <a href="" class="btn btn-outline-dark">Отказать</a>
+                    <?php if (!$post['isNew']): ?>
+                        <!--TODO: Реализовать ссылку на оригинал-->
+                        <a href="/" class="btn btn-outline-dark">Открыть оригинал</a>
+                    <?php endif ?>
                 </div>
             </div>
         </div>

@@ -27,9 +27,6 @@
                         <li class="nav-item">
                             <a class="nav-link" href="/random" style="color: #a4001b">Случайная статья</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/about" style="color: #a4001b">Об авторе</a>
-                        </li>
                         <?php if (isset(Yii::$app->session['login'])): ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
@@ -44,7 +41,7 @@
                             </a>
                         </div>
                         <div class="nav-item">
-                            <a class="nav-link" href="/logout">
+                            <a class="nav-link" href="/users/logout">
                                 Выйти
                             </a>
                         </div>

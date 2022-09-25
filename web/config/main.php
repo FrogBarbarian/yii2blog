@@ -22,8 +22,12 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                '/' => 'main/index',
-                '/<action>' => 'main/<action>',
+                '/' => 'posts/index',
+                '/register' => 'users/register',
+                '/login' => 'users/login',
+                '/profile' => 'users/profile',
+                '/admin' => 'admin/admin-panel',
+                '/<action>' => 'posts/<action>',
                 '<controller>/<action>' => '<controller>/<action>',
             ],
         ],
@@ -35,6 +39,5 @@ return [
                 'yii\web\HttpException:*',
                 ],
             ],
-
         ],
     ];

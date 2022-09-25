@@ -9,7 +9,7 @@ $this->title = 'Главная страница';
         <div class="mx-3 py-5">
             <?php foreach ($posts as $post): ?>
                 <div class="card mb-3 rounded-4 mx-auto" style="border-color: #656560;border-width: medium;">
-                    <div class="card-header">Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?></div>
+                    <div class="card-header">Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?>. Автор - <?=$post['author']?></div>
                     <div class="card-body">
                         <h5 class="card-title"><?=$post['title']?></h5>
                         <p class="card-text"><?=$model->cutPreviewText($post['body'])?></p>
