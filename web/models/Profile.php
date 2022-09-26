@@ -12,11 +12,15 @@ class Profile extends ActiveRecord implements UserData
     /**
      * @var string Таблица с пользователями.
      */
-    private string $users = 'users';
+    private string $_users = 'users';
     /**
      * @var string Таблица с постами пользователей.
      */
-    private string $posts = 'posts';
+    private string $_posts = 'posts';
+    /**
+     * @var string Таблица временного хранения с постами пользователей.
+     */
+    private string $_posts_tmp = 'posts_tmp';
 
     /**
      * Возвращает данные пользователя по email из сессии.
@@ -27,7 +31,7 @@ class Profile extends ActiveRecord implements UserData
     {
         return Yii::$app
             ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->users . ' WHERE login = \'' . Yii::$app->session['login'] .  '\'')
+            ->createCommand('SELECT * FROM ' . $this->_users . ' WHERE login = \'' . Yii::$app->session['login'] .  '\'')
             ->queryOne();
     }
 
@@ -41,7 +45,21 @@ class Profile extends ActiveRecord implements UserData
     {
         return Yii::$app
             ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->posts . ' WHERE author = \'' . $login . '\'')
+            ->createCommand('SELECT * FROM ' . $this->_posts . ' WHERE author = \'' . $login . '\'')
+            ->queryAll();
+    }
+
+    /**
+     * Возвращает посты пользователя из таблицы временного хранения постов по логину.
+     * @param string $login Логин пользователя.
+     * @return array|bool Результат выборки|false.
+     * @throws Exception
+     */
+    public function getUserTmpPosts(string $login): array|bool
+    {
+        return Yii::$app
+            ->getDb()
+            ->createCommand('SELECT * FROM ' . $this->_posts_tmp . ' WHERE author = \'' . $login . '\'')
             ->queryAll();
     }
 }

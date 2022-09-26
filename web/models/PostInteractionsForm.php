@@ -56,50 +56,25 @@ class PostInteractionsForm extends ActiveRecord
     }
 
     /**
-     * Создает или обновляет пост. Если автор админ, то сразу производит изменения.
-     * Иначе пост отправляется на проверку админу.
-     * @return void
+     * Проверяет, редактировал ли пользователь выбранный пост.
+     * @param int $postId ID поста.
+     * @return array|bool Найденный пост во временном хранилище постов|false, если пост редактируется первый раз.
+     * @throws Exception
      */
-//    public function initPost(): void
-//    {
-//        if (!isset(Yii::$app->session['admin'])) {
-//            $params['isNew'] = !isset($_POST['NewPostForm']['isEdit']);
-//            $params['author'] = Yii::$app->session['id'];
-//            $table = $this->_postsTmp;
-//            $this->createPost($table, $params);
-//        } else {
-//            $id = $_POST['NewPostForm']['id'];
-//            $table = self::tableName();
-//            if (isset($_POST['NewPostForm']['isEdit'])) {
-//                $params['author'] = $_POST['NewPostForm']['author'];
-//                $this->updatePost($params, $id);
-//            } else {
-//                $this->createPost($table, $params);
-//            }
-//        }
-//    }
-
-
-    private function initPost(): array
+    public function checkIsUpdate(int $postId): array|bool
     {
-        $params = ['title' => $this->title, 'body' => $this->body];
-
-        if (Yii::$app->session->has('admin')) {
-            $table = self::tableName();
-        } else {
-            if ($_POST['isNew']) {
-
-            } else {
-
-            }
-            $params['author'] = Yii::$app->session['login'];
-            $table = $this->_postsTmp;
-        }
-
-        return ['table' => $table, 'params' => $params];
+        return Yii::$app
+            ->getDb()
+            ->createCommand('SELECT * FROM ' . $this->_postsTmp . ' WHERE update_id = ' . $postId)
+            ->queryOne();
     }
 
-    private function prepareNewPost(): array
+    /**
+     * Подготавливает пост к публикации/обновлению или занесению во временное хранилище постов.
+     * @param int|null $updateId ID обновляемого поста.
+     * @return array Параметры для составления SQL запроса к БД.
+     */
+    private function preparePost(int|null $updateId = null): array
     {
         $params = [
             'title' => $this->title,
@@ -110,19 +85,24 @@ class PostInteractionsForm extends ActiveRecord
         if (Yii::$app->session->has('admin')) {
             $table = self::tableName();
         } else {
+            if (Yii::$app->requestedRoute == 'posts/edit-post') {
+                $params['isNew'] = false;
+                $params['update_id'] = $updateId;
+            }
             $table = $this->_postsTmp;
         }
         return ['table' => $table, 'params' => $params];
     }
 
     /**
-     * Создает запись в БД с новым постом.
+     * Создает пост в соответствующей таблице в БД.
+     * @param int|null $postId ID поста, указывается, если редактируется старый пост.
      * @return void
      * @throws Exception
      */
-    public function createPost(): void
+    public function createPost(int|null $postId = null): void
     {
-        $data = $this->prepareNewPost();
+        $data = $this->preparePost($postId);
         Yii::$app
             ->getDb()
             ->createCommand()
@@ -132,30 +112,17 @@ class PostInteractionsForm extends ActiveRecord
 
     /**
      * Обновляет запись в таблице с постами.
-     * @param array $params Параметры.
      * @param int $id ID поста.
      * @return void
      * @throws Exception
      */
-    private function updatePost(array $params, int $id): void
+    public function updatePost(int $id): void
     {
+        $data = $this->preparePost(null);
         Yii::$app
             ->getDb()
             ->createCommand()
-            ->update(self::tableName(), $params, 'id = ' . $id)
+            ->update($data['table'], $data['params'], 'id = ' . $id)
             ->execute();
     }
-
-    /**
-     * Возвращает данные последнего поста пользователя.
-     * @return array|bool Результат выборки|false.
-     * @throws Exception
-     */
-//    public function getUpdatePost(): array|bool
-//    {
-//        return Yii::$app
-//            ->getDb()
-//            ->createCommand('SELECT * FROM ' . self::tableName() . ' WHERE id = ' . $_POST['NewPostForm']['id'])
-//            ->queryOne();
-//    }
 }

@@ -31,9 +31,6 @@ $options = [
                 'id' => 'passwordInput',
                 'placeholder' => 'password',
                 'autocomplete' => 'new-password',
-                'data-toggle' => 'tooltip',
-                'data-placement' => 'top',
-                'title' => 'Пароль может содержать буквы латинского алфавита, цифры, - и _. От 5 до 30 символов.',
                 'style' => 'background-color: #899aa2;',
             ])->label('Пароль', ['class' => false]) ?>
         <a class="link-dark" id="togglePassword" style="cursor: pointer;text-decoration: none;">Показать пароль</a>

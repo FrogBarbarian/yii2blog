@@ -1,7 +1,7 @@
 <?php
 /** @var array $user */
 /** @var array $posts */
-/** @var array $params */
+/** @var array $posts_tmp */
 
 
 $this->title = 'Профиль';
@@ -23,24 +23,19 @@ $this->title = 'Профиль';
                         | Просмотров: <?=$post['viewed']?><br>
                 <?php endforeach ?>
                 <?php else: ?>
-                    Похоже, что Вы еще не написали ни одного поста. <br>
+                    Похоже, что Вы еще не опубликовали ни одного поста. <br>
                 <?php endif ?>
                 <a type="button" href="/new-post" class="btn btn-outline-dark my-2">Создать новый пост</a>
-                <?php if (isset($params['admin'])): ?>
+                <?php if ($posts_tmp): ?>
                     <hr>
-                    <!--TODO: Админский функционал-->
+                    Посты, ожидающие проверки администрацией.
+                    <br><br>
                     <div>
-                    <?php if ($params['tmpPosts']): ?>
-                        <?php foreach ($params['tmpPosts'] as $post): ?>
-                            <a href="/admin/user-post?id=<?=$post['id']?>">
-                                <?=$post['title']?>
-                                | Автор: <?=$params['users'][$post['author']]['login']?>
-                                | <?=$post['isNew'] ? 'Новый' : 'Отредактированный'?>
-                            </a>
+                        <?php foreach ($posts_tmp as $post_tmp): ?>
+                                <?=$post_tmp['title']?>
+                                | <?=$post_tmp['isNew'] ? 'Новый' : 'Отредактированный'?>
+                                <br>
                         <?php endforeach ?>
-                    <?php endif ?>
-                        <br>
-                        Админский функционал
                     </div>
                 <?php endif ?>
             </div>

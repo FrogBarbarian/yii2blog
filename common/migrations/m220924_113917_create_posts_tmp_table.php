@@ -3,9 +3,9 @@
 use yii\db\Migration;
 
 /**
- * Class m220924_113917_clone_posts_table
+ * Class m220924_113917_create_posts_tmp_table
  */
-class m220924_113917_clone_posts_table extends Migration
+class m220924_113917_create_posts_tmp_table extends Migration
 {
     /**
      * {@inheritdoc}
@@ -16,16 +16,17 @@ class m220924_113917_clone_posts_table extends Migration
             'id' => $this->primaryKey(),
             'title' => $this->string(100)->notNull(),
             'body' => $this->text()->notNull(),
-            'author' => $this->integer()->notNull(),
+            'author' => $this->string(30)->notNull(),
             'isNew' => $this->boolean()->notNull()->defaultValue(true),
+            'update_id' => $this->integer(),
         ]);
 
         $this->addForeignKey(
-            'author',
+            'pt_author_fk',
             'posts_tmp',
             'author',
             'users',
-            'id',
+            'login',
         );
     }
 

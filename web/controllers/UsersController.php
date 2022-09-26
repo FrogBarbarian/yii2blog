@@ -2,7 +2,6 @@
 
 namespace app\controllers;
 
-use app\models\Admin;
 use app\models\LoginForm;
 use app\models\Profile;
 use app\models\RegisterForm;
@@ -91,10 +90,12 @@ class UsersController extends AppController
         $model = new Profile();
         $user = $model->getUser();
         $posts = $model->getUserPosts($user['login']);
+        $posts_tmp = $model->getUserTmpPosts($user['login']);
         return $this->render('profile', [
             'model' => $model,
             'user' => $user,
             'posts' => $posts,
+            'posts_tmp' => $posts_tmp,
         ]);
     }
 }

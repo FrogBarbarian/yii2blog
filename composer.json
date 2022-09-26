@@ -13,7 +13,9 @@
     "psr-4": {
       "app\\controllers\\": "web/controllers",
       "app\\models\\": "web/models",
-      "app\\interfaces\\": "web/interfaces"
+      "app\\interfaces\\": "web/interfaces",
+      "app\\models\\queries\\": "web/models/queries",
+      "src\\services\\": "src/services"
     }
   },
   "require": {

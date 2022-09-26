@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\models;
 
-use Yii;
+use app\models\queries\PostsQuery;
+use src\services\StringService;
 use yii\db\ActiveRecord;
-use yii\db\Exception;
 
 class Posts extends ActiveRecord
 {
     /**
-     * @return string Имя таблицы с которой работает модель.
+     * {@inheritDoc}
      */
     public static function tableName(): string
     {
@@ -17,27 +19,56 @@ class Posts extends ActiveRecord
     }
 
     /**
-     * Получает все посты отсортированные в обратном порядке по ID.
-     * @return array
-     * @throws Exception
+     * {@inheritDoc}
      */
-    public function getPosts(): array
+    public static function find(): PostsQuery
     {
-        return Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . self::tableName() . ' ORDER BY id DESC')
-            ->queryAll();
+        return new PostsQuery(self::class);
     }
 
     /**
-     * Обрезает текст для отображения в карточке с постом.
-     * @param string $text Текст поста.
-     * @param int $offset Минимальная длина текста (по умолчанию 250).
-     * @return string Обрезанный текст + ... на конце.
+     * @return int|null ID поста.
      */
-    public function cutPreviewText(string $text, int $offset = 250): string
+    public function getId(): int|null
     {
-        $position = mb_strpos($text, ' ', $offset);
-        return mb_strimwidth($text, 0, $position) . '...';
+        return $this->getAttribute('id');
+    }
+
+    /**
+     * @return string|null Имя поста.
+     */
+    public function getTitle(): string|null
+    {
+        return $this->getAttribute('title');
+    }
+
+    /**
+     * @return string|null Текст поста.
+     */
+    public function getBody(): string|null
+    {
+        return $this->getAttribute('body');
+    }
+
+    /**
+     * @return int|null Количество просмотров поста.
+     */
+    public function getViews(): int|null
+    {
+        return $this->getAttribute('viewed');
+    }
+
+    /**
+     * @return string|null Автора поста.
+     */
+    public function getAuthor(): string|null
+    {
+        return $this->getAttribute('author');
+    }
+
+    public function getPreview(int $offset = 250, string $ending = '...'): string
+    {
+        return (new StringService($this->getBody()))
+            ->cut($offset, $ending);
     }
 }
