@@ -66,6 +66,60 @@ class Posts extends ActiveRecord
         return $this->getAttribute('author');
     }
 
+    /**
+     * Устанавливает имя поста в таблице.
+     * @param string $title
+     * @return self
+     */
+    public function setTitle(string $title): self
+    {
+        $this->setAttribute('title', $title);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает текст поста в таблице.
+     * @param string $body
+     * @return self
+     */
+    public function setBody(string $body): self
+    {
+        $this->setAttribute('body', $body);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает количество просмотров поста в таблице.
+     * @param int $views
+     * @return self
+     */
+    public function setViews(int $views): self
+    {
+        $this->setAttribute('viewed', $views);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает автора поста в таблице.
+     * @param string $author
+     * @return self
+     */
+    public function setAuthor(string $author): self
+    {
+        $this->setAttribute('author', $author);
+
+        return $this;
+    }
+
+    /**
+     * Получает превью поста с помощью сервиса по работе со строкой.
+     * @param int $offset Длина превью (по умолчанию 250).
+     * @param string $ending Окончание (по умолчанию '...').
+     * @return string
+     */
     public function getPreview(int $offset = 250, string $ending = '...'): string
     {
         return (new StringService($this->getBody()))

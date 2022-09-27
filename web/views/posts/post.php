@@ -1,6 +1,7 @@
 <?php
-/** @var array $post */
-/** @var array $user */
+
+/** @var \app\models\Posts $post */
+/** @var string $user */
 
 $this->title = $post['title'];
 ?>
@@ -14,20 +15,18 @@ $this->title = $post['title'];
         <?php endif ?>
         <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
             <div class="card-body">
-                <h5 class="card-title"><?=$post['title']?></h5>
-                <p class="card-text"><?=$post['body']?></p>
+                <h5 class="card-title"><?=$post->getTitle()?></h5>
+                <p class="card-text"><?=$post->getBody()?></p>
             </div>
             <div class="card-footer">
                 <div>
-                    Написан: <b>дата</b>. Просмотров: <?=$post['viewed']?>. Автор - <?=$post['author']?>
+                    Написан: <b>дата</b>. Просмотров: <?=$post->getViews()?>. Автор - <?=$post->getAuthor()?>
                 </div>
-            <?php if (Yii::$app->session->has('login')): ?>
-                <?php if ($post['author'] == $user): ?>
+                <?php if ($post->getAuthor() == $user): ?>
                     <div>
-                        <a type="button" href="/edit-post?id=<?=$post['id']?>" class="btn" style="float: right;">Отредактировать</a>
+                        <a type="button" href="/edit-post?id=<?=$post->getId()?>" class="btn" style="float: right;">Отредактировать</a>
                     </div>
                 <?php endif ?>
-            <?php endif ?>
             </div>
         </div>
     </div>

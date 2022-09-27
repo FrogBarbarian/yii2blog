@@ -3,6 +3,7 @@
 namespace app\models\queries;
 
 use yii\db\ActiveQuery;
+use yii\db\Expression;
 
 class PostsQuery extends ActiveQuery
 {
@@ -17,8 +18,17 @@ class PostsQuery extends ActiveQuery
     /**
      * Сортирует по ID в обратном порядке.
      */
-    public function descById(): self
+    public function orderDescById(): self
     {
         return $this->orderBy(['id' => SORT_DESC]);
     }
+
+    /**
+     * Рандомный поиск.
+     */
+    public function random(): self
+    {
+        return $this->orderBy(new Expression('random()'));
+    }
+
 }

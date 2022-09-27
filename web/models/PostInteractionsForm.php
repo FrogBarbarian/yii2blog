@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\models;
 
+use app\models\queries\PostsQuery;
 use yii\db\ActiveRecord;
-use Yii;
 use yii\db\Exception;
+use Yii;
 
 class PostInteractionsForm extends ActiveRecord
 {
@@ -70,6 +73,14 @@ class PostInteractionsForm extends ActiveRecord
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public static function find(): PostsQuery
+    {
+        return new PostsQuery(self::class);
+    }
+
+    /**
      * Подготавливает пост к публикации/обновлению или занесению во временное хранилище постов.
      * @param int|null $updateId ID обновляемого поста.
      * @return array Параметры для составления SQL запроса к БД.
@@ -91,6 +102,7 @@ class PostInteractionsForm extends ActiveRecord
             }
             $table = $this->_postsTmp;
         }
+
         return ['table' => $table, 'params' => $params];
     }
 
@@ -107,22 +119,6 @@ class PostInteractionsForm extends ActiveRecord
             ->getDb()
             ->createCommand()
             ->insert($data['table'], $data['params'])
-            ->execute();
-    }
-
-    /**
-     * Обновляет запись в таблице с постами.
-     * @param int $id ID поста.
-     * @return void
-     * @throws Exception
-     */
-    public function updatePost(int $id): void
-    {
-        $data = $this->preparePost(null);
-        Yii::$app
-            ->getDb()
-            ->createCommand()
-            ->update($data['table'], $data['params'], 'id = ' . $id)
             ->execute();
     }
 }
