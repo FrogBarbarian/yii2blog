@@ -1,6 +1,6 @@
 <?php
 
-/** @var \app\models\Post $posts */
+/** @var \app\models\Post[] $posts */
 
 $this->title = 'Главная страница';
 ?>

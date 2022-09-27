@@ -5,8 +5,8 @@ declare(strict_types = 1);
 namespace app\models;
 
 use yii\db\ActiveRecord;
-use Yii;
 use yii\db\Exception;
+use Yii;
 
 class LoginForm extends ActiveRecord
 {

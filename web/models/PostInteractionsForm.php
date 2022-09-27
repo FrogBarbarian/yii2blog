@@ -16,10 +16,6 @@ class PostInteractionsForm extends ActiveRecord
      * @var string Текст нового поста.
      */
     public string $body = '';
-    /**
-     * @var string Таблица с временным хранением постов
-     */
-    private string $_postsTmp = 'posts_tmp';
 
     /**
      * @return string Название таблицы с постами.

@@ -1,6 +1,6 @@
 <?php
 /** @var \app\models\PostInteractionsForm $model */
-/** @var array $post */
+/** @var \app\models\Post $post */
 
 use yii\widgets\ActiveForm;
 
@@ -29,7 +29,7 @@ $options = [
                     ->input('text', [
                         'class' => 'form-control placeholder-wave',
                         'id' => 'titleInput',
-                        'value' => $isEdit ? $post['title'] : '',
+                        'value' => $isEdit ? $post->getTitle() : '',
                         'placeholder' => 'title',
                         'style' => 'background-color: #899aa2;',
                     ])->label('Название', ['class' => false]) ?>
@@ -37,7 +37,7 @@ $options = [
                     ->textarea([
                         'class' => 'form-control placeholder-wave',
                         'id' => 'bodyInput',
-                        'value' => $isEdit ? $post['body'] : '',
+                        'value' => $isEdit ? $post->getBody() : '',
                         'placeholder' => 'body',
                         'style' => 'background-color: #899aa2;min-height: 50vh;',
                     ])->label('Текст статьи', ['class' => false]) ?>

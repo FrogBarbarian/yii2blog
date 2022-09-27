@@ -42,6 +42,8 @@ $this->title = 'Профиль';
                     <hr>
                     <!--TODO: Уведомления, переход в админ панель-->
                     Админский функционал
+                    <br>
+                    <a href="/admin/admin-panel" class="btn btn-outline-dark">Админ-панель</a>
                 <?php endif ?>
             </div>
         </div>

@@ -58,19 +58,6 @@ class RegisterForm extends ActiveRecord
     }
 
     /**
-     * Регистрирует нового юзера.
-     * @return void
-     * @throws Exception
-     */
-    public function registerUser(): void
-    {
-        Yii::$app->getDB()
-            ->createCommand()
-            ->insert(self::tableName(), $this->getRegistryData())
-            ->execute();
-    }
-
-    /**
      * Проверяет на регистронезависимую уникальность введенные email/login при регистрации.
      * @param string $attribute Проверяемый атрибут.
      * @return void
@@ -90,15 +77,5 @@ class RegisterForm extends ActiveRecord
             };
             $this->addError($attribute, "Данный $field уже занят");
         }
-    }
-
-    /**
-     * Получает и форматирует данные из формы для записи в БД.
-     * @return array
-     */
-    private function getRegistryData(): array
-    {
-        $password = password_hash($this->password, PASSWORD_DEFAULT);
-        return ['login' => $this->login, 'email' => $this->email, 'password' => $password];
     }
 }

@@ -13,5 +13,4 @@ class PostsTmpQuery extends PostQuery
     {
         return $this->where(['update_id' => $updateId]);
     }
-
 }

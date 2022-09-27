@@ -48,4 +48,40 @@ class User extends ActiveRecord
     {
         return $this->getAttribute('isAdmin');
     }
+
+    /**
+     * Записывает псевдоним пользователя.
+     * @param string $login
+     * @return self
+     */
+    public function setLogin(string $login): self
+    {
+        $this->setAttribute('login', $login);
+
+        return $this;
+    }
+
+    /**
+     * Записывает email пользователя.
+     * @param string $email
+     * @return self
+     */
+    public function setEmail(string $email): self
+    {
+        $this->setAttribute('email', $email);
+
+        return $this;
+    }
+
+    /**
+     * Записывает пароль пользователя.
+     * @param string $password
+     * @return self
+     */
+    public function setPassword(string $password): self
+    {
+        $this->setAttribute('password', password_hash($password, PASSWORD_DEFAULT));
+
+        return $this;
+    }
 }

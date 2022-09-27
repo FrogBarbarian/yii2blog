@@ -7,7 +7,7 @@ use app\models\Post;
 use app\models\PostTmp;
 use app\models\User;
 use app\models\RegisterForm;
-use yii\db\Exception;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
 
@@ -16,28 +16,36 @@ class UsersController extends AppController
     /**
      * Страница регистрации пользователя, если пользователь залогинен, то переадресует на домашнюю страницу.
      * Если данные из формы провалидированы, то создается запись в БД с пользователем.
-     * @return Response|string Переадресация на домашнюю/страницу пользователя | Страница регистрации нового пользователя.
-     * @throws Exception
+     * @return Response|string Переадресация на домашнюю/страницу пользователя | Вид "регистрация пользователя".
+     * @throws NotFoundHttpException
      */
     public function actionRegister(): Response|string
     {
         if (Yii::$app->session->has('login')) {
-            return $this->goHome();
+            throw new NotFoundHttpException();
         }
         $model = new RegisterForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $model->registerUser();
+            $user = new User();
+            $user
+                ->setLogin($model->login)
+                ->setEmail($model->email)
+                ->setPassword($model->password)
+                ->save();
             $session = Yii::$app->session;
             $session->open();
             $session['login'] = $model->login;
+
             return $this->redirect('/profile');
         }
+
         return $this->render('register', ['model' => $model]);
     }
 
     /**
      * Разлогинивает пользователя и отправляет на главную страницу.
      * @return Response
+     * @throws NotFoundHttpException
      */
     public function actionLogout(): Response
     {
@@ -47,8 +55,7 @@ class UsersController extends AppController
             $session->destroy();
             return $this->goHome();
         }
-
-        return $this->goHome();
+        throw new NotFoundHttpException();
     }
 
     /**
