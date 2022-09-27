@@ -4,7 +4,9 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-class PostsTmp extends Posts
+use app\models\queries\PostsTmpQuery;
+
+class PostTmp extends Post
 {
     /**
      * {@inheritDoc}
@@ -12,6 +14,22 @@ class PostsTmp extends Posts
     public static function tableName(): string
     {
         return 'posts_tmp';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function find(): PostsTmpQuery
+    {
+        return new PostsTmpQuery(self::class);
+    }
+
+    /**
+     * @return bool Новый пост|редакция поста.
+     */
+    public function getIsNew(): bool
+    {
+        return $this->getAttribute('isNew');
     }
 
     /**

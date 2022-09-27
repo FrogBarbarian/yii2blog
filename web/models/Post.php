@@ -4,11 +4,11 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use app\models\queries\PostsQuery;
+use app\models\queries\PostQuery;
 use src\services\StringService;
 use yii\db\ActiveRecord;
 
-class Posts extends ActiveRecord
+class Post extends ActiveRecord
 {
     /**
      * {@inheritDoc}
@@ -21,9 +21,9 @@ class Posts extends ActiveRecord
     /**
      * {@inheritDoc}
      */
-    public static function find(): PostsQuery
+    public static function find(): PostQuery
     {
-        return new PostsQuery(self::class);
+        return new PostQuery(self::class);
     }
 
     /**

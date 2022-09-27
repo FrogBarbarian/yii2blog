@@ -1,6 +1,6 @@
 <?php
 
-/** @var \app\models\Posts $post */
+/** @var \app\models\Post $post */
 /** @var string $user */
 
 $this->title = $post['title'];

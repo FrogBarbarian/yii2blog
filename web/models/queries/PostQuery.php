@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 
-class PostsQuery extends ActiveQuery
+class PostQuery extends ActiveQuery
 {
     /**
      * Поиск по ID поста.
@@ -13,6 +15,14 @@ class PostsQuery extends ActiveQuery
     public function byId(int $id): self
     {
         return $this->where(['id' => $id]);
+    }
+
+    /**
+     * Поиск по автору поста.
+     */
+    public function byAuthor(string $author): self
+    {
+        return $this->where(['author' => $author]);
     }
 
     /**

@@ -3,8 +3,8 @@
 namespace app\controllers;
 
 use app\models\PostInteractionsForm;
-use app\models\Posts;
-use app\models\PostsTmp;
+use app\models\Post;
+use app\models\PostTmp;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\db\Exception;
@@ -17,7 +17,7 @@ class PostsController extends AppController
      */
     public function actionIndex(): string
     {
-        $posts = Posts::find()
+        $posts = Post::find()
             ->orderDescById()
             ->all();
 
@@ -33,7 +33,7 @@ class PostsController extends AppController
     public function actionPost(string $id = '0'): string
     {
         if ($id > 0) {
-            $post = Posts::find()
+            $post = Post::find()
                 ->byId($id)
                 ->one();
             if ($post !== null) {
@@ -55,7 +55,7 @@ class PostsController extends AppController
      */
     public function actionRandom(): Response
     {
-        $post = Posts::find()
+        $post = Post::find()
             ->random()
             ->one();
 
@@ -76,7 +76,7 @@ class PostsController extends AppController
         $model = new PostInteractionsForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             if ($session->has('admin')) {
-                $post = new Posts();
+                $post = new Post();
                 $post
                     ->setTitle($model->title)
                     ->setBody($model->body)
@@ -85,13 +85,14 @@ class PostsController extends AppController
 
                 return $this->redirect('/post?id=' . $post->getId());
             }
-            $postTmp = new PostsTmp();
+            $postTmp = new PostTmp();
             $postTmp
                 ->setTitle($model->title)
                 ->setBody($model->body)
                 ->setAuthor($session['login'])
                 ->save();
             //TODO: Админу приходит на почту сообщение о новом посте пользователя
+            //TODO: Flash message Пост создан и отправлен на одобрение
 
             return $this->goHome();
         }
@@ -114,7 +115,7 @@ class PostsController extends AppController
             throw new NotFoundHttpException();
         }
         $user = Yii::$app->session['login'];
-        $post = Posts::find()->byId($id)->one();
+        $post = Post::find()->byId($id)->one();
         if ($post === null || $post->getAuthor() !== $user) { //Пост по ID не найден или пользователь не автор поста
             throw new NotFoundHttpException();
         }
@@ -127,12 +128,13 @@ class PostsController extends AppController
                     ->save();
                 return $this->redirect('/post?id=' . $post->getId());
             } else {
-                if ($model->checkIsUpdate($post->getId())) { //Если пост уже редактировался, то переправляем на страницу поста и выводим сообщение пользователю
+                if (PostTmp::find()->byUpdatedId($post->getId())->one() !== null) { //Если пост уже редактировался, то переправляем на страницу поста и выводим сообщение пользователю
                     $message = 'Пост уже редактировался и ожидает одобрения админом.';
                     Yii::$app->session->setFlash('postAlreadyUpdated', $message);
+
                     return $this->redirect('/post?id=' . $post->getId());
                 }
-                $postTmp = new PostsTmp();
+                $postTmp = new PostTmp();
                 $postTmp
                     ->setTitle($model->title)
                     ->setBody($model->body)
@@ -141,6 +143,8 @@ class PostsController extends AppController
                     ->setUpdateId($post->getId())
                     ->save();
                 //TODO: Админу приходит на почту сообщение об измененном посте, если пост обновил не админ
+                //TODO: Flash message Изменения приняты и отправлены на одобрение
+
                 return $this->goHome();
             }
         }

@@ -3,7 +3,9 @@
 namespace app\controllers;
 
 use app\models\LoginForm;
-use app\models\Profile;
+use app\models\Post;
+use app\models\PostTmp;
+use app\models\User;
 use app\models\RegisterForm;
 use yii\db\Exception;
 use yii\web\Response;
@@ -45,6 +47,7 @@ class UsersController extends AppController
             $session->destroy();
             return $this->goHome();
         }
+
         return $this->goHome();
     }
 
@@ -52,50 +55,54 @@ class UsersController extends AppController
      * Страница для входа пользователя, если пользователь уже залогинен - переправляет на главную страницу.
      * Логинит пользователя, если данные для входа корректны.
      * @return Response|string Переадресация на страницу пользователя | Страница входа пользователя.
-     * @throws Exception
      */
     public function actionLogin(): Response|string
     {
         if (Yii::$app->session->has('login')) {
             return $this->goHome();
         }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $user = $model->getUser();
+            $user = User::find()
+                ->byEmail($model->email)
+                ->one();
             $session = Yii::$app->session;
             $session->open();
-            $session['login'] = $user['login'];
-            if ($user['isAdmin']) {
+            $session['login'] = $user->getLogin();
+            if ($user->getIsAdmin()) {
                 $session['admin'] = true;
             }
+
             return $this->redirect('/profile');
         }
+
         return $this->render('login', ['model' => $model]);
     }
-
 
     /**
      * Отображает профиль пользователя и позволяет взаимодействовать со своими данными и постами.
      * Если пользователь не залогинен, то отправляет пользователя на страницу логина.
      * @return Response|string Страница пользователя.
-     * @throws Exception
      */
     public function actionProfile(): Response|string
     {
         if (!Yii::$app->session->has('login')) {
             return $this->redirect('/login');
         }
+        $user = User::find()
+            ->byLogin(Yii::$app->session['login'])
+            ->one();
+        $posts = Post::find()
+            ->byAuthor($user['login'])
+            ->all();
+        $postsTmp = PostTmp::find()
+            ->byAuthor($user['login'])
+            ->all();
 
-        $model = new Profile();
-        $user = $model->getUser();
-        $posts = $model->getUserPosts($user['login']);
-        $posts_tmp = $model->getUserTmpPosts($user['login']);
         return $this->render('profile', [
-            'model' => $model,
             'user' => $user,
             'posts' => $posts,
-            'posts_tmp' => $posts_tmp,
+            'postsTmp' => $postsTmp,
         ]);
     }
 }

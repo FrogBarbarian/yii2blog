@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\models;
 
-use app\interfaces\UserData;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Exception;
 
-class Admin extends ActiveRecord implements UserData
+class Admin extends ActiveRecord
 {
     /**
      * @var string ID из hidden input.
@@ -82,7 +83,6 @@ class Admin extends ActiveRecord implements UserData
             'body' => $post['body'],
             'author' => $post['author'],
         ];
-        var_dump($_POST); die();
         if ($_POST['Admin']['id']) {
             $command->insert($this->_posts, $params)->execute();
         } else {

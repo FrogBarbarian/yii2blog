@@ -4,10 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use app\models\queries\PostsQuery;
 use yii\db\ActiveRecord;
-use yii\db\Exception;
-use Yii;
 
 class PostInteractionsForm extends ActiveRecord
 {
@@ -56,69 +53,5 @@ class PostInteractionsForm extends ActiveRecord
                 'tooLong' => 'Название не может быть длиннее 10000 символов',
             ],
         ];
-    }
-
-    /**
-     * Проверяет, редактировал ли пользователь выбранный пост.
-     * @param int $postId ID поста.
-     * @return array|bool Найденный пост во временном хранилище постов|false, если пост редактируется первый раз.
-     * @throws Exception
-     */
-    public function checkIsUpdate(int $postId): array|bool
-    {
-        return Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . $this->_postsTmp . ' WHERE update_id = ' . $postId)
-            ->queryOne();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public static function find(): PostsQuery
-    {
-        return new PostsQuery(self::class);
-    }
-
-    /**
-     * Подготавливает пост к публикации/обновлению или занесению во временное хранилище постов.
-     * @param int|null $updateId ID обновляемого поста.
-     * @return array Параметры для составления SQL запроса к БД.
-     */
-    private function preparePost(int|null $updateId = null): array
-    {
-        $params = [
-            'title' => $this->title,
-            'body' => $this->body,
-            'author' => Yii::$app->session['login'],
-        ];
-
-        if (Yii::$app->session->has('admin')) {
-            $table = self::tableName();
-        } else {
-            if (Yii::$app->requestedRoute == 'posts/edit-post') {
-                $params['isNew'] = false;
-                $params['update_id'] = $updateId;
-            }
-            $table = $this->_postsTmp;
-        }
-
-        return ['table' => $table, 'params' => $params];
-    }
-
-    /**
-     * Создает пост в соответствующей таблице в БД.
-     * @param int|null $postId ID поста, указывается, если редактируется старый пост.
-     * @return void
-     * @throws Exception
-     */
-    public function createPost(int|null $postId = null): void
-    {
-        $data = $this->preparePost($postId);
-        Yii::$app
-            ->getDb()
-            ->createCommand()
-            ->insert($data['table'], $data['params'])
-            ->execute();
     }
 }

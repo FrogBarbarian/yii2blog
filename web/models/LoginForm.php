@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\models;
 
-use app\interfaces\UserData;
 use yii\db\ActiveRecord;
 use Yii;
 use yii\db\Exception;
 
-class LoginForm extends ActiveRecord implements UserData
+class LoginForm extends ActiveRecord
 {
     /**
      * @var string Email, введенный в форму логина.
@@ -55,18 +56,5 @@ class LoginForm extends ActiveRecord implements UserData
         if (!$user || !password_verify($this->password, $user['password'])) {
             $this->addError($attribute, "Почта или пароль введены не верно");
         }
-    }
-
-    /**
-     * Получает данные пользователя.
-     * @return array Результат выборки.
-     * @throws Exception
-     */
-    public function getUser(): array
-    {
-        return Yii::$app
-            ->getDb()
-            ->createCommand("SELECT * FROM " . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
-            ->queryOne();
     }
 }

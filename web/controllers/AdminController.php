@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 use app\models\Admin;
+use app\models\Post;
+use app\models\PostInteractionsForm;
 use Yii;
 use yii\web\NotFoundHttpException;
 
@@ -45,4 +47,11 @@ class AdminController extends AppController
 //            $params['users'] = $model->getUsers();
 //        }
     }
+//    public function actionEditPost()
+//{
+//    $model = new PostInteractionsForm();
+//    $post = (new Post())->getPostById($_GET['id']);
+//    $_POST['isEdit'] = true;
+//    return $this->render('new-post', ['model' => $model, 'post' => $post]);
+//}
 }
