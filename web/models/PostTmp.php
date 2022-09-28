@@ -33,6 +33,14 @@ class PostTmp extends Post
     }
 
     /**
+     * @return int ID оригинального поста.
+     */
+    public function getUpdateId(): int
+    {
+        return $this->getAttribute('update_id');
+    }
+
+    /**
      * Устанавливает автора поста в таблице.
      * @param int $updateId
      * @return self

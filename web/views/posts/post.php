@@ -20,13 +20,17 @@ $this->title = $post['title'];
             </div>
             <div class="card-footer">
                 <div>
-                    Написан: <b>дата</b>. Просмотров: <?=$post->getViews()?>. Автор - <?=$post->getAuthor()?>
-                </div>
-                <?php if ($post->getAuthor() == $user): ?>
-                    <div>
+                    Опубликован: <b><?=$post->getDate()?></b>.
+                    Просмотров: <?=$post->getViews()?>.
+                    Автор - <?=$post->getAuthor()?>
+                    <?php if ($post->getAuthor() == $user): ?>
                         <a type="button" href="/edit-post?id=<?=$post->getId()?>" class="btn" style="float: right;">Отредактировать</a>
-                    </div>
-                <?php endif ?>
+                    <?php endif ?>
+                </div>
+                <hr>
+                <?php foreach ($post->getTagsArray() as $tag): ?>
+                <?=$tag?>
+                <?php endforeach ?>
             </div>
         </div>
     </div>

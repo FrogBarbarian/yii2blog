@@ -67,6 +67,22 @@ class Post extends ActiveRecord
     }
 
     /**
+     * @return string|null Дата создания поста.
+     */
+    public function getDate(): string|null
+    {
+        return $this->getAttribute('date');
+    }
+
+    /**
+     * @return string|null Теги поста.
+     */
+    public function getTags(): string|null
+    {
+        return $this->getAttribute('tags');
+    }
+
+    /**
      * Устанавливает имя поста в таблице.
      * @param string $title
      * @return self
@@ -118,11 +134,24 @@ class Post extends ActiveRecord
      * Получает превью поста с помощью сервиса по работе со строкой.
      * @param int $offset Длина превью (по умолчанию 250).
      * @param string $ending Окончание (по умолчанию '...').
+     * @param string $needle Искомый символ для обрезания.
      * @return string
      */
-    public function getPreview(int $offset = 250, string $ending = '...'): string
+    public function getPreview(string $string, int $offset = 250, string $needle = ' ', string $ending = '...'): string
     {
-        return (new StringService($this->getBody()))
-            ->cut($offset, $ending);
+        return (new StringService($string))
+            ->cut($offset, $needle, $ending);
+    }
+
+    /**
+     * Из строги тегов из БД делает массив с тегами.
+     * @param string $separator Разделитель (по умолчанию ';').
+     * @param int $limit Лимит элементов массива (по умолчанию PHP_INT_MAX).
+     * @return array
+     */
+    public function getTagsArray(string $separator = ';', int $limit = PHP_INT_MAX): array
+    {
+        return(new StringService($this->getTags()))
+            ->explode($separator, $limit);
     }
 }

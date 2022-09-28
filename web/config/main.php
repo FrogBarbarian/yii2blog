@@ -1,4 +1,7 @@
 <?php
+
+const ADMIN_PANEL = '/admin/panel';
+
 return [
     'id' => 'yii2test',
     'basePath' => dirname(__DIR__),
@@ -26,7 +29,8 @@ return [
                 '/register' => 'users/register',
                 '/login' => 'users/login',
                 '/profile' => 'users/profile',
-                '/admin' => 'admin/admin-panel',
+                'admin/panel' => 'admin/index',
+                'admin/panel/<action>' => 'admin/<action>',
                 '/<action>' => 'posts/<action>',
                 '<controller>/<action>' => '<controller>/<action>',
             ],

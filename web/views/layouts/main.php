@@ -12,7 +12,7 @@
 </head>
 <body style="background-color: rgba(77,101,27,0.58);">
 <div>
-    <header class="fixed-top">
+    <header class="sticky-top">
         <nav class="navbar navbar-expand-lg" style="background-color: #39828f">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">
@@ -61,12 +61,14 @@
             </div>
         </nav>
     </header>
-    <div style="margin-top: 60px;">
-        <div>
-            <?=$content ?? ''?>
-        </div>
-
+    <div class="my-1">
+        <?=$content ?? '' ?>
     </div>
+    <footer class="footer mt-auto py-3 bg-light">
+        <div class="container">
+            <span class="text-muted">Place sticky footer content here.</span>
+        </div>
+    </footer>
 </div>
 </body>
 </html>

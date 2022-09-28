@@ -10,12 +10,16 @@ $this->title = 'Главная страница';
         <div class="mx-3 py-5">
             <?php foreach ($posts as $post): ?>
                 <div class="card mb-3 rounded-4 mx-auto" style="border-color: #656560;border-width: medium;">
-                    <div class="card-header">Написан: <b>дата</b>. Просмотров: <?=$post->getViews()?>. Автор - <?=$post->getAuthor()?></div>
+                    <div class="card-header">Опубликован: <b><?=$post->getDate()?></b>. Просмотров: <?=$post->getViews()?>. Автор - <?=$post->getAuthor()?></div>
                     <div class="card-body">
                         <h5 class="card-title"><?=$post->getTitle()?></h5>
-                        <p class="card-text"><?=$post->getPreview()?></p>
+                        <p class="card-text"><?=$post->getPreview($post->getBody())?></p>
                     </div>
-                    <div class="card-footer"><a type="button" class="btn" href="/post?id=<?=$post->getId()?>">Посмотреть</a></div>
+                    <div class="card-footer">
+                        <a type="button" class="btn" href="/post?id=<?=$post->getId()?>">
+                            Посмотреть
+                        </a>
+                    </div>
                 </div>
             <?php endforeach ?>
         </div>

@@ -1,7 +1,6 @@
 <?php
-/** @var array $post */
-/** @var array $user */
-/** @var \app\models\Admin $model */
+/** @var \app\models\PostTmp $post */
+/** @var \app\models\PostInteractionsForm $model */
 
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
@@ -13,23 +12,21 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Отредактированн�
     <div class="mx-3 py-5">
         <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
             <div class="card-body">
-                <h5 class="card-title"><?=$post['title']?></h5>
-                <p class="card-text"><?php var_dump($post);//echo $post['body']?></p>
+                <h5 class="card-title"><?=$post->getTitle()?></h5>
+                <p class="card-text"><?=$post->getBody()?></p>
             </div>
             <div class="card-footer">
                 <div>
-                    Отправлен: <b>дата</b>. Автор - <?=$user['login']?>
+                    Отправлен: <b>дата</b>. Автор - <?=$post->getAuthor()?>
                     <!--TODO: Функционал одобрения статьи-->
                     <?php $activeForm = ActiveForm::begin([
-                        'id' => 'user-confirm-form',
-                        'action' => Url::to('/admin/confirm'),
+                        'id' => 'post-confirm-form',
+                        'action' => Url::to(ADMIN_PANEL. '/confirm'),
                     ]) ?>
                     <?= $activeForm->field($model, 'id')
-                        ->hiddenInput(['value' => $post['id']])
+                        ->hiddenInput(['value' => $post->getId()])
                         ->label(false)->error(false) ?>
-                    <?= $activeForm->field($model, 'isNew')
-                        ->hiddenInput(['value' => $post['isNew']])
-                        ->label(false)->error(false) ?>
+                    <!--TODO: Функционал одобрения статьи-->
                     <button type="submit" class="btn btn-outline-dark">Одобрить</button>
                     <?php ActiveForm::end() ?>
                     <!--TODO: Функционал неодобрения статьи (открывается модальное окно с комментарием создателю)-->
