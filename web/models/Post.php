@@ -131,10 +131,23 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Устанавливает тэги поста в таблице.
+     * @param string $tags
+     * @return self
+     */
+    public function setTags(string $tags): self
+    {
+        $this->setAttribute('tags', $tags);
+
+        return $this;
+    }
+
+    /**
      * Получает превью поста с помощью сервиса по работе со строкой.
+     * @param string $string Строка.
      * @param int $offset Длина превью (по умолчанию 250).
-     * @param string $ending Окончание (по умолчанию '...').
      * @param string $needle Искомый символ для обрезания.
+     * @param string $ending Окончание (по умолчанию '...').
      * @return string
      */
     public function getPreview(string $string, int $offset = 250, string $needle = ' ', string $ending = '...'): string
@@ -144,14 +157,15 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Из строги тегов из БД делает массив с тегами.
+     * Из строги тегов делает массив с тегами.
+     * @param string $tags Строка с тегами.
      * @param string $separator Разделитель (по умолчанию ';').
      * @param int $limit Лимит элементов массива (по умолчанию PHP_INT_MAX).
      * @return array
      */
-    public function getTagsArray(string $separator = ';', int $limit = PHP_INT_MAX): array
+    public function getTagsArray(string $tags, string $separator = ';', int $limit = PHP_INT_MAX): array
     {
-        return(new StringService($this->getTags()))
+        return(new StringService($tags))
             ->explode($separator, $limit);
     }
 }

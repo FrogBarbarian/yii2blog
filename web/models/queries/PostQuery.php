@@ -40,5 +40,4 @@ class PostQuery extends ActiveQuery
     {
         return $this->orderBy(new Expression('random()'));
     }
-
 }

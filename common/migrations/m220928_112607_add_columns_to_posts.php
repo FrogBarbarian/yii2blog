@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Class m220928_112607_add_columns_to_posts
+ * Добавляем в таблицу с постами и таблицу хранилище новые столбцы.
  */
 class m220928_112607_add_columns_to_posts extends Migration
 {

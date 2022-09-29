@@ -42,4 +42,13 @@ class StringService
     {
         return explode($separator, $this->string, $limit);
     }
+
+    /**
+     * Возвращает длину строки, предварительно убрав пробелы с двух сторон.
+     * @return int Количество символов.
+     */
+    public function getLength(): int
+    {
+        return mb_strlen(trim($this->string));
+    }
 }

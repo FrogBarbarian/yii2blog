@@ -10,65 +10,75 @@
     <script src="../../assets/js/bootstrap.bundle.js"></script>
     <script src="../../assets/js/jquery.js"></script>
 </head>
-<body style="background-color: rgba(77,101,27,0.58);">
-<div>
-    <header class="sticky-top">
-        <nav class="navbar navbar-expand-lg" style="background-color: #39828f">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">
-                    <img src="../../assets/images/favicon.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
-                    Блог
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link" href="/random" style="color: #a4001b">Случайная статья</a>
-                        </li>
-                        <?php if (isset(Yii::$app->session['login'])): ?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
-                            </li>
-                        <?php endif ?>
-                    </ul>
-                    <!--TODO: Реализовать систему поиска по статьям-->
+<body style="background-image: url('../../assets/images/favicon.svg');background-color: #cccccc;">
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-lg" style="background-color: #39828f">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <img src="../../assets/images/favicon.svg" alt="Logo" width="30" height="24"
+                     class="d-inline-block align-text-top">
+                Блог
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/random" style="color: #a4001b">Случайная статья</a>
+                    </li>
                     <?php if (isset(Yii::$app->session['login'])): ?>
-                        <div class="nav-item me-2">
-                            <a class="nav-link" href="/profile">
-                                Профиль
-                            </a>
-                        </div>
-                        <div class="nav-item">
-                            <a class="nav-link" href="/users/logout">
-                                Выйти
-                            </a>
-                        </div>
-                    <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
+                    </li>
+                    <?php if (isset(Yii::$app->session['admin'])): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="<?= ADMIN_PANEL ?>" style="color: #a4001b">Админ-панель</a>
+                        </li>
+                    <?php endif ?>
+                </ul>
+                <!--TODO: Реализовать систему поиска по статьям-->
+                <div class="nav-item me-2">
+                    <a class="nav-link" href="/profile">
+                        Профиль
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" href="/users/logout">
+                        Выйти
+                    </a>
+                </div>
+                <?php else: ?>
                     <div class="nav-item me-2">
                         <a class="nav-link" href="/login">
                             Вход
-                            </a>
+                        </a>
                     </div>
                     <div class="nav-item">
                         <a class="nav-link" href="/register">
                             Зарегистрироваться
                         </a>
                     </div>
-                    <?php endif ?>
-                </div>
+                <?php endif ?>
             </div>
-        </nav>
-    </header>
-    <div class="my-1">
-        <?=$content ?? '' ?>
-    </div>
-    <footer class="footer mt-auto py-3 bg-light">
-        <div class="container">
-            <span class="text-muted">Place sticky footer content here.</span>
         </div>
-    </footer>
+    </nav>
+</header>
+<div style="
+        height: 90vh;
+        max-width: 900px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%)
+    ">
+    <?= $content ?? '' ?>
 </div>
+<!--<footer class="fixed-bottom mt-auto py-3 bg-light">-->
+<!--    <span class="text-muted">Place sticky footer content here.</span>-->
+<!--</footer>-->
 </body>
 </html>

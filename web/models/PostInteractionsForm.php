@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models;
 
+use src\services\StringService;
 use yii\db\ActiveRecord;
 
 class PostInteractionsForm extends ActiveRecord
@@ -37,17 +38,30 @@ class PostInteractionsForm extends ActiveRecord
                 'title',
                 'string',
                 'length' => [10, 100],
-                'tooShort' => 'Название не может быть короче 10 символов',
-                'tooLong' => 'Название не может быть длиннее 100 символов',
+                'tooShort' => 'Название не может быть короче 10 символов (сейчас - ' . $this->fieldLength('title') . ')',
+                'tooLong' => 'Название не может быть длиннее 100 символов (сейчас - ' . $this->fieldLength('title') . ')',
             ],
             ['body', 'required', 'message' => 'Заполните содержимое поста'],
             [
                 'body',
                 'string',
                 'length' => [300, 10000],
-                'tooShort' => 'Название не может быть короче 300 символов',
-                'tooLong' => 'Название не может быть длиннее 10000 символов',
+                'tooShort' => 'Содержание не может быть короче 300 символов (сейчас - ' . $this->fieldLength('body') . ')',
+                'tooLong' => 'Содержание не может быть длиннее 10000 символов (сейчас - ' . $this->fieldLength('body') . ')',
             ],
         ];
+    }
+
+    /**
+     * Получает длину строки выбранного поля.
+     * @param string $field Поле.
+     * @return int
+     */
+    private function fieldLength(string $field): int
+    {
+        $attribute = $_POST['PostInteractionsForm'][$field] ?? '';
+
+        return (new StringService($attribute))
+        ->getLength();
     }
 }

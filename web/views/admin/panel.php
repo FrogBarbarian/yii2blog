@@ -4,8 +4,8 @@ $this->title = 'Панель администратора';
 $page = Yii::$app->requestedRoute;
 ?>
 
-<div class="container-fluid row" style="height: 95vh">
-    <div class="col nav flex-column flex-shrink-0 p-3 text-white bg-dark" style="max-width: 280px;height: 100%">
+<div class="container-fluid row mt-5 rounded-2" style="width: 100%;height: 95vh">
+    <div class="col nav flex-column flex-shrink-0 p-3 text-white bg-dark" style="width: 25%;height: 100%">
         <a class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
             <svg class="bi me-2" width="40" height="32">
                 <use xlink:href="#bootstrap"></use>
@@ -41,7 +41,7 @@ $page = Yii::$app->requestedRoute;
         </ul>
     </div>
 
-    <div class="col card">
+    <div class="col card" style="width: 75%;height: 100%">
         <div class="card-body">
             <?php switch ($page) {
                 case 'admin/index':

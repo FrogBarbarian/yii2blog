@@ -18,7 +18,6 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Отредактированн�
             <div class="card-footer">
                 <div>
                     Отправлен: <b>дата</b>. Автор - <?=$post->getAuthor()?>
-                    <!--TODO: Функционал одобрения статьи-->
                     <?php $activeForm = ActiveForm::begin([
                         'id' => 'post-confirm-form',
                         'action' => Url::to(ADMIN_PANEL. '/confirm'),
@@ -35,6 +34,11 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Отредактированн�
                         <!--TODO: Реализовать ссылку на оригинал-->
                         <a href="/" class="btn btn-outline-dark">Открыть оригинал</a>
                     <?php endif ?>
+                    <hr>
+                    <h5>Тэги:</h5>
+                    <?php foreach ($post->getTagsArray($post->getTags()) as $tag): ?>
+                        <b class="mx-1"><?=$tag?></b>
+                    <?php endforeach ?>
                 </div>
             </div>
         </div>

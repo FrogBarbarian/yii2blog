@@ -3,7 +3,7 @@
 /** @var \app\models\Post $post */
 /** @var string $user */
 
-$this->title = $post['title'];
+$this->title = $post->getTitle();
 ?>
 
 <div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vh;margin-right: 1vh;">
@@ -28,7 +28,7 @@ $this->title = $post['title'];
                     <?php endif ?>
                 </div>
                 <hr>
-                <?php foreach ($post->getTagsArray() as $tag): ?>
+                <?php foreach ($post->getTagsArray($post->getTags()) as $tag): ?>
                 <?=$tag?>
                 <?php endforeach ?>
             </div>

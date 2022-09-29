@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Handles the creation of table `posts`.
+ * Таблица с постами пользователей.
  */
 class m220922_113857_create_posts_table extends Migration
 {

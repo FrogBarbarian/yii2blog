@@ -23,7 +23,6 @@ $options = [
                 'class' => 'form-control placeholder-wave',
                 'id' => 'emailInput',
                 'placeholder' => 'email',
-                'autocomplete' => 'email',
                 'style' => 'background-color: #899aa2;',
             ])->label('Почта', ['class' => false]) ?>
         <?=$activeForm->field($model, 'password', $options)

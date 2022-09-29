@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Class m220924_113917_create_posts_tmp_table
+ * Создаем таблицу для хранения новый постов и их редакций со стороны обычных пользователей.
  */
 class m220924_113917_create_posts_tmp_table extends Migration
 {

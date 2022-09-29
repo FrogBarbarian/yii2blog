@@ -1,6 +1,7 @@
 <?php
 
 const ADMIN_PANEL = '/admin/panel';
+const POSTS_ON_PAGE = 5;
 
 return [
     'id' => 'yii2test',

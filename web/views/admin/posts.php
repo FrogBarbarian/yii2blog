@@ -9,7 +9,7 @@
     <br>
     <?php foreach ($posts as $post): ?>
         <br>
-        <a href="user-post?id=<?=$post->getId()?>" data-toggle="tooltip" data-placement="top"
+        <a href="<?=ADMIN_PANEL?>/user-post?id=<?=$post->getId()?>" data-toggle="tooltip" data-placement="top"
            title="<?=$post->getTitle()?>">
             <?=$post->getPreview($post->getTitle(), 10, '') ?> | Автор:
             <?=$post->getAuthor() ?> |
@@ -18,4 +18,6 @@
 
         <hr>
     <?php endforeach ?>
+<?php else: ?>
+    В данный момент нет постов для одобрения.
 <?php endif ?>

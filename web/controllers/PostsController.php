@@ -14,14 +14,24 @@ class PostsController extends AppController
 {
     /**
      * @return string Вид "главная страница".
+     * @throws NotFoundHttpException
      */
-    public function actionIndex(): string
+    public function actionIndex(string $page = '1'): string
     {
+        if ($page < 1) {
+            throw new NotFoundHttpException();
+        }
         $posts = Post::find()
             ->orderDescById()
+            ->offset(($page - 1) * POSTS_ON_PAGE)
+            ->limit(POSTS_ON_PAGE)
             ->all();
+        if (!$posts) {
+            throw new NotFoundHttpException();
+        }
+        $pages = intval(ceil(Post::find()->count() / POSTS_ON_PAGE));
 
-        return $this->render('index', ['posts' => $posts]);
+        return $this->render('index', ['posts' => $posts, 'pages' => $pages, 'page' => $page]);
     }
 
     /**
@@ -81,6 +91,7 @@ class PostsController extends AppController
                     ->setTitle($model->title)
                     ->setBody($model->body)
                     ->setAuthor($session['login'])
+                    ->setTags('test;')
                     ->save();
 
                 return $this->redirect('/post?id=' . $post->getId());
@@ -90,6 +101,7 @@ class PostsController extends AppController
                 ->setTitle($model->title)
                 ->setBody($model->body)
                 ->setAuthor($session['login'])
+                ->setTags('test;')
                 ->save();
             //TODO: Админу приходит на почту сообщение о новом посте пользователя
             //TODO: Flash message Пост создан и отправлен на одобрение

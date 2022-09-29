@@ -3,7 +3,8 @@
 use yii\db\Migration;
 
 /**
- * Class m220924_083107_add_fkey_author_to_posts
+ * В таблицу с постами добавляется строка автор.
+ * Она является внешним ключом ты поля login таблицы users.
  */
 class m220924_083107_add_fkey_author_to_posts extends Migration
 {

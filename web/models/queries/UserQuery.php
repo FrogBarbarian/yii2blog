@@ -9,6 +9,14 @@ use yii\db\ActiveQuery;
 class UserQuery extends ActiveQuery
 {
     /**
+     * Поиск по ID пользователя.
+     */
+    public function byId(int $id): self
+    {
+        return $this->where(['id' => $id]);
+    }
+
+    /**
      * Поиск по псевдониму пользователя.
      */
     public function byLogin(string $login): self
@@ -22,5 +30,13 @@ class UserQuery extends ActiveQuery
     public function byEmail(string $email): self
     {
         return $this->where(['email' => $email]);
+    }
+
+    /**
+     * Сортирует по ID в прямом порядке.
+     */
+    public function orderAscById(): self
+    {
+        return $this->orderBy(['id' => SORT_ASC]);
     }
 }

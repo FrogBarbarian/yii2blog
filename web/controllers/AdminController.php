@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Post;
 use app\models\PostInteractionsForm;
 use app\models\PostTmp;
+use app\models\User;
 use Yii;
 use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
@@ -58,17 +59,19 @@ class AdminController extends AppController
                         ->setTitle($postTmp->getTitle())
                         ->setBody($postTmp->getBody())
                         ->setAuthor($postTmp->getAuthor())
+                        ->setTags($postTmp->getTags())
                         ->save();
                     $postTmp->delete();
                     //TODO: Публикуем статью, отправляем email создателю о публикации
 
-                    return $this->goHome();
+                    return $this->redirect('/post?id=' . $post->getId());
                 }
                 $post = Post::find()->byId($postTmp->getUpdateId())->one();
                 if ($post !== null) {
                     $post
                         ->setTitle($postTmp->getTitle())
                         ->setBody($postTmp->getBody())
+                        ->setTags($postTmp->getTags())
                         ->save();
                     $postTmp->delete();
                     //TODO: Изменяем статью, отправляем email создателю об изменении
@@ -89,8 +92,15 @@ class AdminController extends AppController
         if (!Yii::$app->session->has('admin')) {
             throw new NotFoundHttpException();
         }
+        if (isset($_POST['changeStatus'])) {
+            $user = User::find()->byId($_POST['id'])->one();
+            $user
+                ->setIsAdmin(!$_POST['isAdmin'])
+                ->save();
+        }
+        $users = User::find()->orderAscById()->all();
 
-        return $this->render('panel');
+        return $this->render('panel', ['users' => $users]);
     }
 
     /**

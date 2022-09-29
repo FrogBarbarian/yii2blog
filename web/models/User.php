@@ -26,6 +26,14 @@ class User extends ActiveRecord
     }
 
     /**
+     * @return int ID пользователя.
+     */
+    public function getId(): int
+    {
+        return $this->getAttribute('id');
+    }
+
+    /**
      * @return string Логин пользователя.
      */
     public function getLogin(): string
@@ -81,6 +89,18 @@ class User extends ActiveRecord
     public function setPassword(string $password): self
     {
         $this->setAttribute('password', password_hash($password, PASSWORD_DEFAULT));
+
+        return $this;
+    }
+
+    /**
+     * Принимает значение, является ли пользователь админом.
+     * @param bool $isAdmin
+     * @return self
+     */
+    public function setIsAdmin(bool $isAdmin): self
+    {
+        $this->setAttribute('isAdmin', $isAdmin);
 
         return $this;
     }
