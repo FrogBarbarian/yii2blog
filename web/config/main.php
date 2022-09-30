@@ -2,6 +2,7 @@
 
 const ADMIN_PANEL = '/admin/panel';
 const POSTS_ON_PAGE = 5;
+//TODO: Организовать хранение констант
 
 return [
     'id' => 'yii2test',
@@ -31,6 +32,7 @@ return [
                 '/login' => 'users/login',
                 '/profile' => 'users/profile',
                 'admin/panel' => 'admin/index',
+                '/user' => 'users/user',
                 'admin/panel/<action>' => 'admin/<action>',
                 '/<action>' => 'posts/<action>',
                 '<controller>/<action>' => '<controller>/<action>',

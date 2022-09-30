@@ -58,6 +58,14 @@ class User extends ActiveRecord
     }
 
     /**
+     * @return bool Скрыт ли профиль пользователя..
+     */
+    public function getIsHidden(): bool
+    {
+        return $this->getAttribute('is_hidden');
+    }
+
+    /**
      * Записывает псевдоним пользователя.
      * @param string $login
      * @return self
@@ -101,6 +109,18 @@ class User extends ActiveRecord
     public function setIsAdmin(bool $isAdmin): self
     {
         $this->setAttribute('isAdmin', $isAdmin);
+
+        return $this;
+    }
+
+    /**
+     * Скрывает/показывает профиль пользователя.
+     * @param bool $isHidden
+     * @return self
+     */
+    public function setIsHidden(bool $isHidden): self
+    {
+        $this->setAttribute('is_hidden', $isHidden);
 
         return $this;
     }

@@ -3,13 +3,22 @@
 /** @var \app\models\Post[] $posts */
 /** @var int $pages */
 /** @var string $page */
+/** @var string $search */
 
 
 $curPage = intval($page);
 $this->title = 'Главная страница';
 ?>
-
-<div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vw;margin-right: 1vw;">
+<div class="rounded-5 border border-3 border-dark" style="background-color: #84a2a6;margin-left: 1vw;margin-right: 1vw;">
+    <?php if ($search !== null): ?>
+        <div class="alert alert-warning rounded-5 small mt-1 mx-1" role="alert">
+            <?php if ($posts): ?>
+            Результат поиска по фразе '<?=$search?>'.
+            <?php else: ?>
+            К сожалению, по запросу '<?=$search?>' ничего не найдено.
+            <?php endif ?>
+        </div>
+    <?php endif ?>
     <?php if ($posts): ?>
         <div class="mx-3 py-5">
             <?php require 'widgets/index-pagination.php'?>

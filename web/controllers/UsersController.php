@@ -93,12 +93,44 @@ class UsersController extends AppController
      */
     public function actionProfile(): Response|string
     {
-        if (!Yii::$app->session->has('login')) {
+        $session = Yii::$app->session;
+        if (!$session->has('login')) {
             return $this->redirect('/login');
         }
         $user = User::find()
-            ->byLogin(Yii::$app->session['login'])
+            ->byLogin($session['login'])
             ->one();
+        $posts = Post::find()
+            ->byAuthor($user->getLogin())
+            ->all();
+        $postsTmp = PostTmp::find()
+            ->byAuthor($user->getLogin())
+            ->all();
+
+        return $this->render('profile', [
+            'user' => $user,
+            'posts' => $posts,
+            'postsTmp' => $postsTmp,
+        ]);
+    }
+
+    //TODO: Add the comment
+    public function actionUser(string $id = null)
+    {
+        $session = Yii::$app->session;
+
+        if ($id === null || !$session->has('login')) {
+            throw new NotFoundHttpException();
+        }
+        $user = User::find()
+            ->byId($id)
+            ->one();
+        if ($user === null || $user->getId() === 4) {
+            throw new NotFoundHttpException();
+        }
+        if ($user->getLogin() === $session['login']) {
+            return $this->redirect('/profile');
+        }
         $posts = Post::find()
             ->byAuthor($user['login'])
             ->all();
@@ -111,5 +143,29 @@ class UsersController extends AppController
             'posts' => $posts,
             'postsTmp' => $postsTmp,
         ]);
+    }
+
+    //TODO: add the comment
+    public function actionChangeVisibility()
+    {
+        //TODO: Переделать под аякс
+        if (!isset($_POST['_csrf'])) {
+            throw new NotFoundHttpException();
+        }
+        $user = User::find()
+            ->byId($_POST['id'])
+            ->one();
+        if (isset($_POST['hide'])) {
+            $user
+                ->setIsHidden(true)
+                ->save();
+        }
+        if (isset($_POST['show'])) {
+            $user
+                ->setIsHidden(false)
+                ->save();
+        }
+
+        return $this->redirect('/profile');
     }
 }

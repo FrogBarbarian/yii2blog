@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models\queries;
 
+use src\services\StringService;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 
@@ -39,5 +40,22 @@ class PostQuery extends ActiveQuery
     public function random(): self
     {
         return $this->orderBy(new Expression('random()'));
+    }
+
+    /**
+     * Осуществляет поиск по слову запросу.
+     * Для удобства склонения и форм слова, чем длиннее слово, тем больше отрезается с его конца.
+     */
+    public function postHasWords(string $words): self
+    {
+        $strLength = (new StringService($words))
+            ->getLength();
+        $position = intval(floor($strLength * .8));
+        $words = mb_substr($words, 0, $position);
+
+        return $this
+            ->where(['ILIKE', 'title', $words])
+            ->orWhere(['ILIKE', 'body', $words])
+            ->orWhere(['ILIKE', 'tags', $words]);
     }
 }

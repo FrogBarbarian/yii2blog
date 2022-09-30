@@ -33,10 +33,11 @@ class RegisterForm extends ActiveRecord
     public function rules(): array
     {
         return [
+            //TODO: Актуализировать справку о правилах заполнения полей при регистрации
             [['login', 'email', 'password', 'confirmPassword'], 'trim'],
             ['login', 'required', 'message' => 'Придумайте псевдоним'],
             ['login', 'string', 'length' => [3, 20], 'tooLong' => 'Максимум 20 символов', 'tooShort' => 'Минимум 3 символа'],
-            ['login', 'match', 'pattern' => '/^[a-z]\w*$/i', 'message' => 'Используются недопустимые символы'],
+            ['login', 'match', 'pattern' => '/[a-zА-яёЁ][\wА-яёЁ]+/i', 'message' => 'Используются недопустимые символы'],
             ['login', 'uniqueCaseInsensitiveValidation'],
             ['email', 'required', 'message' => 'Введите Ваш email'],
             ['email' , 'email', 'message' => 'Введенный email не корректный'],

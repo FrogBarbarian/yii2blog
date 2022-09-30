@@ -30,15 +30,18 @@
                         <a class="nav-link" href="/random" style="color: #a4001b">Случайная статья</a>
                     </li>
                     <?php if (isset(Yii::$app->session['login'])): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
-                    </li>
-                    <?php if (isset(Yii::$app->session['admin'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="<?= ADMIN_PANEL ?>" style="color: #a4001b">Админ-панель</a>
+                            <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
                         </li>
-                    <?php endif ?>
-                </ul>
+                            <?php if (isset(Yii::$app->session['admin'])): ?>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="<?= ADMIN_PANEL ?>" style="color: #a4001b">Админ-панель</a>
+                                </li>
+                            <?php
+                            endif;
+                            echo '</ul>';
+                            require 'widgets/search.php';
+                            ?>
                 <!--TODO: Реализовать систему поиска по статьям-->
                 <div class="nav-item me-2">
                     <a class="nav-link" href="/profile">
@@ -51,6 +54,10 @@
                     </a>
                 </div>
                 <?php else: ?>
+                    <?php
+                    echo '</ul>';
+                    require 'widgets/search.php';
+                    ?>
                     <div class="nav-item me-2">
                         <a class="nav-link" href="/login">
                             Вход

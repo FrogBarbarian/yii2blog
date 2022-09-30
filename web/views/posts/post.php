@@ -1,6 +1,7 @@
 <?php
 
 /** @var \app\models\Post $post */
+/** @var \app\models\User $owner */
 /** @var string $user */
 
 $this->title = $post->getTitle();
@@ -22,7 +23,9 @@ $this->title = $post->getTitle();
                 <div>
                     Опубликован: <b><?=$post->getDate()?></b>.
                     Просмотров: <?=$post->getViews()?>.
-                    Автор - <?=$post->getAuthor()?>
+                    <a href="user?id=<?=$owner->getId()?>">
+                        Автор - <?=$post->getAuthor()?>
+                    </a>
                     <?php if ($post->getAuthor() == $user): ?>
                         <a type="button" href="/edit-post?id=<?=$post->getId()?>" class="btn" style="float: right;">Отредактировать</a>
                     <?php endif ?>

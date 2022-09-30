@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\PostInteractionsForm;
 use app\models\Post;
 use app\models\PostTmp;
+use app\models\User;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\db\Exception;
@@ -13,25 +14,40 @@ use Yii;
 class PostsController extends AppController
 {
     /**
+     * Главная страница постами, здесь же выводятся результаты поиска постов.
      * @return string Вид "главная страница".
      * @throws NotFoundHttpException
      */
-    public function actionIndex(string $page = '1'): string
+    public function actionIndex(string $page = '1', string $search = null): string
     {
-        if ($page < 1) {
+        if (!is_numeric($page) || $page < 1) {
             throw new NotFoundHttpException();
         }
-        $posts = Post::find()
-            ->orderDescById()
-            ->offset(($page - 1) * POSTS_ON_PAGE)
-            ->limit(POSTS_ON_PAGE)
-            ->all();
-        if (!$posts) {
+        if ($search !== null) {
+            $posts = Post::find()
+                ->postHasWords($search)
+                ->orderDescById()
+                ->offset(($page - 1) * POSTS_ON_PAGE)
+                ->limit(POSTS_ON_PAGE)
+                ->all();
+            $postAmount = count(Post::find()
+                ->postHasWords($search)
+                ->asArray()
+                ->all());
+            $pages = intval(ceil($postAmount / POSTS_ON_PAGE));
+        } else {
+            $posts = Post::find()
+                ->orderDescById()
+                ->offset(($page - 1) * POSTS_ON_PAGE)
+                ->limit(POSTS_ON_PAGE)
+                ->all();
+            $pages = intval(ceil(Post::find()->count() / POSTS_ON_PAGE));
+        }
+        if (!$posts && $search === null) {
             throw new NotFoundHttpException();
         }
-        $pages = intval(ceil(Post::find()->count() / POSTS_ON_PAGE));
 
-        return $this->render('index', ['posts' => $posts, 'pages' => $pages, 'page' => $page]);
+        return $this->render('index', ['posts' => $posts, 'pages' => $pages, 'page' => $page, 'search' => $search]);
     }
 
     /**
@@ -51,8 +67,11 @@ class PostsController extends AppController
                     ->setViews($post->getViews() + 1)
                     ->save();
                 $user = Yii::$app->session['login'] ?? '_guest';
+                $owner = User::find()
+                    ->byLogin($post->getAuthor())
+                    ->one();
 
-                return $this->render('post', ['post' => $post, 'user' => $user]);
+                return $this->render('post', ['post' => $post, 'user' => $user, 'owner' => $owner]);
             }
         }
         throw new NotFoundHttpException();
@@ -123,7 +142,7 @@ class PostsController extends AppController
         if (!Yii::$app->session->has('login')) { //Пользователь не залогинен
             return $this->redirect('/login');
         }
-        if ($id < 1) { //Нет GET параметра с ID поста или его значение не валидно
+        if ($id < 1) {
             throw new NotFoundHttpException();
         }
         $user = Yii::$app->session['login'];

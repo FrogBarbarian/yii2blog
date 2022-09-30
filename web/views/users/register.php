@@ -12,7 +12,7 @@ $options = [
 
 <div class="align-items-center vstack justify-content-center" style="height: 90vh">
 
-    <div class="col-md-6 rounded-4 p-4" style="background-color: rgba(185,146,69,0.84)">
+    <div class="col-md-6 rounded-4 p-4" style="background-color: rgba(185,146,69,0.84);min-width: 450px">
         <h3 class="mb-5">Регистрация</h3>
         <?php $activeForm = ActiveForm::begin([
                 'id' => 'register-form',
