@@ -12,7 +12,7 @@
 </head>
 <body style="background-image: url('../../assets/images/favicon.svg');background-color: #cccccc;">
 <header class="sticky-top">
-    <nav class="navbar navbar-expand-lg" style="background-color: #39828f">
+    <nav class="navbar navbar-expand-lg" style="background-color: rgba(101,101,96,0.95)">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
                 <img src="../../assets/images/favicon.svg" alt="Logo" width="30" height="24"
@@ -27,15 +27,15 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/random" style="color: #a4001b">Случайная статья</a>
+                        <a class="nav-link" href="/random" style="color: #d0e0dc">Случайная статья</a>
                     </li>
                     <?php if (isset(Yii::$app->session['login'])): ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="/new-post" style="color: #a4001b">Создать пост</a>
+                            <a class="nav-link" href="/new-post" style="color: #d0e0dc">Создать пост</a>
                         </li>
                             <?php if (isset(Yii::$app->session['admin'])): ?>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="<?= ADMIN_PANEL ?>" style="color: #a4001b">Админ-панель</a>
+                                    <a class="nav-link" href="<?= ADMIN_PANEL ?>" style="color: #d0e0dc">Админ-панель</a>
                                 </li>
                             <?php
                             endif;
@@ -74,13 +74,10 @@
     </nav>
 </header>
 <div style="
-        height: 90vh;
-        max-width: 900px;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%, -50%)
+        min-height: 90vh;
+        max-width: 960px;
+        margin: auto;
+        padding-top: 1%;
     ">
     <?= $content ?? '' ?>
 </div>

@@ -146,11 +146,11 @@ class Post extends ActiveRecord
      * Получает превью поста с помощью сервиса по работе со строкой.
      * @param string $string Строка.
      * @param int $offset Длина превью (по умолчанию 250).
-     * @param string $needle Искомый символ для обрезания.
+     * @param string $needle Искомый символ для обрезания (по умолчанию '.').
      * @param string $ending Окончание (по умолчанию '...').
      * @return string
      */
-    public function getPreview(string $string, int $offset = 250, string $needle = ' ', string $ending = '...'): string
+    public function getPreview(string $string, int $offset = 250, string $needle = '.', string $ending = '...'): string
     {
         return (new StringService($string))
             ->cut($offset, $needle, $ending);
@@ -167,5 +167,15 @@ class Post extends ActiveRecord
     {
         return(new StringService($tags))
             ->explode($separator, $limit);
+    }
+
+    // TODO: Add the comment
+    public function getSumOfViews(Post $posts): int
+    {
+        $sum = 0;
+        foreach ($posts as $post) {
+            $sum += $post->getViews();
+        }
+        return $sum;
     }
 }

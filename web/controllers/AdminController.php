@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\Post;
 use app\models\PostInteractionsForm;
 use app\models\PostTmp;
+use app\models\Statistics;
 use app\models\User;
 use Yii;
 use yii\db\StaleObjectException;
@@ -62,6 +63,12 @@ class AdminController extends AppController
                         ->setTags($postTmp->getTags())
                         ->save();
                     $postTmp->delete();
+                    $statistics = Statistics::find()
+                        ->byLogin($post->getAuthor())
+                        ->one();
+                    $statistics
+                        ->increasePosts()
+                        ->save();
                     //TODO: Публикуем статью, отправляем email создателю о публикации
 
                     return $this->redirect('/post?id=' . $post->getId());

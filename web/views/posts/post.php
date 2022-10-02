@@ -7,7 +7,7 @@
 $this->title = $post->getTitle();
 ?>
 
-<div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vh;margin-right: 1vh;">
+<div class="rounded-5" style="background-color: #84a2a6">
     <div class="mx-3 py-5">
         <?php if (Yii::$app->session->hasFlash('postAlreadyUpdated')): ?>
         <div class="alert alert-warning rounded-4" role="alert">
@@ -23,7 +23,7 @@ $this->title = $post->getTitle();
                 <div>
                     Опубликован: <b><?=$post->getDate()?></b>.
                     Просмотров: <?=$post->getViews()?>.
-                    <a href="user?id=<?=$owner->getId()?>">
+                    <a href="/user?id=<?=$owner->getId()?>">
                         Автор - <?=$post->getAuthor()?>
                     </a>
                     <?php if ($post->getAuthor() == $user): ?>

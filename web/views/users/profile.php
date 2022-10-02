@@ -1,101 +1,40 @@
 <?php
 /** @var \app\models\User $user */
-/** @var \app\models\Post[] $posts */
+/** @var bool $isOwn */
+/** @var string $tab */
 
-/** @var \app\models\PostTmp[] $postsTmp */
-
-use yii\helpers\Url;
-use yii\widgets\ActiveForm;
-
-$isOwn = (Yii::$app->requestedRoute === 'users/profile');
 $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user->getLogin();
 ?>
 
-<div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vh;margin-right: 1vh;">
-    <div class="mx-3 py-5">
-        <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
-            <div class="card-body">
-                <!--TODO: Добавить функционал изменения личных данных-->
-                <h5 class="card-title"><?= $user->getLogin() ?></h5>
-                <?php if ($isOwn): ?>
-                    <div class="card-text">
-                        <span>Email: <?= $user->getEmail() ?></span>
-                        <span>
-                            Профиль
-                            <?php $activeForm = ActiveForm::begin([
-                                'id' => 'change-visibility-form',
-                                'action' => Url::to('/users/change-visibility')
-                            ]) ?>
-                            <?php if ($user->getIsHidden()): ?>
-                                скрыт
-                                <button type="submit" name="show" class="small btn-link btn btn-sm">открыть?</button>
-                            <?php else: ?>
-                                публичный
-                                <button type="submit" name="hide" class="small btn-link btn btn-sm">скрыть?</button>
-                            <?php endif ?>
-                            <input type="hidden" name="id" value="<?= $user->getId() ?>">
-                            <?php ActiveForm::end() ?>
-                        </span>
+<div class="rounded-5" style="background-color: #84a2a6;">
+    <div class="mx-3 py-5"> <div class="col">
+            <?php if ($isOwn): ?>
+                <div class="col-2">
+                    <div class="list-group list-group-horizontal mb-1" id="list-tab" role="tablist">
+                        <a class="list-group-item list-group-item-action active" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-home">Профиль</a>
+                        <a class="list-group-item list-group-item-action" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">Сообщения</a>
+                        <a class="list-group-item list-group-item-action" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Настройки</a>
                     </div>
-                <?php endif ?>
-                <?php if ($user->getIsHidden() && !$isOwn && !Yii::$app->session->has('admin')): ?>
-                    <p class="text-danger">Профиль скрыт</p>
-                <?php else: ?>
-                    <hr>
-                    <h5><?= $isOwn ? 'Ваша статистика:' : 'Статистика пользователя' ?></h5>
-                    <br>
-                    Количество написанных постов: <?= count($posts) ?>
-                    <br>
-                    Количество просмотров: <!-- TODO: Функционал -->
-                    <br>
-                    Количество комментариев: <!-- TODO: Функционал -->
-                    <br>
-                    Рейтинг: <!-- TODO: Функционал -->
-                    <hr>
-                    <?php if ($posts): ?>
-                        <h6>Опубликованные посты:</h6>
-                        <br>
-                        <!--TODO: Добавить пагинацию и выбор сколько постов отображать на странице-->
-                        <?php foreach ($posts as $post): ?>
-                            <a href="/post?id=<?= $post->getId() ?>">
-                                <?= $post->getPreview($post->getTitle(), 10, '') ?>
-                            </a>
-                            | Просмотров: <?= $post->getViews() ?>
-                            <br>
-                        <?php endforeach ?>
-                    <?php else: ?>
-                        <?= $isOwn ? 'Вы еще не опубликовали ни одного поста.' : $user->getLogin() . ' еще не написал ни одного поста.' ?>
-                        <br>
+                </div>
+            <?php endif ?>
+            <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
+                <div class="card-body">
+                    <div class="card-title">
+                        <h5 style="text-align: left">
+                            <?= $user->getLogin()?>
+                            <?=(!$isOwn && Yii::$app->session->has('admin') && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : ''?>
+                        </h5>
+                    </div>
+            <div class="col">
+                <div class="tab-content" id="nav-tabContent">
+                    <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list"><?php require 'profile-tabs/overview.php'?></div>
+                    <?php if ($isOwn): ?>
+                    <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list"><?php require 'profile-tabs/pm.php'?></div>
+                    <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list"><?php require 'profile-tabs/settings.php'?></div>
                     <?php endif ?>
-                <?php endif ?>
-
-                <?php if ($isOwn): ?>
-                    <a type="button" href="/new-post" class="btn btn-outline-dark my-2">Создать новый пост</a>
-                    <?php if ($postsTmp): ?>
-                        <hr>
-                        Посты, ожидающие проверки администрацией.
-                        <br>
-                        <br>
-                        <div>
-                            <?php foreach ($postsTmp as $postTmp): ?>
-                                <?= $postTmp->getTitle() ?>
-                                | <?= $postTmp->getIsNew() ? 'Новый' : 'Отредактированный' ?>
-                                <br>
-                            <?php endforeach ?>
-                        </div>
-                    <?php endif ?>
-                    <?php if ($user->getIsAdmin()): ?>
-                        <hr>
-                        <!--TODO: Уведомления-->
-                        Админский функционал
-                        <br>
-                        <a href="<?= ADMIN_PANEL ?>" class="btn btn-outline-dark">Админ-панель</a>
-                        <br>
-                        <?php ?>
-                        <!--Уведомления-->
-                        <?php ?>
-                    <?php endif ?>
-                <?php endif ?>
+                </div>
+            </div>
+                </div>
             </div>
         </div>
     </div>

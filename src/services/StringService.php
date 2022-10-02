@@ -28,7 +28,12 @@ class StringService
      */
     public function cut(int $offset = 250, string $needle = ' ', string $ending = '...'): string
     {
-        $position = mb_strpos($this->string, $needle, $offset);
+        try {
+            $position = mb_strpos($this->string, $needle, $offset);
+        } catch (\Error) {
+            $position = mb_strlen($this->string);
+            $ending = '';
+        }
         return mb_strimwidth($this->string, 0, $position) . $ending;
     }
 

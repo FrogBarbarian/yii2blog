@@ -2,6 +2,7 @@
 
 const ADMIN_PANEL = '/admin/panel';
 const POSTS_ON_PAGE = 5;
+const POSTS_ON_PROFILE = 5;
 //TODO: Организовать хранение констант
 
 return [
@@ -30,9 +31,9 @@ return [
                 '/' => 'posts/index',
                 '/register' => 'users/register',
                 '/login' => 'users/login',
-                '/profile' => 'users/profile',
-                'admin/panel' => 'admin/index',
+                '/profile' => 'users/user',
                 '/user' => 'users/user',
+                'admin/panel' => 'admin/index',
                 'admin/panel/<action>' => 'admin/<action>',
                 '/<action>' => 'posts/<action>',
                 '<controller>/<action>' => '<controller>/<action>',

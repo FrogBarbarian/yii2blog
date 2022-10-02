@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\PostInteractionsForm;
 use app\models\Post;
 use app\models\PostTmp;
+use app\models\Statistics;
 use app\models\User;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -66,6 +67,12 @@ class PostsController extends AppController
                 $post
                     ->setViews($post->getViews() + 1)
                     ->save();
+                $statistics = Statistics::find()
+                    ->byLogin($post->getAuthor())
+                    ->one();
+                $statistics
+                    ->increaseViews()
+                    ->save();
                 $user = Yii::$app->session['login'] ?? '_guest';
                 $owner = User::find()
                     ->byLogin($post->getAuthor())
@@ -110,7 +117,13 @@ class PostsController extends AppController
                     ->setTitle($model->title)
                     ->setBody($model->body)
                     ->setAuthor($session['login'])
-                    ->setTags('test;')
+                    ->setTags('test;') //TODO: нужна система присвоения тегов
+                    ->save();
+                $statistics = Statistics::find()
+                    ->byLogin($post->getAuthor())
+                    ->one();
+                $statistics
+                    ->increasePosts()
                     ->save();
 
                 return $this->redirect('/post?id=' . $post->getId());
@@ -120,7 +133,7 @@ class PostsController extends AppController
                 ->setTitle($model->title)
                 ->setBody($model->body)
                 ->setAuthor($session['login'])
-                ->setTags('test;')
+                ->setTags('test;') //TODO: нужна система присвоения тегов
                 ->save();
             //TODO: Админу приходит на почту сообщение о новом посте пользователя
             //TODO: Flash message Пост создан и отправлен на одобрение

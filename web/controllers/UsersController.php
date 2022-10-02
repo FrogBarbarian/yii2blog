@@ -5,6 +5,7 @@ namespace app\controllers;
 use app\models\LoginForm;
 use app\models\Post;
 use app\models\PostTmp;
+use app\models\Statistics;
 use app\models\User;
 use app\models\RegisterForm;
 use yii\web\NotFoundHttpException;
@@ -31,6 +32,10 @@ class UsersController extends AppController
                 ->setLogin($model->login)
                 ->setEmail($model->email)
                 ->setPassword($model->password)
+                ->save();
+            $statistics = new Statistics();
+            $statistics
+                ->setOwner($model->login)
                 ->save();
             $session = Yii::$app->session;
             $session->open();
@@ -86,62 +91,61 @@ class UsersController extends AppController
         return $this->render('login', ['model' => $model]);
     }
 
-    /**
-     * Отображает профиль пользователя и позволяет взаимодействовать со своими данными и постами.
-     * Если пользователь не залогинен, то отправляет пользователя на страницу логина.
-     * @return Response|string Страница пользователя.
-     */
-    public function actionProfile(): Response|string
-    {
-        $session = Yii::$app->session;
-        if (!$session->has('login')) {
-            return $this->redirect('/login');
-        }
-        $user = User::find()
-            ->byLogin($session['login'])
-            ->one();
-        $posts = Post::find()
-            ->byAuthor($user->getLogin())
-            ->all();
-        $postsTmp = PostTmp::find()
-            ->byAuthor($user->getLogin())
-            ->all();
-
-        return $this->render('profile', [
-            'user' => $user,
-            'posts' => $posts,
-            'postsTmp' => $postsTmp,
-        ]);
-    }
-
     //TODO: Add the comment
     public function actionUser(string $id = null)
     {
+        $path = Yii::$app->request->getPathInfo();
         $session = Yii::$app->session;
+        if ($path === 'user') {
+            if ($id === null || !$session->has('login')) {
+                throw new NotFoundHttpException();
+            }
 
-        if ($id === null || !$session->has('login')) {
-            throw new NotFoundHttpException();
+            $user = User::find()
+                ->byId($id)
+                ->one();
+            if ($user === null) {
+                throw new NotFoundHttpException();
+            }
+
+            if ($user->getLogin() === $session['login']) {
+                return $this->redirect('/profile');
+            }
+            $isOwn = false;
+        } else {
+            if (!$session->has('login')) {
+                return $this->redirect('/login');
+            }
+
+            $user = User::find()
+                ->byLogin($session['login'])
+                ->one();
+            $isOwn = true;
         }
-        $user = User::find()
-            ->byId($id)
-            ->one();
-        if ($user === null || $user->getId() === 4) {
-            throw new NotFoundHttpException();
-        }
-        if ($user->getLogin() === $session['login']) {
-            return $this->redirect('/profile');
-        }
+
         $posts = Post::find()
-            ->byAuthor($user['login'])
+            ->byAuthor($user->getLogin())
             ->all();
-        $postsTmp = PostTmp::find()
-            ->byAuthor($user['login'])
+        $statistics = Statistics::find()
+            ->byLogin($user->getLogin())
+            ->one();
+
+        if ($session->has('admin')) {
+            $postsTmp = PostTmp::find()
             ->all();
+
+        } else {
+            $postsTmp = PostTmp::find()
+                ->byAuthor($user->getLogin())
+                ->all();
+        }
 
         return $this->render('profile', [
             'user' => $user,
             'posts' => $posts,
             'postsTmp' => $postsTmp,
+            'statistics' => $statistics,
+            'isOwn' => $isOwn,
         ]);
     }
 
