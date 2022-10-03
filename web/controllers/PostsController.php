@@ -2,6 +2,8 @@
 
 namespace app\controllers;
 
+use app\models\Comment;
+use app\models\CommentForm;
 use app\models\PostInteractionsForm;
 use app\models\Post;
 use app\models\PostTmp;
@@ -21,9 +23,14 @@ class PostsController extends AppController
      */
     public function actionIndex(string $page = '1', string $search = null): string
     {
+        if ($search === '') {
+            $search = null;
+        }
+
         if (!is_numeric($page) || $page < 1) {
             throw new NotFoundHttpException();
         }
+
         if ($search !== null) {
             $posts = Post::find()
                 ->postHasWords($search)
@@ -44,6 +51,7 @@ class PostsController extends AppController
                 ->all();
             $pages = intval(ceil(Post::find()->count() / POSTS_ON_PAGE));
         }
+
         if (!$posts && $search === null) {
             throw new NotFoundHttpException();
         }
@@ -59,26 +67,65 @@ class PostsController extends AppController
      */
     public function actionPost(string $id = '0'): string
     {
+        $session = Yii::$app->session;
+        $visitorIsLogin = $session->has('login');
         if ($id > 0) {
             $post = Post::find()
                 ->byId($id)
                 ->one();
             if ($post !== null) {
-                $post
-                    ->setViews($post->getViews() + 1)
-                    ->save();
-                $statistics = Statistics::find()
-                    ->byLogin($post->getAuthor())
-                    ->one();
-                $statistics
-                    ->increaseViews()
-                    ->save();
-                $user = Yii::$app->session['login'] ?? '_guest';
+
+                if ($visitorIsLogin) {
+                    $user = User::find()
+                        ->byLogin($session['login'])
+                        ->one();
+                } else {
+                    $user = null;
+                }
+
+                $model = new CommentForm();
+
+                if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+                    $comment = new Comment();
+                    $comment
+                        ->setPostId($post->getId())
+                        ->setAuthor($user->getLogin())
+                        ->setAuthorId($user->getId())
+                        ->setComment($model->comment)
+                        ->save();
+                    $userStatistics = Statistics::find()
+                        ->byLogin($user->getLogin())
+                        ->one();
+                    $userStatistics
+                        ->increaseComments()
+                        ->save();
+                } else {
+                    $ownerStatistics = Statistics::find()
+                        ->byLogin($post->getAuthor())
+                        ->one();
+                    $ownerStatistics
+                        ->increaseViews()
+                        ->save();
+                    $post
+                        ->increasePostViews()
+                        ->save();
+                }
+
                 $owner = User::find()
                     ->byLogin($post->getAuthor())
                     ->one();
+                $comments = Comment::find()
+                    ->byPostId($post->getId())
+                    ->all();
 
-                return $this->render('post', ['post' => $post, 'user' => $user, 'owner' => $owner]);
+                return $this->render('post', [
+                    'post' => $post,
+                    'user' => $user,
+                    'owner' => $owner,
+                    'comments' => $comments,
+                    'model' => $model,
+                    'visitorIsLogin' => $visitorIsLogin,
+                ]);
             }
         }
         throw new NotFoundHttpException();

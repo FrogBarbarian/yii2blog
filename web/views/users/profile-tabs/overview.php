@@ -28,8 +28,8 @@
             <span class="badge bg-primary rounded-pill"><?=$statistics->getViews()?></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            Комментариев <!-- TODO: Функционал -->
-            <span class="badge bg-primary rounded-pill">100</span>
+            Комментариев
+            <span class="badge bg-primary rounded-pill"><?=$statistics->getComments()?></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
             Лайков <!-- TODO: Функционал -->

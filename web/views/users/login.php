@@ -18,21 +18,25 @@ $options = [
         <?php $activeForm = ActiveForm::begin([
             'id' => 'login-form',
         ]) ?>
-        <?=$activeForm->field($model, 'email', $options)
+        <?=$activeForm
+            ->field($model, 'email', $options)
             ->input('email', [
                 'class' => 'form-control placeholder-wave',
                 'id' => 'emailInput',
                 'placeholder' => 'email',
                 'style' => 'background-color: #899aa2;',
-            ])->label('Почта', ['class' => false]) ?>
-        <?=$activeForm->field($model, 'password', $options)
+            ])
+            ->label('Почта', ['class' => false]) ?>
+        <?=$activeForm
+            ->field($model, 'password', $options)
             ->input('password', [
                 'class' => 'form-control placeholder-wave',
                 'id' => 'passwordInput',
                 'placeholder' => 'password',
                 'autocomplete' => 'new-password',
                 'style' => 'background-color: #899aa2;',
-            ])->label('Пароль', ['class' => false]) ?>
+                ])
+            ->label('Пароль', ['class' => false]) ?>
         <a class="link-dark" id="togglePassword" style="cursor: pointer;text-decoration: none;">Показать пароль</a>
         <button type="submit" class="btn btn-lg btn-outline-dark mt-5 d-block">Войти</button>
         <?php ActiveForm::end() ?>

@@ -14,7 +14,7 @@ class m220924_113917_create_posts_tmp_table extends Migration
     {
         $this->createTable('posts_tmp', [
             'id' => $this->primaryKey(),
-            'title' => $this->string(100)->notNull(),
+            'title' => $this->string(150)->notNull(),
             'body' => $this->text()->notNull(),
             'author' => $this->string(30)->notNull(),
             'isNew' => $this->boolean()->notNull()->defaultValue(true),

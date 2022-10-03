@@ -50,7 +50,7 @@ class PostQuery extends ActiveQuery
     {
         $strLength = (new StringService($words))
             ->getLength();
-        $position = intval(floor($strLength * .85));
+        $position = intval(ceil($strLength * .8));
         $words = mb_substr($words, 0, $position);
 
         return $this

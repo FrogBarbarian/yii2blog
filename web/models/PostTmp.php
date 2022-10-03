@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use app\models\queries\PostsTmpQuery;
+use app\models\queries\PostTmpQuery;
 
 class PostTmp extends Post
 {
@@ -19,9 +19,9 @@ class PostTmp extends Post
     /**
      * {@inheritDoc}
      */
-    public static function find(): PostsTmpQuery
+    public static function find(): PostTmpQuery
     {
-        return new PostsTmpQuery(self::class);
+        return new PostTmpQuery(self::class);
     }
 
     /**

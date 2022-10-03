@@ -4,7 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models\queries;
 
-class PostsTmpQuery extends PostQuery
+class PostTmpQuery extends PostQuery
 {
     /**
      * Поиск по update_id поста.

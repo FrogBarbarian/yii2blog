@@ -58,11 +58,19 @@ class User extends ActiveRecord
     }
 
     /**
-     * @return bool Скрыт ли профиль пользователя..
+     * @return bool Скрыт ли профиль пользователя.
      */
     public function getIsHidden(): bool
     {
         return $this->getAttribute('is_hidden');
+    }
+
+    /**
+     * @return bool Есть ли право комментировать.
+     */
+    public function getCanComment(): bool
+    {
+        return $this->getAttribute('can_comment');
     }
 
     /**

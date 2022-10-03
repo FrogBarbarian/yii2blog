@@ -20,7 +20,7 @@ class LoginForm extends ActiveRecord
     public string $password = '';
 
     /**
-     * @return array Правила валидации регистрации нового юзера.
+     * @return array Правила валидации входа юзера.
      */
     public function rules(): array
     {

@@ -97,7 +97,7 @@ class UsersController extends AppController
         $path = Yii::$app->request->getPathInfo();
         $session = Yii::$app->session;
         if ($path === 'user') {
-            if ($id === null || !$session->has('login')) {
+            if ($id === null || $id < 1) {
                 throw new NotFoundHttpException();
             }
 
@@ -125,6 +125,7 @@ class UsersController extends AppController
 
         $posts = Post::find()
             ->byAuthor($user->getLogin())
+            ->orderDescById()
             ->all();
         $statistics = Statistics::find()
             ->byLogin($user->getLogin())

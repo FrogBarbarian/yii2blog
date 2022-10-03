@@ -29,7 +29,7 @@ $options = [
 
 <div class="card mb-3 rounded-4" style="border-color: #656560;border-width: medium;">
     <div class="card-header alert alert-warning rounded-4 small" role="alert">
-        Название должно содержать от 10 до 100 символов. <br>
+        Название должно содержать от 30 до 150 символов. <br>
         Текст поста должен содержать от 300 до 10000 символов. <br>
         Остальные правила - бла бла бла бла.
     </div>

@@ -83,6 +83,14 @@ class Post extends ActiveRecord
     }
 
     /**
+     * @return bool Можно ли комментировать пост.
+     */
+    public function getIsCommentable(): bool
+    {
+        return $this->getAttribute('is_commentable');
+    }
+
+    /**
      * Устанавливает имя поста в таблице.
      * @param string $title
      * @return self
@@ -111,7 +119,7 @@ class Post extends ActiveRecord
      * @param int $views
      * @return self
      */
-    public function setViews(int $views): self
+    private function setViews(int $views): self
     {
         $this->setAttribute('viewed', $views);
 
@@ -143,6 +151,18 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Устанавливает можно ли комментировать пост.
+     * @param bool $isCommentable
+     * @return self
+     */
+    public function setIsCommentable(bool $isCommentable): self
+    {
+        $this->setAttribute('is_commentable', $isCommentable);
+
+        return $this;
+    }
+
+    /**
      * Получает превью поста с помощью сервиса по работе со строкой.
      * @param string $string Строка.
      * @param int $offset Длина превью (по умолчанию 250).
@@ -169,13 +189,13 @@ class Post extends ActiveRecord
             ->explode($separator, $limit);
     }
 
-    // TODO: Add the comment
-    public function getSumOfViews(Post $posts): int
+    /**
+     * Увеличивает количество просмотров поста на 1.
+     */
+    public function increasePostViews(): self
     {
-        $sum = 0;
-        foreach ($posts as $post) {
-            $sum += $post->getViews();
-        }
-        return $sum;
+        $this->setViews($this->getViews() + 1);
+
+        return $this;
     }
 }

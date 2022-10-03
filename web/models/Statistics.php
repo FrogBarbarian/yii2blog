@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\models;
 
 use app\models\queries\StatisticsQuery;
@@ -42,9 +44,17 @@ class Statistics extends ActiveRecord
     }
 
     /**
+     * Количество комментариев пользователя.
+     */
+    private function setComments(int $comments)
+    {
+        $this->setAttribute('comments', $comments);
+    }
+
+    /**
      * Количество постов пользователя.
      */
-    private function setPosts(string $posts)
+    private function setPosts(int $posts)
     {
         $this->setAttribute('posts', $posts);
     }
@@ -55,6 +65,14 @@ class Statistics extends ActiveRecord
     public function getViews(): int
     {
         return $this->getAttribute('views');
+    }
+
+    /**
+     * Количество комментариев пользователя
+     */
+    public function getComments(): int
+    {
+        return $this->getAttribute('comments');
     }
 
     /**
@@ -76,11 +94,21 @@ class Statistics extends ActiveRecord
     }
 
     /**
-     * Увеличивает количество просмотров в статистике на 1.
+     * Увеличивает количество постов в статистике на 1.
      */
     public function increasePosts(): self
     {
         $this->setPosts($this->getPosts() + 1);
+
+        return $this;
+    }
+
+    /**
+     * Увеличивает количество комментариев в статистике на 1.
+     */
+    public function increaseComments(): self
+    {
+        $this->setComments($this->getComments() + 1);
 
         return $this;
     }
