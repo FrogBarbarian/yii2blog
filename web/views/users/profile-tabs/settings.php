@@ -18,4 +18,31 @@ $activeForm = ActiveForm::begin([
 <input type="hidden" name="id" value="<?= $user->getId() ?>">
 <?php ActiveForm::end() ?>
 
-Настройки
+<ul class="list-group">
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Логин - <?= $user->getLogin() ?>
+        <button class="badge bg-primary rounded-pill">Изменить</button>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Email - <?= $user->getEmail() ?>
+        <button class="badge bg-primary rounded-pill">Изменить</button>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Пароль
+        <button class="badge bg-primary rounded-pill">Изменить</button>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Публичный профиль
+        <div class="form-check form-switch">
+            <input class="form-check-input" <?= $user->getIsHidden() ? '' : 'checked' ?> type="checkbox" id="profileVisibility">
+            <label class="form-check-label" for="profileVisibility"></label>
+        </div>
+    </li>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        Личные сообщения
+        <div class="form-check form-switch">
+            <input class="form-check-input" checked type="checkbox" id="allowPM">
+            <label class="form-check-label" for="allowPM"></label>
+        </div>
+    </li>
+</ul>

@@ -17,10 +17,11 @@ class m221003_081606_create_comments_table extends Migration
             'post_id' => $this->integer()->notNull(),
             'author' => $this->string(30)->notNull(),
             'author_id' => $this->integer()->notNull(),
-            'comment' => $this->string()->notNull(),
+            'comment' => $this->text()->notNull(),
             'datetime' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()")),
             'likes' => $this->integer()->defaultValue(0),
             'dislikes' => $this->integer()->defaultValue(0),
+            'is_deleted' => $this->boolean()->defaultValue(false),
         ]);
 
         $this->addForeignKey('author_fk', 'comments', 'author', 'users', 'login');

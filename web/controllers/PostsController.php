@@ -85,20 +85,23 @@ class PostsController extends AppController
 
                 $model = new CommentForm();
 
-                if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                    $comment = new Comment();
-                    $comment
-                        ->setPostId($post->getId())
-                        ->setAuthor($user->getLogin())
-                        ->setAuthorId($user->getId())
-                        ->setComment($model->comment)
-                        ->save();
-                    $userStatistics = Statistics::find()
-                        ->byLogin($user->getLogin())
-                        ->one();
-                    $userStatistics
-                        ->increaseComments()
-                        ->save();
+                if ($model->load(Yii::$app->request->post())) {
+                    if ($model->validate()) {
+                        $comment = new Comment();
+                        $comment
+                            ->setPostId($post->getId())
+                            ->setAuthor($user->getLogin())
+                            ->setAuthorId($user->getId())
+                            ->setComment($model->comment)
+                            ->save();
+                        $userStatistics = Statistics::find()
+                            ->byLogin($user->getLogin())
+                            ->one();
+                        $userStatistics
+                            ->increaseComments()
+                            ->save();
+                    }
+
                 } else {
                     $ownerStatistics = Statistics::find()
                         ->byLogin($post->getAuthor())

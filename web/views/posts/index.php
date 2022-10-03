@@ -24,7 +24,12 @@ $this->title = 'Главная страница';
             <?php require 'widgets/index-pagination.php'?>
             <?php foreach ($posts as $post): ?>
                 <div class="card mb-3 rounded-4 mx-auto" style="border-color: #656560;border-width: medium;">
-                    <div class="card-header">Опубликован: <b><?=$post->getDate()?></b>. Просмотров: <?=$post->getViews()?>. Автор - <?=$post->getAuthor()?></div>
+                    <div class="card-header">
+                        Опубликован: <b><?=$post->getDate()?></b>.
+                        Просмотров: <?=$post->getViews()?>.
+                        Автор - <?=$post->getAuthor()?>
+                        <!--TODO: Отображение количества комментариев (если есть)-->
+                    </div>
                     <div class="card-body">
                         <h5 class="card-title">
                             <a class="nav-link" href="/post?id=<?=$post->getId()?>">
