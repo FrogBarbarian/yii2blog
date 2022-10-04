@@ -92,7 +92,7 @@ class UsersController extends AppController
     }
 
     //TODO: Add the comment
-    public function actionUser(string $id = null)
+    public function actionUser(string $id = null, string $tab = 'overview')
     {
         $path = Yii::$app->request->getPathInfo();
         $session = Yii::$app->session;
@@ -112,6 +112,7 @@ class UsersController extends AppController
                 return $this->redirect('/profile');
             }
             $isOwn = false;
+            $tab = 'overview';
         } else {
             if (!$session->has('login')) {
                 return $this->redirect('/login');
@@ -147,6 +148,7 @@ class UsersController extends AppController
             'postsTmp' => $postsTmp,
             'statistics' => $statistics,
             'isOwn' => $isOwn,
+            'tab' => $tab,
         ]);
     }
 
@@ -172,5 +174,9 @@ class UsersController extends AppController
         }
 
         return $this->redirect('/profile');
+    }
+
+    public function actionChangeSettings()
+    {
     }
 }

@@ -76,12 +76,39 @@ class Statistics extends ActiveRecord
     }
 
     /**
+     * Количество лайков пользователю.
+     */
+    public function getLikes(): int
+    {
+        return $this->getAttribute('likes');
+    }
+
+    /**
+     * Количество дизлайков пользователю.
+     */
+    public function getDislikes(): int
+    {
+        return $this->getAttribute('dislikes');
+    }
+
+
+    /**
+     * Рейтинг пользователя.
+     */
+    public function getRating(): int
+    {
+        return $this->getAttribute('rating');
+    }
+
+
+    /**
      * Количество постов пользователя
      */
     public function getPosts(): int
     {
         return $this->getAttribute('posts');
     }
+
 
     /**
      * Увеличивает количество просмотров в статистике на 1.

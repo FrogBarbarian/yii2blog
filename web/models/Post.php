@@ -97,7 +97,7 @@ class Post extends ActiveRecord
      */
     public function setTitle(string $title): self
     {
-        $this->setAttribute('title', $title);
+        $this->setAttribute('title', (new StringService($title))->prepareToSave());
 
         return $this;
     }
@@ -109,7 +109,7 @@ class Post extends ActiveRecord
      */
     public function setBody(string $body): self
     {
-        $this->setAttribute('body', $body);
+        $this->setAttribute('body', (new StringService($body))->prepareToSave());
 
         return $this;
     }
@@ -117,13 +117,10 @@ class Post extends ActiveRecord
     /**
      * Устанавливает количество просмотров поста в таблице.
      * @param int $views
-     * @return self
      */
-    private function setViews(int $views): self
+    private function setViews(int $views)
     {
         $this->setAttribute('viewed', $views);
-
-        return $this;
     }
 
     /**

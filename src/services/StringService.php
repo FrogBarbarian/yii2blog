@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace src\services;
 
+use yii\helpers\HtmlPurifier;
+
 /**
  * Сервис по работе со строками.
  */
@@ -55,5 +57,13 @@ class StringService
     public function getLength(): int
     {
         return mb_strlen(trim($this->string));
+    }
+
+    /**
+     * Подготавливает строку к сохранению в БД. Заменяет переводы строки на HTML тег <br>.
+     */
+    public function prepareToSave(): string
+    {
+        return HtmlPurifier::process(preg_replace('/\r\n/', '<br>', $this->string));
     }
 }

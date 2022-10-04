@@ -23,7 +23,8 @@
     "ext-pdo": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "yiisoft/yii2": "*"
+    "yiisoft/yii2": "*",
+    "ezyang/htmlpurifier": "*"
   },
   "config": {
     "allow-plugins": true

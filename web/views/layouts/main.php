@@ -10,7 +10,7 @@
     <script src="../../assets/js/bootstrap.bundle.js"></script>
     <script src="../../assets/js/jquery.js"></script>
 </head>
-<body style="background-image: url('../../assets/images/favicon.svg');background-color: #cccccc;">
+<body style="background-image: url('../../assets/images/favicon.svg');background-color: #1a384d;">
 <header class="sticky-top">
     <nav class="navbar navbar-expand-lg" style="background-color: rgba(101,101,96,0.95)">
         <div class="container-fluid">

@@ -33,9 +33,12 @@ $activeForm = ActiveForm::begin([
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Публичный профиль
-        <div class="form-check form-switch">
-            <input class="form-check-input" <?= $user->getIsHidden() ? '' : 'checked' ?> type="checkbox" id="profileVisibility">
-            <label class="form-check-label" for="profileVisibility"></label>
+        <div>
+            <div class="form-check form-switch">
+                <input class="form-check-input" <?= $user->getIsHidden() ? '' : 'checked' ?> type="checkbox"
+                       id="profileVisibility">
+                <label class="form-check-label" for="profileVisibility"></label>
+            </div>
         </div>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">

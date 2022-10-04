@@ -14,7 +14,7 @@ $activeForm = ActiveForm::begin(['id' => 'comment-form']) ?>
     ->textarea([
         'placeholder' => 'comment',
         'id' => 'commentArea',
-        'value' => '',
+        'value' => $_POST['CommentForm']['comment'] ?? '',
         'style' => 'min-height: 150px',
     ])
     ->label('Комментарий', ['class' => false])

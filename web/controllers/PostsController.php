@@ -85,8 +85,14 @@ class PostsController extends AppController
 
                 $model = new CommentForm();
 
-                if ($model->load(Yii::$app->request->post())) {
-                    if ($model->validate()) {
+                if (isset($_POST['_csrf'])) {
+                    if (isset($_POST['comments'])) {
+                        $post
+                            ->setIsCommentable(!$post->getIsCommentable())
+                            ->save();
+                    }
+
+                    if ($model->load(Yii::$app->request->post()) && $model->validate()) {
                         $comment = new Comment();
                         $comment
                             ->setPostId($post->getId())
@@ -100,6 +106,7 @@ class PostsController extends AppController
                         $userStatistics
                             ->increaseComments()
                             ->save();
+                        unset($_POST['CommentForm']);
                     }
 
                 } else {
@@ -119,6 +126,7 @@ class PostsController extends AppController
                     ->one();
                 $comments = Comment::find()
                     ->byPostId($post->getId())
+                    ->orderAscById()
                     ->all();
 
                 return $this->render('post', [

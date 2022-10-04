@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace app\models;
 
 use app\models\queries\CommentQuery;
+use src\services\StringService;
 use yii\db\ActiveRecord;
 
 class Comment extends ActiveRecord
@@ -60,7 +61,7 @@ class Comment extends ActiveRecord
      */
     public function setComment(string $comment): self
     {
-        $this->setAttribute('comment', $comment);
+        $this->setAttribute('comment', (new StringService($comment))->prepareToSave());
 
         return $this;
     }

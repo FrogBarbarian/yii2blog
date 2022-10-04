@@ -15,4 +15,12 @@ class CommentQuery extends ActiveQuery
     {
         return $this->where(['post_id' => $postId]);
     }
+
+    /**
+     * Сортирует по ID в прямом порядке.
+     */
+    public function orderAscById(): self
+    {
+        return $this->orderBy(['id' => SORT_ASC]);
+    }
 }
