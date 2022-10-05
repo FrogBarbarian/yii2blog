@@ -52,7 +52,7 @@ class PostsController extends AppController
             $pages = intval(ceil(Post::find()->count() / POSTS_ON_PAGE));
         }
 
-        if (!$posts && $search === null) {
+        if (!$posts && $search === null || $search !== null && $page > 1 && $page > $pages) {
             throw new NotFoundHttpException();
         }
 
@@ -252,5 +252,46 @@ class PostsController extends AppController
         }
 
         return $this->render('new-post', ['model' => $model, 'post' => $post]);
+    }
+
+    public function actionDelete()
+    {
+        if (Yii::$app->request->post()) {
+            $post = Post::find()
+                ->byId($_POST['id'])
+                ->one();
+            $ownerStatistics = Statistics::find()
+                ->byLogin($post->getAuthor())
+                ->one();
+            $ownerStatistics
+                ->decreasePosts()
+                ->decreaseViews($post->getViews())
+                ->decreaseLikes($post->getLikes())
+                ->decreaseDislikes($post->getDislikes())
+                ->save();
+            $ownerStatistics->updateRating();
+            $comments = Comment::find()
+                ->byPostId($_POST['id'])
+                ->all();
+
+            foreach ($comments as $comment) {
+                $commentOwnerStatistics = Statistics::find()
+                    ->byLogin($comment->getAuthor())
+                    ->one();
+                $commentOwnerStatistics
+                    ->decreaseLikes($comment->getLikes())
+                    ->decreaseDislikes($comment->getDislikes())
+                    ->decreaseComments()
+                    ->save();
+                $commentOwnerStatistics->updateRating();
+                $comment->delete();
+            }
+
+            $post->delete();
+
+            return $this->goHome();
+        } else {
+            throw new NotFoundHttpException();
+        }
     }
 }

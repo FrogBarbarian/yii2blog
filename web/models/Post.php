@@ -91,6 +91,30 @@ class Post extends ActiveRecord
     }
 
     /**
+     * @return int Количество лайков.
+     */
+    public function getLikes(): int
+    {
+        return $this->getAttribute('likes');
+    }
+
+    /**
+     * @return int Количество дизлайков.
+     */
+    public function getDislikes(): int
+    {
+        return $this->getAttribute('dislikes');
+    }
+
+    /**
+     * @return int Рейтинг поста.
+     */
+    public function getRating(): int
+    {
+        return $this->getAttribute('rating');
+    }
+
+    /**
      * Устанавливает имя поста в таблице.
      * @param string $title
      * @return self
@@ -121,6 +145,22 @@ class Post extends ActiveRecord
     private function setViews(int $views)
     {
         $this->setAttribute('viewed', $views);
+    }
+
+    /**
+     * Устанавливает количество лайков поста.
+     */
+    private function setLikes(int $likes)
+    {
+        $this->setAttribute('likes', $likes);
+    }
+
+    /**
+     * Устанавливает количество дизлайков поста.
+     */
+    private function setDislikes(int $dislikes)
+    {
+        $this->setAttribute('dislikes', $dislikes);
     }
 
     /**
@@ -194,5 +234,150 @@ class Post extends ActiveRecord
         $this->setViews($this->getViews() + 1);
 
         return $this;
+    }
+
+    /**
+     * Увеличивает количество лайков поста на $int (по умолчанию 1).
+     */
+    public function increaseLikes(int $int = 1): self
+    {
+        $this->setLikes($this->getLikes() + $int);
+
+        return $this;
+    }
+
+    /**
+     * Уменьшает количество лайков поста на $int (по умолчанию 1).
+     */
+    public function decreaseLikes(int $int = 1): self
+    {
+        $this->setLikes($this->getLikes() - $int);
+
+        return $this;
+    }
+
+    /**
+     * Увеличивает количество дизлайков поста на $int (по умолчанию 1).
+     */
+    public function increaseDislikes(int $int = 1): self
+    {
+        $this->setDislikes($this->getDislikes() + $int);
+
+        return $this;
+    }
+
+    /**
+     * Уменьшает количество дизлайков поста на $int (по умолчанию 1).
+     */
+    public function decreaseDislikes(int $int = 1): self
+    {
+        $this->setDislikes($this->getDislikes() - $int);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает рейтинг поста.
+     */
+    private function setRating(int $int)
+    {
+        $this->setAttribute('rating', $int);
+    }
+
+    /**
+     * Обновляет рейтинг на основе общего количества лайков и дизлайков.
+     */
+    public function updateRating()
+    {
+        $this->setRating($this->getLikes() - $this->getDislikes());
+        $this->save();
+    }
+
+    /**
+     * Список ID пользователей, лайкнувших пост.
+     */
+    public function getLikedByUsers(): string
+    {
+        return $this->getAttribute('liked_by_users');
+    }
+
+    /**
+     * Список ID пользователей, дизлайкнувших пост.
+     */
+    public function getDislikedByUsers(): string
+    {
+        return $this->getAttribute('disliked_by_users');
+    }
+
+    /**
+     * Дополняет список ID пользователей лайкнувших пост.
+     */
+    public function addLikedByUserId(string $id): self
+    {
+        $this->setAttribute('liked_by_users', "{$this->getLikedByUsers()}$id ");
+
+        return $this;
+    }
+
+    /**
+     * Убирает ID из списка ID пользователей лайкнувших пост.
+     */
+    public function bateLikedByUserId(string $id): self
+    {
+        $usersIds = explode(' ', $this->getLikedByUsers());
+        $usersIds = array_diff($usersIds, [$id]);
+        $this->setAttribute('liked_by_users', implode(' ', $usersIds));
+
+        return $this;
+    }
+
+    /**
+     * Убирает ID из списка ID пользователей дизлайкнувших пост.
+     */
+    public function bateDislikedByUserId(string $id): self
+    {
+        $usersIds = explode(' ', $this->getDislikedByUsers());
+        $usersIds = array_diff($usersIds, [$id]);
+        $this->setAttribute('disliked_by_users', implode(' ', $usersIds));
+
+        return $this;
+    }
+
+    /**
+     * Дополняет список ID пользователей дизлайкнувших пост.
+     */
+    public function addDislikedByUserId(string $id): self
+    {
+        $this->setAttribute('disliked_by_users', "{$this->getDislikedByUsers()}$id ");
+
+        return $this;
+    }
+
+    /**
+     * Проверяет, есть ли юзер в писке лайкнувших пост.
+     */
+    public function isUserLikeIt(string $id): bool
+    {
+        $usersIds = explode(' ', $this->getLikedByUsers());
+
+        if (in_array($id, $usersIds, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Проверяет, есть ли юзер в писке дизлайкнувших пост.
+     */
+    public function isUserDislikeIt(string $id): bool
+    {
+        $usersIds = explode(' ', $this->getDislikedByUsers());
+
+        if (in_array($id, $usersIds, true)) {
+            return true;
+        }
+
+        return false;
     }
 }

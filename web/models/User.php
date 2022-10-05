@@ -74,6 +74,22 @@ class User extends ActiveRecord
     }
 
     /**
+     * @return bool Есть ли право писать ЛС.
+     */
+    public function getCanWriteMessages(): bool
+    {
+        return $this->getAttribute('can_write_messages');
+    }
+
+    /**
+     * @return bool Есть ли право писать посты.
+     */
+    public function getCanWritePosts(): bool
+    {
+        return $this->getAttribute('can_write_posts');
+    }
+
+    /**
      * Записывает псевдоним пользователя.
      * @param string $login
      * @return self
@@ -129,6 +145,36 @@ class User extends ActiveRecord
     public function setIsHidden(bool $isHidden): self
     {
         $this->setAttribute('is_hidden', $isHidden);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает, может ли пользователь комментировать посты.
+     */
+    public function setCanComment(bool $canComment): self
+    {
+        $this->setAttribute('can_comment', $canComment);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает, может ли пользователь писать ЛС.
+     */
+    public function setCanWriteMessages(bool $canWriteMessages): self
+    {
+        $this->setAttribute('can_write_messages', $canWriteMessages);
+
+        return $this;
+    }
+
+    /**
+     * Устанавливает, может ли пользователь писать посты.
+     */
+    public function setCanWritePosts(bool $canWritePosts): self
+    {
+        $this->setAttribute('can_write_posts', $canWritePosts);
 
         return $this;
     }

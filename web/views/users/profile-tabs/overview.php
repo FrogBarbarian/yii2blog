@@ -32,11 +32,11 @@
             <span class="badge bg-primary rounded-pill"><?= $statistics->getComments() ?></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            Лайков <!-- TODO: Функционал -->
+            Лайков
             <span class="badge bg-success rounded-pill"><?= $statistics->getLikes() ?></span>
         </li>
         <li class="list-group-item d-flex justify-content-between align-items-center">
-            Дизлайков <!-- TODO: Функционал -->
+            Дизлайков
             <span class="badge bg-danger rounded-pill"><?= $statistics->getDislikes() ?></span>
         </li>
     </ul>

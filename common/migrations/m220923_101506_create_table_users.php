@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Таблица с пользователями.
+ * Создает таблицу с пользователями 'users'.
  */
 class m220923_101506_create_table_users extends Migration
 {

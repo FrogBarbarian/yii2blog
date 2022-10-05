@@ -97,4 +97,20 @@ class Comment extends ActiveRecord
     {
         return $this->getAttribute('datetime');
     }
+
+    /**
+     * @return int Количество лайков.
+     */
+    public function getLikes(): int
+    {
+        return $this->getAttribute('likes');
+    }
+
+    /**
+     * @return int Количество дизлайков.
+     */
+    public function getDislikes(): int
+    {
+        return $this->getAttribute('dislikes');
+    }
 }

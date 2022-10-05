@@ -7,6 +7,15 @@
 /** @var bool $visitorIsLogin */
 
 $this->title = $post->getTitle();
+$postIsCommentable = $post->getIsCommentable();
+
+if ($visitorIsLogin) {
+    $userIsAdmin = $user->getIsAdmin();
+    $userCanComment = $user->getCanComment();
+} else {
+    $userIsAdmin = false;
+    $userCanComment = false;
+}
 ?>
 <ul class="list-group list-group-horizontal mb-1 col-3">
     <?php if ($user !== null): ?>
@@ -16,22 +25,23 @@ $this->title = $post->getTitle();
                 <img src="../../assets/images/post-edit.svg" alt="edit" width="30" height="30"
                      class="d-inline-block">
             </a>
+            <button class="list-group-item list-group-item-action" type="button"
+                    data-bs-toggle="modal" data-bs-target="#staticBackdrop"
+                    title="Удалить пост" style="width: auto">
+                <img src="../../assets/images/post-delete.svg"
+                     alt="delete" width="30" height="30"
+                     class="d-inline-block">
+            </button>
+            <?php require 'widgets/delete-post.php' ?>
         <?php endif; ?>
-        <a class="list-group-item list-group-item-action" href=""
-           data-bs-toggle="tooltip" data-bs-placement="top"
-           title="Удалить пост" style="width: auto">
-            <img src="../../assets/images/post-delete.svg"
-                 alt="delete" width="30" height="30"
-                 class="d-inline-block">
-        </a>
     <?php endif; ?>
-    <?php if ($user->getIsAdmin()): ?>
+    <?php if ($visitorIsLogin && $userIsAdmin): ?>
         <?php $activeForm = \yii\widgets\ActiveForm::begin(['options' => ['style' => 'width: 30px']]); ?>
         <input type="hidden" name="comments" value="1">
         <button type="submit" class="list-group-item list-group-item-action"
                 data-bs-toggle="tooltip" data-bs-placement="top"
-                title="<?= $post->getIsCommentable() ? 'Запретить' : 'Разрешить' ?> комментарии" style="width: auto">
-            <img src="../../assets/images/<?= $post->getIsCommentable() ? 'comment-enabled' : 'comment-disabled' ?>.svg"
+                title="<?= $postIsCommentable ? 'Запретить' : 'Разрешить' ?> комментарии" style="width: auto">
+            <img src="../../assets/images/<?= $postIsCommentable ? 'comment-enabled' : 'comment-disabled' ?>.svg"
                  alt="comments" width="30" height="30"
                  class="d-inline-block">
         </button>
@@ -64,12 +74,40 @@ $this->title = $post->getTitle();
                 <?php endforeach ?>
             </div>
         </div>
+        <div class="mb-2">
+            <span style="color:
+                        <?php
+            if ($post->getRating() > 0): echo 'green';
+            elseif ($post->getRating() < 0): echo 'red';
+            else: echo 'grey';
+            endif;
+            ?>">
+                <?= ($post->getRating() > 0 ? '+' : '') . $post->getRating() ?>
+            </span>
+            (
+            <small style="color: green"><?= $post->getLikes() ?></small>
+            /
+            <small style="color: red"><?= $post->getDislikes() ?></small>
+            )
+            <?php if ($visitorIsLogin): ?>
+            <p>
+                <?php $activeForm = \yii\widgets\ActiveForm::begin([
+                        'action' => \yii\helpers\Url::to('/interface/post')
+                ]) ?>
+                <input type="hidden" name="id" value="<?= $post->getId() ?>">
+                <button <?= $post->isUserLikeIt(Yii::$app->session['id']) ? 'disabled' : '' ?> type="submit" name="postInterface" value="like">like</button>
+                <button <?= $post->isUserDislikeIt(Yii::$app->session['id']) ? 'disabled' : '' ?> type="submit" name="postInterface" value="dislike">dislike</button>
+                <?php \yii\widgets\ActiveForm::end() ?>
+            </p>
+            <?php endif ?>
+        </div>
         <!--Начало комментариев-->
-        <?php if (!$post->getIsCommentable()): ?>
+        <?php if (!$postIsCommentable): ?>
             <div class="alert alert-secondary text-center text-danger" role="alert">
                 Комментарии запрещены.
             </div>
-        <?php endif; ?>
+        <?php endif ?>
+
         <?php if ($comments): ?>
             <h5 style="padding-left: 5%"><?= count($comments) ?>
                 комментариев</h5> <!--TODO: Функция окончания слова комментарии-->
@@ -80,7 +118,7 @@ $this->title = $post->getTitle();
                     Комментарии
                 </button>
                 <div class="collapse show" id="collapseExample" >
-                <?php require 'widgets/comment-field.php' ?>
+                <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable) require 'widgets/comment-field.php' ?>
             <?php endif ?>
             <ul class="list-group" style="padding-left: 5%;padding-right: 5%">
                 <?php foreach ($comments as $comment): ?>
@@ -97,7 +135,7 @@ $this->title = $post->getTitle();
                         <small class="text-muted">
                             <a href="#">Like</a>
                             <a href="#">Dislike</a>
-                            <?php if ($user->getLogin() === $comment->getAuthor()): ?>
+                            <?php if ($visitorIsLogin && $user->getLogin() === $comment->getAuthor()): ?>
                                 <a href="#">Delete</a> <!--TODO: Удаление комментария (комментарий остается в бд, но параметр is_deleted ставиться в true)-->
                             <?php endif; ?>
                         </small>
@@ -107,7 +145,7 @@ $this->title = $post->getTitle();
             <?php if (count($comments) > 5): ?>
                 </div>
             <?php endif ?>
-        <?php elseif ($visitorIsLogin && $user->getCanComment()): ?>
+        <?php elseif ($visitorIsLogin && $userCanComment && $postIsCommentable): ?>
             <div class="alert alert-secondary text-center" role="alert">
                 Комментариев нет, вы можете быть первым.
             </div>
@@ -116,17 +154,13 @@ $this->title = $post->getTitle();
                 Комментариев нет.
             </div>
         <?php endif ?>
-        <?php if ($visitorIsLogin): ?>
-            <?php if ($user->getCanComment()): require 'widgets/comment-field.php' ?>
+        <?php if ($visitorIsLogin && $postIsCommentable): ?>
+            <?php if ($userCanComment): require 'widgets/comment-field.php' ?>
             <?php else: ?>
                 <div class="alert alert-danger text-center" role="alert">
                     Вам запрещено комментировать.
                 </div>
             <?php endif ?>
-        <?php else: ?>
-            <div class="alert alert-secondary text-center text-danger" role="alert">
-                Комментарии запрещены.
-            </div>
         <?php endif ?>
     </div>
 </div>

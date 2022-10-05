@@ -27,6 +27,7 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                     <div class="card-title">
                         <h5 style="text-align: left">
                             <?= $user->getLogin() ?>
+                            <span style="font-size: x-small"><?= !$isOwn ? ($user->getIsAdmin() ? '(администратор)' : '(пользователь)') : '' ?></span>
                             <?= (!$isOwn && Yii::$app->session->has('admin') && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : '' ?>
                         </h5>
                         <span style="font-size: small;color:
@@ -46,6 +47,34 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                     ?>
                 </div>
             </div>
+            <?php if (!$user->getIsAdmin() && !$isOwn && Yii::$app->session->has('admin')): ?>
+                <?php $activeForm = \yii\widgets\ActiveForm::begin(['action' => \yii\helpers\Url::to('/admin/user-settings'), 'options' => ['class' => 'row ms-2']]) ?>
+                <input type="hidden" name="id" value="<?= $user->getId() ?>">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#adminApply">Сделать админом</button>
+                <button type="submit" name="settings" value="comment">Комментарии <?= $user->getCanComment() ? 'разрешены' : 'запрещены' ?></button>
+                <button type="submit" name="settings" value="posts">Писать посты <?= $user->getCanWritePosts() ? 'разрешено' : 'запрещено' ?></button>
+                <button type="submit" name="settings" value="messages">ЛС <?= $user->getCanWriteMessages() ? 'разрешены' : 'запрещены' ?></button>
+                <button type="submit" name="settings" value="ban">Забанить</button>
+                <button type="submit" name="settings" value="resetRating">Обнулить рейтинг</button>
+                <div class="modal fade" id="adminApply" tabindex="-1" aria-labelledby="adminApplyLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="adminApplyLabel">Вы уверены?</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                Это назначит пользователя <b><?= $user->getLogin() ?></b> администратором. Отменить возможно через прямой доступ к БД.
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" data-bs-dismiss="modal">Отмена</button>
+                                <button type="submit" name="settings" value="admin">Подтвердить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php \yii\widgets\ActiveForm::end() ?>
+            <?php endif ?>
         </div>
     </div>
 </div>

@@ -40,6 +40,7 @@ class UsersController extends AppController
             $session = Yii::$app->session;
             $session->open();
             $session['login'] = $model->login;
+            $session['id'] = $user->getId();
 
             return $this->redirect('/profile');
         }
@@ -81,6 +82,7 @@ class UsersController extends AppController
             $session = Yii::$app->session;
             $session->open();
             $session['login'] = $user->getLogin();
+            $session['id'] = $user->getId();
             if ($user->getIsAdmin()) {
                 $session['admin'] = true;
             }
