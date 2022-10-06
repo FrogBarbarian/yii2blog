@@ -1,10 +1,14 @@
 <?php
 
-/** @var \app\models\Post $post */
-/** @var \app\models\User $owner */
-/** @var \app\models\User $user */
-/** @var \app\models\Comment[] $comments */
-/** @var bool $visitorIsLogin */
+/**
+ * @var \app\models\Post $post
+ * @var \app\models\User $owner
+ * @var \app\models\User $user
+ * @var \app\models\Comment[] $comments
+ * @var bool $visitorIsLogin
+ */
+
+use src\helpers\ConstructHtml;
 
 $this->title = $post->getTitle();
 $postIsCommentable = $post->getIsCommentable();
@@ -17,8 +21,11 @@ if ($visitorIsLogin) {
     $userCanComment = false;
 }
 ?>
+<script src="../../assets/js/post-rating.js"></script>
+<input type="hidden" id="post-id" value="<?= $post->getId() ?>">
 <ul class="list-group list-group-horizontal mb-1 col-3">
     <?php if ($user !== null): ?>
+        <input type="hidden" id="user-id" value="<?= $user->getId() ?>">
         <?php if ($owner->getId() === $user->getId()): ?>
             <a class="list-group-item list-group-item-action" href="/edit-post?id=<?= $post->getId() ?>"
                data-bs-toggle="tooltip" data-bs-placement="top" title="Отредактировать" style="width: auto">
@@ -75,29 +82,11 @@ if ($visitorIsLogin) {
             </div>
         </div>
         <div class="mb-2">
-            <span style="color:
-                        <?php
-            if ($post->getRating() > 0): echo 'green';
-            elseif ($post->getRating() < 0): echo 'red';
-            else: echo 'grey';
-            endif;
-            ?>">
-                <?= ($post->getRating() > 0 ? '+' : '') . $post->getRating() ?>
-            </span>
-            (
-            <small style="color: green"><?= $post->getLikes() ?></small>
-            /
-            <small style="color: red"><?= $post->getDislikes() ?></small>
-            )
+            <span id="rating-container"><?= ConstructHtml::rating($post->getRating()) ?></span>
             <?php if ($visitorIsLogin): ?>
             <p>
-                <?php $activeForm = \yii\widgets\ActiveForm::begin([
-                        'action' => \yii\helpers\Url::to('/interface/post')
-                ]) ?>
-                <input type="hidden" name="id" value="<?= $post->getId() ?>">
-                <button <?= $post->isUserLikeIt(Yii::$app->session['id']) ? 'disabled' : '' ?> type="submit" name="postInterface" value="like">like</button>
-                <button <?= $post->isUserDislikeIt(Yii::$app->session['id']) ? 'disabled' : '' ?> type="submit" name="postInterface" value="dislike">dislike</button>
-                <?php \yii\widgets\ActiveForm::end() ?>
+                <button type="button" id="like">like</button>
+                <button type="button" id="dislike">dislike</button>
             </p>
             <?php endif ?>
         </div>

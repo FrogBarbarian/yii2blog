@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace src\services;
+namespace src\helpers;
 
 /**
  * Сервис для конструирования пагинации на странице.

@@ -143,20 +143,6 @@ class PostsController extends AppController
     }
 
     /**
-     * Находит рандомный пост и открывает страничку с ним.
-     * @return Response Редирект на страницу с постом.
-     * @throws Exception
-     */
-    public function actionRandom(): Response
-    {
-        $post = Post::find()
-            ->random()
-            ->one();
-
-        return $this->redirect('/post?id=' . $post->getId());
-    }
-
-    /**
      * Страница создания нового поста.
      * Отправляет валидированные данные в таблицу постов (основную либо во временное хранилище).
      * @return Response|string Редирект на главную/на пост (если данные провалидированы и пост отправлен в БД)/на логин, если не залогинен|Вид "новый пост".
@@ -293,5 +279,6 @@ class PostsController extends AppController
         } else {
             throw new NotFoundHttpException();
         }
+
     }
 }

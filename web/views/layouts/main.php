@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.css" />
     <script src="../../assets/js/bootstrap.bundle.js"></script>
     <script src="../../assets/js/jquery.js"></script>
+    <script src="../../assets/js/random-post.js"></script>
 </head>
 <body style="background-image: url('../../assets/images/favicon.svg');background-color: #1a384d;">
 <header class="sticky-top">
@@ -27,7 +28,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" href="/random" style="color: #d0e0dc">Случайная статья</a>
+                        <button type="button" id="randomPost" class="nav-link" style="color: #d0e0dc;background-color: rgba(0,0,0,0)">
+                            Случайная статья
+                        </button>
                     </li>
                     <?php if (isset(Yii::$app->session['login'])): ?>
                         <li class="nav-item">

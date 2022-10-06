@@ -3,7 +3,8 @@
 /** @var int $pages */
 /** @var string $search */
 
-use src\services\PaginationService;
+use src\helpers\PaginationService;
+
 ?>
 
 <?php if ($pages > 1): ?>

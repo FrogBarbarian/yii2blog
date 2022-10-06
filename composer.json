@@ -15,7 +15,8 @@
       "app\\models\\": "web/models",
       "app\\interfaces\\": "web/interfaces",
       "app\\models\\queries\\": "web/models/queries",
-      "src\\services\\": "src/services"
+      "src\\services\\": "src/services",
+      "src\\helpers\\": "src/helpers"
     }
   },
   "require": {
