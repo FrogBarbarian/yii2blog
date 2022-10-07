@@ -1,9 +1,12 @@
 <?php
 
-/** @var \app\models\Post[] $posts */
-/** @var string $page */
-/** @var string $search */
+/**
+ * @var \app\models\Post[] $posts
+ * @var string $page
+ * @var string $search
+ */
 
+use src\helpers\ConstructHtml;
 
 $curPage = intval($page);
 $this->title = 'Главная страница';
@@ -28,6 +31,7 @@ $this->title = 'Главная страница';
                         Опубликован: <b><?= $post->getDate() ?></b>.
                         Просмотров: <?= $post->getViews() ?>.
                         Автор - <?= $post->getAuthor() ?>
+                        <?= ConstructHtml::rating($post->getRating()) ?>
                         <!--TODO: Отображение количества комментариев (если есть)-->
                     </div>
                     <div class="card-body">

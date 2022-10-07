@@ -3,7 +3,7 @@
 const ADMIN_PANEL = '/admin/panel';
 const POSTS_ON_PAGE = 5;
 const POSTS_ON_PROFILE = 5;
-const ALLOWED_HTML_TAGS = ['b', 'i'];
+const IMAGES = '../../assets/images/';
 //TODO: Организовать хранение констант
 
 return [

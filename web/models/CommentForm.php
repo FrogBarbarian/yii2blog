@@ -8,8 +8,22 @@ use yii\db\ActiveRecord;
 
 class CommentForm extends ActiveRecord
 {
+    /**
+     * @var string Комментарий.
+     */
     public string $comment = '';
 
+    /**
+     * {@inheritDoc}
+     */
+    public static function tableName()
+    {
+        return 'comments';
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function rules(): array
     {
         return [

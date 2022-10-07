@@ -1,51 +1,44 @@
 $(document).ready(function () {
-    $('#like').click(function () {
-        let data = {
-            ajax: {
-                userId: $('#user-id').val(),
-                postId: $('#post-id').val()
-            }
-        };
-        $.ajax({
-            url: '/interface/like-post',
-            cache: false,
-            data: data,
-            success: function (res) {
-                $("#rating-container").html(res);
-            }
-        });
-    });
-});
-
-$(document).ready(function () {
-    $('#dislike').click(function () {
-        let data = {
-            ajax: {
-                userId: $('#user-id').val(),
-                postId: $('#post-id').val()
-            }
-        };
-        $.ajax({
-            url: '/interface/dislike-post',
-            cache: false,
-            data: data,
-            success: function (res) {
-                $("#rating-container").html(res);
-                console.log(res)
-            }
-        });
-    });
-});
-
-function show() {
     let data = {
         ajax: {
-            postId: $('#post-id').val()
+            userId: $('#userId').val(),
+            postId: $('#postId').val()
+        }
+    };
+    $('#like').click(function () {
+        $.ajax({
+            url: '/post-interface/like-post',
+            cache: false,
+            data: data,
+            success: function (html) {
+                $("#rating-container").html(html);
+            }
+        });
+    });
+    $('#dislike').click(function () {
+        $.ajax({
+            url: '/post-interface/dislike-post',
+            cache: false,
+            data: data,
+            success: function (html) {
+                $("#rating-container").html(html);
+            }
+        });
+    });
+    update();
+    setInterval('update()', 2000);
+});
+
+
+function update() {
+    let data = {
+        ajax: {
+            postId: $('#postId').val()
         }
     };
     $.ajax({
 
-        url: "/interface/update-post-rating",
+        url: "/post-interface/update-post-rating",
         cache: false,
         data: data,
         success: function (html) {
@@ -53,8 +46,3 @@ function show() {
         }
     });
 }
-
-$(document).ready(function () {
-    show();
-    setInterval('show()', 1000);
-});

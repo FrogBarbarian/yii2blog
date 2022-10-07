@@ -1,7 +1,7 @@
 $(function random() {
     $('#randomPost').click(function () {
         $.ajax({
-            url: '/interface/random-post',
+            url: '/post-interface/random-post',
             success: function (data) {
                 location.href=(data)
             },

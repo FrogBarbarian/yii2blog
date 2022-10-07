@@ -9,10 +9,12 @@ use app\models\Post;
 use app\models\PostTmp;
 use app\models\Statistics;
 use app\models\User;
+use src\helpers\ConstructHtml;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\db\Exception;
 use Yii;
+use yii\widgets\ActiveForm;
 
 class PostsController extends AppController
 {
@@ -69,12 +71,13 @@ class PostsController extends AppController
     {
         $session = Yii::$app->session;
         $visitorIsLogin = $session->has('login');
+
         if ($id > 0) {
             $post = Post::find()
                 ->byId($id)
                 ->one();
-            if ($post !== null) {
 
+            if ($post !== null) {
                 if ($visitorIsLogin) {
                     $user = User::find()
                         ->byLogin($session['login'])
@@ -84,42 +87,15 @@ class PostsController extends AppController
                 }
 
                 $model = new CommentForm();
-
-                if (isset($_POST['_csrf'])) {
-                    if (isset($_POST['comments'])) {
-                        $post
-                            ->setIsCommentable(!$post->getIsCommentable())
-                            ->save();
-                    }
-
-                    if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-                        $comment = new Comment();
-                        $comment
-                            ->setPostId($post->getId())
-                            ->setAuthor($user->getLogin())
-                            ->setAuthorId($user->getId())
-                            ->setComment($model->comment)
-                            ->save();
-                        $userStatistics = Statistics::find()
-                            ->byLogin($user->getLogin())
-                            ->one();
-                        $userStatistics
-                            ->increaseComments()
-                            ->save();
-                        unset($_POST['CommentForm']);
-                    }
-
-                } else {
-                    $ownerStatistics = Statistics::find()
-                        ->byLogin($post->getAuthor())
-                        ->one();
-                    $ownerStatistics
-                        ->increaseViews()
-                        ->save();
-                    $post
-                        ->increasePostViews()
-                        ->save();
-                }
+                $ownerStatistics = Statistics::find()
+                    ->byLogin($post->getAuthor())
+                    ->one();
+                $ownerStatistics
+                    ->increaseViews()
+                    ->save();
+                $post
+                    ->increasePostViews()
+                    ->save();
 
                 $owner = User::find()
                     ->byLogin($post->getAuthor())
@@ -240,6 +216,7 @@ class PostsController extends AppController
         return $this->render('new-post', ['model' => $model, 'post' => $post]);
     }
 
+    //TODO: comment? Ajax?
     public function actionDelete()
     {
         if (Yii::$app->request->post()) {
@@ -279,6 +256,46 @@ class PostsController extends AppController
         } else {
             throw new NotFoundHttpException();
         }
+    }
 
+    public function actionAddComment(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new CommentForm();
+
+        if ($model->load($request->post()) && $model->validate()) {
+            $postId = $request->post('CommentForm')['postId'];
+            $post = Post::find()
+                ->byId($postId)
+                ->one();
+            $user = User::find()
+                ->byId(Yii::$app->session['id'])
+                ->one();
+            $comment = new Comment();
+            $comment
+                ->setPostId($post->getId())
+                ->setAuthor($user->getLogin())
+                ->setAuthorId($user->getId())
+                ->setComment($model->comment)
+                ->save();
+            $userStatistics = Statistics::find()
+                ->byLogin($user->getLogin())
+                ->one();
+            $userStatistics
+                ->increaseComments()
+                ->save();
+            $comments = Comment::find()
+                ->byPostId($postId)
+                ->all();
+
+            return $this->asJson(ConstructHtml::comments($comments));
+        }
+
+        return $this->asJson($model->errors);
     }
 }
