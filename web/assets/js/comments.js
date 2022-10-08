@@ -1,35 +1,93 @@
 $(document).ready(function () {
+    var token = $('meta[name=csrf-token]').attr("content");
     let data = {
+        _csrf: token,
         ajax: {
             postId: $('#postId').val(),
-            isVisible: $('#commentsAllowed').val()
-        }
+            isVisible: $('#commentsAllowed').val(),
+        },
     };
     $('#commentsButton').click(function () {
         $.ajax({
             url: '/post-interface/comment-rule',
             cache: false,
+            type: 'post',
             data: data,
             success: function (html) {
                 $("#commentsButton").html(html);
-            }
+            },
         });
         $.ajax({
             url: '/post-interface/comments-permissions',
             cache: false,
+            type: 'post',
             data: data,
             success: function (html) {
                 $("#comments-permissions").html(html);
-            }
-        });
-        $.ajax({
-            url: '/post-interface/comment-form',
-            cache: false,
-            data: data,
-            success: function (html) {
-                // $("#comment-form").html(html);
-            }
+            },
         });
     });
+    updateComments();
+    setInterval('updateComments()', 2000);
 });
 
+
+function updateComments() {
+    var token = $('meta[name=csrf-token]').attr("content");
+    let data = {
+        _csrf: token,
+        ajax: {
+            postId: $('#postId').val(),
+        },
+    };
+    $.ajax({
+        url: "/post-interface/update-comments",
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (html) {
+            $("#comments").html(html[0]);
+            $("#commentsAmount").html(html[1]);
+        },
+    });
+};
+
+function likeComment(id) {
+    var token = $('meta[name=csrf-token]').attr('content');
+    let data = {
+        _csrf: token,
+        ajax: {
+            commentId: id,
+        },
+    };
+    $.ajax({
+        url: '/post-interface/like-comment',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (html) {
+            $('#commentRating' + id).html(html);
+            updateComments();
+        },
+    });
+};
+
+function dislikeComment(id) {
+    var token = $('meta[name=csrf-token]').attr('content');
+    let data = {
+        _csrf: token,
+        ajax: {
+            commentId: id,
+        },
+    };
+    $.ajax({
+        url: '/post-interface/dislike-comment',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (html) {
+            $('#commentRating' + id).html(html);
+            updateComments();
+        },
+    });
+};

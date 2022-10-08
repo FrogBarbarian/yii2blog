@@ -67,6 +67,74 @@ class Comment extends ActiveRecord
     }
 
     /**
+     *  Присваивает количество лайков.
+     */
+    private function setLikes(string $likes): self
+    {
+        $this->setAttribute('likes', $likes);
+
+        return $this;
+    }
+
+    /**
+     *  Присваивает количество дизлайков.
+     */
+    private function setDislikes(string $dislikes): self
+    {
+        $this->setAttribute('dislikes', $dislikes);
+
+        return $this;
+    }
+
+    /**
+     * Увеличивает количество лайков на $int (по умолчанию 1).
+     */
+    public function increaseLikes(int $int = 1): self
+    {
+        $this->setAttribute('likes', $this->getLikes() + $int);
+
+        return $this;
+    }
+
+    /**
+     * Уменьшает количество лайков на $int (по умолчанию 1).
+     */
+    public function decreaseLikes(int $int = 1): self
+    {
+        $this->setAttribute('likes', $this->getLikes() - $int);
+
+        return $this;
+    }
+
+    /**
+     * Увеличивает количество дизлайков на $int (по умолчанию 1).
+     */
+    public function increaseDislikes(int $int = 1): self
+    {
+        $this->setAttribute('dislikes', $this->getDislikes() + $int);
+
+        return $this;
+    }
+
+    /**
+     * Уменьшает количество дизлайков на $int (по умолчанию 1).
+     */
+    public function decreaseDislikes(int $int = 1): self
+    {
+        $this->setAttribute('dislikes', $this->getDislikes() - $int);
+
+        return $this;
+    }
+
+    /**
+     * @return int ID комментария.
+     */
+    public function getId(): int
+    {
+        return $this->getAttribute('id');
+    }
+
+    /**
      * @return string Автор комментария.
      */
     public function getAuthor(): string
@@ -112,5 +180,118 @@ class Comment extends ActiveRecord
     public function getDislikes(): int
     {
         return $this->getAttribute('dislikes');
+    }
+
+    /**
+     * Присваивает рейтинг комментарию.
+     */
+    private function setRating(int $rating)
+    {
+        $this->setAttribute('rating', $rating);
+    }
+
+    /**
+     * @return int Рейтинг комментария.
+     */
+    public function getRating(): int
+    {
+        return $this->getAttribute('rating');
+    }
+
+    /**
+     * Список ID пользователей, лайкнувших комментарий.
+     */
+    private function getUsersLiked(): string
+    {
+        return $this->getAttribute('users_liked');
+    }
+
+    /**
+     * Список ID пользователей, дизлайкнувших комментарий.
+     */
+    private function getUsersDisliked(): string
+    {
+        return $this->getAttribute('users_disliked');
+    }
+
+    /**
+     * Проверяет, есть ли юзер в писке лайкнувших комментарий.
+     */
+    public function isUserLikeIt(string $id): bool
+    {
+        $usersIds = explode(' ', $this->getUsersLiked());
+
+        if (in_array($id, $usersIds, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Проверяет, есть ли юзер в писке дизлайкнувших комментарий.
+     */
+    public function isUserDislikeIt(string $id): bool
+    {
+        $usersIds = explode(' ', $this->getUsersDisliked());
+
+        if (in_array($id, $usersIds, true)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Дополняет список ID пользователей лайкнувших комментарий.
+     */
+    public function addLikedByUserId(string $id): self
+    {
+        $this->setAttribute('users_liked', "{$this->getUsersLiked()}$id ");
+
+        return $this;
+    }
+
+    /**
+     * Убирает ID из списка ID пользователей лайкнувших комментарий.
+     */
+    public function removeLikedByUserId(string $id): self
+    {
+        $usersIds = explode(' ', $this->getUsersLiked());
+        $usersIds = array_diff($usersIds, [$id]);
+        $this->setAttribute('users_liked', implode(' ', $usersIds));
+
+        return $this;
+    }
+
+    /**
+     * Дополняет список ID пользователей дизлайкнувших комментарий.
+     */
+    public function addDislikedByUserId(string $id): self
+    {
+        $this->setAttribute('users_disliked', "{$this->getUsersDisliked()}$id ");
+
+        return $this;
+    }
+
+    /**
+     * Убирает ID из списка ID пользователей дизлайкнувших комментарий.
+     */
+    public function removeDislikedByUserId(string $id): self
+    {
+        $usersIds = explode(' ', $this->getUsersDisliked());
+        $usersIds = array_diff($usersIds, [$id]);
+        $this->setAttribute('users_disliked', implode(' ', $usersIds));
+
+        return $this;
+    }
+
+    /**
+     * Обновляет рейтинг на основе общего количества лайков и дизлайков.
+     */
+    public function updateRating()
+    {
+        $this->setRating($this->getLikes() - $this->getDislikes());
+        $this->save();
     }
 }

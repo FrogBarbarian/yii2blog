@@ -136,46 +136,4 @@ class AdminController extends AppController
 
         return $this->render('panel');
     }
-
-    public function actionUserSettings()
-    {
-        if (!Yii::$app->request->post()) {
-            throw new NotFoundHttpException();
-        }
-
-        $user = User::find()
-            ->byId($_POST['id'])
-            ->one();
-
-        switch ($_POST['settings']) {
-            case 'admin':
-                $user
-                    ->setIsAdmin(!$user->getIsAdmin())
-                    ->save();
-                break;
-            case 'comment':
-                $user
-                    ->setCanComment(!$user->getCanComment())
-                    ->save();
-                break;
-            case 'posts':
-                $user
-                    ->setCanWritePosts(!$user->getCanWritePosts())
-                    ->save();
-                break;
-            case 'messages':
-                $user
-                    ->setCanWriteMessages(!$user->getCanWriteMessages())
-                    ->save();
-                break;
-            case 'ban':
-                //TODO: Ban user
-                break;
-            case 'resetRating':
-                //TODO: Reset user rating
-                break;
-        }
-
-        return $this->goHome(); //TODO: $this->goBack
-    }
 }

@@ -15,6 +15,13 @@ class CommentQuery extends ActiveQuery
     {
         return $this->where(['post_id' => $postId]);
     }
+    /**
+     * Поиск по ID.
+     */
+    public function byId(int $id): self
+    {
+        return $this->where(['id' => $id]);
+    }
 
     /**
      * Сортирует по ID в прямом порядке.

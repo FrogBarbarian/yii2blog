@@ -177,8 +177,4 @@ class UsersController extends AppController
 
         return $this->redirect('/profile');
     }
-
-    public function actionChangeSettings()
-    {
-    }
 }

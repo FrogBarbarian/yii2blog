@@ -7,7 +7,7 @@
 $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user->getLogin();
 ?>
 
-<div class="rounded-5" style="background-color: #84a2a6;">
+
     <div class="mx-3 py-5">
         <div class="col">
             <?php if ($isOwn): ?>
@@ -48,14 +48,13 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                 </div>
             </div>
             <?php if (!$user->getIsAdmin() && !$isOwn && Yii::$app->session->has('admin')): ?>
-                <?php $activeForm = \yii\widgets\ActiveForm::begin(['action' => \yii\helpers\Url::to('/admin/user-settings'), 'options' => ['class' => 'row ms-2']]) ?>
-                <input type="hidden" name="id" value="<?= $user->getId() ?>">
+                <script src="../../assets/js/profile-admin.js"></script>
+                <input type="hidden" id="userId" value="<?= $user->getId() ?>">
                 <button type="button" data-bs-toggle="modal" data-bs-target="#adminApply">Сделать админом</button>
-                <button type="submit" name="settings" value="comment">Комментарии <?= $user->getCanComment() ? 'разрешены' : 'запрещены' ?></button>
-                <button type="submit" name="settings" value="posts">Писать посты <?= $user->getCanWritePosts() ? 'разрешено' : 'запрещено' ?></button>
-                <button type="submit" name="settings" value="messages">ЛС <?= $user->getCanWriteMessages() ? 'разрешены' : 'запрещены' ?></button>
-                <button type="submit" name="settings" value="ban">Забанить</button>
-                <button type="submit" name="settings" value="resetRating">Обнулить рейтинг</button>
+                <button onclick="setCommentsPermissions(this)">Комментарии <?= $user->getCanComment() ? 'разрешены' : 'запрещены' ?></button>
+                <button onclick="setCreatePostsPermissions(this)">Писать посты <?= $user->getCanWritePosts() ? 'разрешено' : 'запрещено' ?></button>
+                <button onclick="setPrivateMessagesPermissions(this)">ЛС <?= $user->getCanWriteMessages() ? 'разрешены' : 'запрещены' ?></button>
+                <button type="submit" name="settings" value="ban">Забанить</button> <!--TODO: remark-->
                 <div class="modal fade" id="adminApply" tabindex="-1" aria-labelledby="adminApplyLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -68,13 +67,11 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                             </div>
                             <div class="modal-footer">
                                 <button type="button" data-bs-dismiss="modal">Отмена</button>
-                                <button type="submit" name="settings" value="admin">Подтвердить</button>
+                                <button onclick="setUserAdmin()">Подтвердить</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <?php \yii\widgets\ActiveForm::end() ?>
             <?php endif ?>
         </div>
     </div>
-</div>

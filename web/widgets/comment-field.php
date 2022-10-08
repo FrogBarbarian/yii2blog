@@ -7,12 +7,15 @@
 use yii\widgets\ActiveForm;
 
 $options = [
-    'options' => ['class' => 'form-floating', 'style' => 'justify-content: start;'],
+    'options' => ['class' => 'form-floating'],
     'errorOptions' => ['class' => 'text-danger small', 'id' => 'errorLabel'],
     'template' => "{input}\n{label}\n{error}",
 ];
 $activeForm = ActiveForm::begin([
     'id' => 'comment-form',
+    'options'=> [
+    'style' => 'width: 100%;padding-left: 5%;padding-right: 5%;',
+    ],
     'enableAjaxValidation' => true,
     'validateOnType' => true,
     'action' => \yii\helpers\Url::to('/posts/add-comment'),
@@ -23,7 +26,6 @@ $activeForm = ActiveForm::begin([
     ->textarea([
         'placeholder' => 'comment',
         'id' => 'commentArea',
-        'value' => $_POST['CommentForm']['comment'] ?? '',
         'style' => 'min-height: 150px',
     ])
     ->label('Комментарий', ['class' => false])
@@ -31,7 +33,7 @@ $activeForm = ActiveForm::begin([
 <?= $activeForm
     ->field($model, 'postId')
     ->hiddenInput(['value' => $post->getId()]) ?>
-<button type="button" id="addComment" class="btn">Отправить</button>
+<button type="button" id="addComment" class="btn btn-dark my-1">Отправить</button>
 <?php ActiveForm::end() ?>
 
 <script>

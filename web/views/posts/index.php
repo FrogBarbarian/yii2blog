@@ -11,8 +11,6 @@ use src\helpers\ConstructHtml;
 $curPage = intval($page);
 $this->title = 'Главная страница';
 ?>
-<div class="rounded-5 border border-3 border-dark"
-     style="background-color: #84a2a6;margin-left: 1vw;margin-right: 1vw;">
     <?php if ($search !== null): ?>
         <div class="alert alert-warning rounded-5 small mt-1 mx-1" role="alert">
             <?php if ($posts): ?>
@@ -51,4 +49,3 @@ $this->title = 'Главная страница';
             <?php require 'widgets/index-pagination.php' ?>
         </div>
     <?php endif; ?>
-</div>

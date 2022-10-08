@@ -7,7 +7,7 @@ namespace src\helpers;
 /**
  * Сервис для конструирования пагинации на странице.
  */
-class PaginationService
+class PaginationHelper
 {
     /**
      * Получает страницы для пагинации.

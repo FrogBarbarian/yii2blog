@@ -291,6 +291,7 @@ class PostsController extends AppController
                 ->save();
             $comments = Comment::find()
                 ->byPostId($postId)
+                ->orderAscById()
                 ->all();
 
             return $this->asJson(ConstructHtml::comments($comments));

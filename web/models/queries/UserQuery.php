@@ -11,7 +11,7 @@ class UserQuery extends ActiveQuery
     /**
      * Поиск по ID пользователя.
      */
-    public function byId(int $id): self
+    public function byId(int|string $id): self
     {
         return $this->where(['id' => $id]);
     }

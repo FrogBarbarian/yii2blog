@@ -50,7 +50,6 @@ if ($visitorIsLogin) {
         </button>
     <?php endif; ?>
 </div>
-<div class="rounded-5" style="background-color: #84a2a6;">
     <div class="mx-3 py-5">
         <?php if (Yii::$app->session->hasFlash('postAlreadyUpdated')): ?>
             <div class="alert alert-warning rounded-4" role="alert">
@@ -79,10 +78,10 @@ if ($visitorIsLogin) {
         </div>
         <div class="mb-2">
             <span id="rating-container"><?= ConstructHtml::rating($post->getRating()) ?></span>
-            <?php if ($visitorIsLogin): ?>
+            <?php if ($visitorIsLogin && $post->getAuthor() !== $user->getLogin()): ?>
                 <p>
-                    <button type="button" id="like">like</button>
-                    <button type="button" id="dislike">dislike</button>
+                    <button type="button" id="like" style="background-color: <?= $post->isUserLikeIt($user->getId()) ? 'green' : 'grey'?>">like</button>
+                    <button type="button" id="dislike" style="background-color: <?= $post->isUserDislikeIt($user->getId()) ? 'red' : 'grey'?>">dislike</button>
                 </p>
             <?php endif ?>
         </div>
@@ -94,22 +93,13 @@ if ($visitorIsLogin) {
                 </div>
             <?php endif ?>
         </div>
-
-
-        <?php if ($comments): ?>
-            <h5 style="padding-left: 5%"><?= count($comments) ?>
-                комментариев</h5> <!--TODO: Функция окончания слова комментарии-->
-        <?php else: ?>
-            <div class="alert alert-secondary text-center" role="alert">
-                Комментариев нет.
-            </div>
-        <?php endif ?>
-                <div id="#commentForm">
-                    <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable) require 'widgets/comment-field.php' ?>
-                </div>
-            <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
-                <?= $comments ? ConstructHtml::comments($comments) : '' ?>
-            </ul>
+        <h5 id="commentsAmount" style="padding-left: 5%"><?= ConstructHtml::commentsAmount(count($comments)) ?></h5>
+        <div id="#commentForm">
+            <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable) require 'widgets/comment-field.php' ?>
+        </div>
+        <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
+            <?= $comments ? ConstructHtml::comments($comments) : '' ?>
+        </ul>
         <?php if ($visitorIsLogin && $postIsCommentable): ?>
             <?php if (!$userCanComment): ?>
                 <div class="alert alert-danger text-center" role="alert">
@@ -117,5 +107,4 @@ if ($visitorIsLogin) {
                 </div>
             <?php endif ?>
         <?php endif ?>
-    </div>
 </div>

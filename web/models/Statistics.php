@@ -62,7 +62,7 @@ class Statistics extends ActiveRecord
     /**
      * Количество лайков пользователя.
      */
-    private function setLikes(int $likes)
+    public function setLikes(int $likes)
     {
         $this->setAttribute('likes', $likes);
     }
@@ -70,7 +70,7 @@ class Statistics extends ActiveRecord
     /**
      * Количество дизлайков пользователя.
      */
-    private function setDislikes(int $dislikes)
+    public function setDislikes(int $dislikes)
     {
         $this->setAttribute('dislikes', $dislikes);
     }

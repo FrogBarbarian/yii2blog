@@ -8,7 +8,6 @@ use yii\widgets\ActiveForm;
 $this->title = ($post['isNew'] ? 'Новый' : 'Отредактированный') . ' пост ' . $post['title'];
 ?>
 
-<div class="rounded-5" style="background-color: #84a2a6;margin-left: 1vh;margin-right: 1vh;">
     <div class="mx-3 py-5">
         <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
             <div class="card-body">
@@ -43,4 +42,3 @@ $this->title = ($post['isNew'] ? 'Новый' : 'Отредактированн�
             </div>
         </div>
     </div>
-</div>

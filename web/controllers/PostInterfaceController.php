@@ -2,6 +2,7 @@
 
 namespace app\controllers;
 
+use app\models\Comment;
 use app\models\Post;
 use app\models\Statistics;
 use src\helpers\ConstructHtml;
@@ -40,8 +41,9 @@ class PostInterfaceController extends AppController
             throw new NotFoundHttpException();
 
         }
-        $userId = $request->get('ajax')['userId'];
-        $postId = $request->get('ajax')['postId'];
+
+        $userId = Yii::$app->session['id'];
+        $postId = $request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
@@ -83,8 +85,6 @@ class PostInterfaceController extends AppController
             ->updateRating();
 
         return $this->asJson(ConstructHtml::rating($post->getRating()));
-
-
     }
 
     /**
@@ -99,8 +99,8 @@ class PostInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = $request->get('ajax')['userId'];
-        $postId = $request->get('ajax')['postId'];
+        $userId = Yii::$app->session['id'];
+        $postId = $request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
@@ -135,12 +135,38 @@ class PostInterfaceController extends AppController
                 ->decreaseLikes()
                 ->save();
         }
+
         $post
             ->updateRating();
         $ownerStatistics
             ->updateRating();
 
         return $this->asJson(ConstructHtml::rating($post->getRating()));
+    }
+
+    /**
+     * Обновляет цвет на кнопках лайк/дизлайк поста.
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdateRatingButtons(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $userId = Yii::$app->session['id'];
+        $postId = $request->post('ajax')['postId'];
+        $post = Post::find()
+            ->byId($postId)
+            ->one();
+        $liked = $post
+            ->isUserLikeIt($userId);
+        $disliked = $post
+            ->isUserDislikeIt($userId);
+
+        return $this->asJson([$liked, $disliked]);
     }
 
     /**
@@ -155,7 +181,7 @@ class PostInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $postId = $request->get('ajax')['postId'];
+        $postId = $request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
@@ -175,7 +201,7 @@ class PostInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $postId = $request->get('ajax')['postId'];
+        $postId = $request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
@@ -200,7 +226,7 @@ class PostInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $postId = $request->get('ajax')['postId'];
+        $postId = $request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
@@ -211,8 +237,11 @@ class PostInterfaceController extends AppController
         return $this->asJson($html);
     }
 
-    //TODO: Need?
-    public function actionCommentForm()
+    /**
+     * Обновляет список комментариев.
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdateComments()
     {
         $request = Yii::$app->getRequest();
 
@@ -220,12 +249,126 @@ class PostInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $postId = $request->get('ajax')['postId'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-//        $html = $post->getIsCommentable() ? '' : require 'widgets/comment-field.php';
+        $postId = $request->post('ajax')['postId'];
+        $comments = Comment::find()
+            ->byPostId($postId)
+            ->orderAscById()
+            ->all();
 
-        return $this->asJson('1');
+        return $this->asJson([ConstructHtml::comments($comments), ConstructHtml::commentsAmount(count($comments))]);
+    }
+
+    /**
+     * Добавляет комментарию лайк.
+     * @throws NotFoundHttpException
+     */
+    public function actionLikeComment(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentId = $request->post('ajax')['commentId'];
+        $userId = Yii::$app->session['id'];
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $ownerStatistics = Statistics::find()
+            ->byLogin($comment->getAuthor())
+            ->one();
+
+        if ($comment->isUserDislikeIt($userId)) {
+            $comment
+                ->decreaseDislikes()
+                ->removeDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseDislikes()
+                ->save();
+        }
+
+        if ($comment->isUserLikeIt($userId)) {
+            $comment
+                ->decreaseLikes()
+                ->removeLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseLikes()
+                ->save();
+        } else {
+            $comment
+                ->increaseLikes()
+                ->addLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->increaseLikes()
+                ->save();
+        }
+
+        $ownerStatistics
+            ->updateRating();
+        $comment
+            ->updateRating();
+
+        return $this->asJson(ConstructHtml::rating($comment->getRating()));
+    }
+
+    /**
+     * Добавляет комментарию лайк.
+     * @throws NotFoundHttpException
+     */
+    public function actionDislikeComment(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentId = $request->post('ajax')['commentId'];
+        $userId = Yii::$app->session['id'];
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $ownerStatistics = Statistics::find()
+            ->byLogin($comment->getAuthor())
+            ->one();
+
+        if ($comment->isUserLikeIt($userId)) {
+            $comment
+                ->decreaseLikes()
+                ->removeLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseLikes()
+                ->save();
+        }
+
+        if ($comment->isUserDislikeIt($userId)) {
+            $comment
+                ->decreaseDislikes()
+                ->removeDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseDislikes()
+                ->save();
+        } else {
+            $comment
+                ->increaseDislikes()
+                ->addDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->increaseDislikes()
+                ->save();
+        }
+
+        $ownerStatistics
+            ->updateRating();
+        $comment
+            ->updateRating();
+
+        return $this->asJson(ConstructHtml::rating($comment->getRating()));
     }
 }
