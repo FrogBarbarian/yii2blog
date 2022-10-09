@@ -1,3 +1,6 @@
+/**
+ * Открывает страницу с рандомным постом.
+ */
 $(function random() {
     $('#randomPost').click(function () {
         $.ajax({
@@ -9,13 +12,16 @@ $(function random() {
     });
 })
 
-$(document).ready(function () {
-    $('#arrowTop').click (function() {
-        window.scrollTo(0, 0);
-    });
+/**
+ * При коике на кнопку страницу скроллится в самый верх.
+ */
+$('#arrowTop').click(function () {
+    window.scrollTo(0, 0);
+});
 
-    window.addEventListener('scroll', function() {
-        arrowTop.hidden = (pageYOffset < document.documentElement.clientHeight);
-    })
+/**
+ * Прячет и показывает стрелку для прокрутки страницы вверх.
+ */
+window.addEventListener('scroll', function () {
+    arrowTop.hidden = (pageYOffset < (document.documentElement.clientHeight / 2));
 })
-

@@ -4,6 +4,7 @@
  * @var \app\models\Post $post
  */
 
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $options = [
@@ -18,8 +19,8 @@ $activeForm = ActiveForm::begin([
     ],
     'enableAjaxValidation' => true,
     'validateOnType' => true,
-    'action' => \yii\helpers\Url::to('/posts/add-comment'),
-    'validationUrl' => \yii\helpers\Url::to('/posts/add-comment'),
+    'action' => Url::to('/posts/add-comment'),
+    'validationUrl' => Url::to('/posts/add-comment'),
 ]) ?>
 <?= $activeForm
     ->field($model, 'comment', $options)

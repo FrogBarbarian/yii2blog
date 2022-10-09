@@ -34,7 +34,7 @@ class PostInterfaceController extends AppController
      * Добавляет лайк посту.
      * @throws NotFoundHttpException
      */
-    public function actionLikePost(): Response
+    public function actionLikePost()
     {
         $request = Yii::$app->getRequest();
 
@@ -84,15 +84,13 @@ class PostInterfaceController extends AppController
             ->updateRating();
         $ownerStatistics
             ->updateRating();
-
-        return $this->asJson(ConstructHtml::rating($post->getRating()));
     }
 
     /**
      * Добавляет дизлайк посту.
      * @throws NotFoundHttpException
      */
-    public function actionDislikePost(): Response
+    public function actionDislikePost()
     {
         $request = Yii::$app->getRequest();
 
@@ -141,8 +139,6 @@ class PostInterfaceController extends AppController
             ->updateRating();
         $ownerStatistics
             ->updateRating();
-
-        return $this->asJson(ConstructHtml::rating($post->getRating()));
     }
 
     /**

@@ -6,43 +6,44 @@ $(document).ready(function () {
             postId: $('#postId').val()
         }
     };
+    /**
+     * Ставит лайк посту.
+     */
     $('#like').click(function () {
         $.ajax({
             url: '/post-interface/like-post',
             cache: false,
             type: 'post',
             data: data,
-            success: function (html) {
-                $("#rating-container").html(html);
+            success: function () {
+                updateRating(data);
                 updateRatingButtons(data);
             },
         });
     });
+    /**
+     * Ставит дизлайк посту.
+     */
     $('#dislike').click(function () {
         $.ajax({
             url: '/post-interface/dislike-post',
             cache: false,
             type: 'post',
             data: data,
-            success: function (html) {
-                $("#rating-container").html(html);
+            success: function () {
+                updateRating(data);
                 updateRatingButtons(data);
             }
         });
     });
-    updateRating();
-    setInterval('updateRating()', 2000);
+    updateRating(data);
+    setInterval('updateRating', 2000, data);
 });
 
-
-function updateRating() {
-    var token = $('meta[name=csrf-token]').attr("content");
-    let data = {
-        _csrf: token,
-        ajax: {
-            postId: $('#postId').val()
-        }
-    };
+/**
+ * Обновляет рейтинг поста.
+ */
+function updateRating(data) {
     $.ajax({
         url: "/post-interface/update-post-rating",
         cache: false,
@@ -54,6 +55,9 @@ function updateRating() {
     });
 }
 
+/**
+ * Обновляет цвет кнопок "лайк" и "дизлайк".
+ */
 function updateRatingButtons(data) {
     $.ajax({
         url: '/post-interface/update-rating-buttons',

@@ -24,7 +24,7 @@ $this->title = 'Главная страница';
     <div style="margin-left: 10%;margin-right: 10%;">
         <?php require 'widgets/index-pagination.php' ?>
         <?php foreach ($posts as $post): ?>
-            <div class="card rounded-0 mx-auto mb-1" style="background-color: white;">
+            <div class="card rounded-0 mx-auto mb-1">
                 <div class="card-header hstack" >
                     <div class="col" style="font-size:small;text-align:start;">
                         <?= $post->getViews() . ' ' . NormalizeData::wordForm($post->getViews(), 'просмотров', 'просмотр', 'просмотра') ?>
