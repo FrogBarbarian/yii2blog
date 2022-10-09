@@ -48,9 +48,9 @@ $activeForm = ActiveForm::begin([
                 data: formData,
                 success: function (response) {
                     if (typeof (response) === "string") {
-                        $('#comments').html(response);
                         document.getElementById("commentArea").value = document.getElementById("commentArea").defaultValue;
                         $('#errorLabel').html('');
+                        updateComments();
                     } else {
                         $('#errorLabel').html(response['comment'][0]);
                     }

@@ -9,6 +9,7 @@
  */
 
 use src\helpers\ConstructHtml;
+use src\helpers\NormalizeData;
 
 $this->title = $post->getTitle();
 $postIsCommentable = $post->getIsCommentable();
@@ -93,7 +94,7 @@ if ($visitorIsLogin) {
                 </div>
             <?php endif ?>
         </div>
-        <h5 id="commentsAmount" style="padding-left: 5%"><?= ConstructHtml::commentsAmount(count($comments)) ?></h5>
+        <h5 id="commentsAmount" style="padding-left: 5%"><?= count($comments) . ' ' . NormalizeData::wordForm(count($comments), 'комментариев', 'комментарий', 'комментария') ?></h5>
         <div id="#commentForm">
             <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable) require 'widgets/comment-field.php' ?>
         </div>

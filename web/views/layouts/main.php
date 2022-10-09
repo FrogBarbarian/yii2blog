@@ -12,9 +12,9 @@
     <script src="../../assets/js/jquery.js"></script>
     <script src="../../assets/js/main.js"></script>
 </head>
-<body style="background-image: url('../../assets/images/background.jpg');background-color: #1a384d;">
+<body style="background-image: url('../../assets/images/background.jpg');height: 100vh">
 <header class="sticky-top">
-    <nav class="navbar navbar-expand-lg" style="background-color: rgba(101,101,96,0.95)">
+    <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104)">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
                 <img src="../../assets/images/favicon.svg" alt="Logo" width="30" height="24"
@@ -78,14 +78,9 @@
         </div>
     </nav>
 </header>
-<div style="
-        min-height: 90vh;
-        max-width: 960px;
-        margin: auto;
-        padding-top: 1%;
-    ">
-    <div class="rounded-5" style="background-color: rgba(106,112,115,0.75);">
-    <?= $content ?? '' ?>
+<div style="max-width: 960px;margin: auto;">
+    <div class="py-1" style="min-height: calc(100vh - 60px); padding-right:5%;padding-left:5%;background-color:rgba(106,112,115,0.75);">
+        <?= $content ?? '' ?>
     </div>
 </div>
 <button id="arrowTop" hidden

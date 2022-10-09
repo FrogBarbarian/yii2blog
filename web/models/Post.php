@@ -380,4 +380,38 @@ class Post extends ActiveRecord
 
         return false;
     }
+
+    /**
+     * @return int ID автора.
+     */
+    public function getAuthorId(): int
+    {
+        return $this->getAttribute('author_id');
+    }
+
+    /**
+     * Записывает количество комментариев.
+     */
+    private function setCommentsAmount(int $amount)
+    {
+        $this->setAttribute('comments_amount', $amount);
+    }
+
+    /**
+     * @return int Количество комментариев.
+     */
+    public function getCommentsAmount(): int
+    {
+        return $this->getAttribute('comments_amount');
+    }
+
+    /**
+     * Увеличивает количество комментариев на 1.
+     */
+    public function increaseCommentsAmount(): self
+    {
+        $this->setCommentsAmount($this->getCommentsAmount() + 1);
+
+        return $this;
+    }
 }

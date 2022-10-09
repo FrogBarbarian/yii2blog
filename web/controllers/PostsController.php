@@ -9,12 +9,10 @@ use app\models\Post;
 use app\models\PostTmp;
 use app\models\Statistics;
 use app\models\User;
-use src\helpers\ConstructHtml;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\db\Exception;
 use Yii;
-use yii\widgets\ActiveForm;
 
 class PostsController extends AppController
 {
@@ -258,6 +256,10 @@ class PostsController extends AppController
         }
     }
 
+    /**
+     * Добавляет комментарий к посту.
+     * @throws NotFoundHttpException
+     */
     public function actionAddComment(): Response
     {
         $request = Yii::$app->getRequest();
@@ -289,12 +291,11 @@ class PostsController extends AppController
             $userStatistics
                 ->increaseComments()
                 ->save();
-            $comments = Comment::find()
-                ->byPostId($postId)
-                ->orderAscById()
-                ->all();
+            $post
+                ->increaseCommentsAmount()
+                ->save();
 
-            return $this->asJson(ConstructHtml::comments($comments));
+            return $this->asJson('');
         }
 
         return $this->asJson($model->errors);

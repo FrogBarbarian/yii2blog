@@ -6,6 +6,7 @@ use app\models\Comment;
 use app\models\Post;
 use app\models\Statistics;
 use src\helpers\ConstructHtml;
+use src\helpers\NormalizeData;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -255,7 +256,7 @@ class PostInterfaceController extends AppController
             ->orderAscById()
             ->all();
 
-        return $this->asJson([ConstructHtml::comments($comments), ConstructHtml::commentsAmount(count($comments))]);
+        return $this->asJson([ConstructHtml::comments($comments), count($comments) . ' ' . NormalizeData::wordForm(count($comments), 'комментариев', 'комментарий', 'комментария')]);
     }
 
     /**
