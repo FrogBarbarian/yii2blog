@@ -32,5 +32,6 @@ class m221009_123414_create_complaints_table extends Migration
     {
         $this->dropForeignKey('sender_id_fk', 'complaints');
         $this->dropTable('complaints');
+        $this->execute('DROP TYPE objects');
     }
 }

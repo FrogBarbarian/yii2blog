@@ -4,11 +4,13 @@ namespace app\controllers;
 
 use app\models\Comment;
 use app\models\CommentForm;
+use app\models\ComplaintForm;
 use app\models\PostInteractionsForm;
 use app\models\Post;
 use app\models\PostTmp;
 use app\models\Statistics;
 use app\models\User;
+use src\helpers\ConstructHtml;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\db\Exception;
@@ -84,7 +86,8 @@ class PostsController extends AppController
                     $user = null;
                 }
 
-                $model = new CommentForm();
+                $commentForm = new CommentForm();
+                $complaintForm = new ComplaintForm();
                 $ownerStatistics = Statistics::find()
                     ->byLogin($post->getAuthor())
                     ->one();
@@ -108,7 +111,8 @@ class PostsController extends AppController
                     'user' => $user,
                     'owner' => $owner,
                     'comments' => $comments,
-                    'model' => $model,
+                    'commentForm' => $commentForm,
+                    'complaintForm' => $complaintForm,
                     'visitorIsLogin' => $visitorIsLogin,
                 ]);
             }

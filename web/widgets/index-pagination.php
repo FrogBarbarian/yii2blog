@@ -43,7 +43,7 @@ use src\helpers\PaginationHelper;
                     <?php endif ?>
                     <input class="form-control ms-2 me-1" name="page" type="search" placeholder="Страница"
                            aria-label="Search"
-                           style="max-width: 115px;background-color: rgba(0,0,0,0.5);color: #ffffff;font-size: small" required>
+                           style="max-width: 85px;background-color: rgba(0,0,0,0);color: #000000;font-size: small;border-color: #dee2e6" required>
                     <button class="page-link" type="submit" style="background-color: rgba(0,0,0,0);color: #000000;font-size: small">
                         <img src="/assets/images/arrow-right.svg" alt="Page open" width="16" height="16">
                     </button>

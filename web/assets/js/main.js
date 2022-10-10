@@ -4,7 +4,7 @@
 $(function random() {
     $('#randomPost').click(function () {
         $.ajax({
-            url: '/post-interface/random-post',
+            url: '/u-i/random-post',
             success: function (data) {
                 location.href = (data);
             },
@@ -13,11 +13,11 @@ $(function random() {
 })
 
 /**
- * При коике на кнопку страницу скроллится в самый верх.
+ * Скроллит страницу на самый верх.
  */
-$('#arrowTop').click(function () {
+function goTop() {
     window.scrollTo(0, 0);
-});
+}
 
 /**
  * Прячет и показывает стрелку для прокрутки страницы вверх.

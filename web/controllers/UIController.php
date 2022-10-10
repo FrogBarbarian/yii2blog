@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 use app\models\Comment;
+use app\models\Complaint;
+use app\models\ComplaintForm;
 use app\models\Post;
 use app\models\Statistics;
 use src\helpers\ConstructHtml;
@@ -11,7 +13,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
 
-class PostInterfaceController extends AppController
+class UIController extends AppController
 {
     /**
      * Находит случайный пост.
@@ -238,7 +240,7 @@ class PostInterfaceController extends AppController
      * Обновляет список комментариев.
      * @throws NotFoundHttpException
      */
-    public function actionUpdateComments()
+    public function actionUpdateComments(): Response
     {
         $request = Yii::$app->getRequest();
 
@@ -367,5 +369,63 @@ class PostInterfaceController extends AppController
             ->updateRating();
 
         return $this->asJson(ConstructHtml::rating($comment->getRating()));
+    }
+
+    /**
+     * Создает окно для отправки жалобы.
+     * @throws NotFoundHttpException
+     */
+    public function actionCreateComplaintWindow(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $complaintForm = new ComplaintForm();
+        $objectType = $request->post('ajax')['objectType'];
+        $objectId = $request->post('ajax')['objectId'];
+        $subjectId = $request->post('ajax')['subjectId'];
+
+        return $this->renderAjax('complaint-window', [
+            'complaintForm' => $complaintForm,
+            'objectType' => $objectType,
+            'objectId' => $objectId,
+            'subjectId' => $subjectId
+        ]);
+    }
+
+    /**
+     * Отправка жалобы.
+     * @throws NotFoundHttpException
+     */
+    public function actionSendComplaint(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new ComplaintForm();
+
+        if ($model->load($request->post()) && $model->validate()) {
+            $content = $request->post('ComplaintForm')['complaint'];
+            $objectType = $request->post('ComplaintForm')['objectType'];
+            $objectId = $request->post('ComplaintForm')['objectId'];
+            $subjectId = $request->post('ComplaintForm')['subjectId'];
+            $complaint = new Complaint();
+            $complaint
+                ->setObject($objectType)
+                ->setObjectId($objectId)
+                ->setSenderId($subjectId)
+                ->setComplaint($content)
+                ->save();
+
+            return $this->asJson(true);
+        }
+
+        return $this->asJson($model->errors);
     }
 }

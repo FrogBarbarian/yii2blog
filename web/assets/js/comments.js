@@ -9,7 +9,7 @@ $(document).ready(function () {
     };
     $('#commentsButton').click(function () {
         $.ajax({
-            url: '/post-interface/comment-rule',
+            url: '/u-i/comment-rule',
             cache: false,
             type: 'post',
             data: data,
@@ -18,7 +18,7 @@ $(document).ready(function () {
             },
         });
         $.ajax({
-            url: '/post-interface/comments-permissions',
+            url: '/u-i/comments-permissions',
             cache: false,
             type: 'post',
             data: data,
@@ -41,7 +41,7 @@ function updateComments() {
         },
     };
     $.ajax({
-        url: "/post-interface/update-comments",
+        url: "/u-i/update-comments",
         cache: false,
         type: 'post',
         data: data,
@@ -61,7 +61,7 @@ function likeComment(id) {
         },
     };
     $.ajax({
-        url: '/post-interface/like-comment',
+        url: '/u-i/like-comment',
         cache: false,
         type: 'post',
         data: data,
@@ -81,7 +81,7 @@ function dislikeComment(id) {
         },
     };
     $.ajax({
-        url: '/post-interface/dislike-comment',
+        url: '/u-i/dislike-comment',
         cache: false,
         type: 'post',
         data: data,

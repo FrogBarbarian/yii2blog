@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \app\models\CommentForm $model
+ * @var \app\models\CommentForm $commentForm
  * @var \app\models\Post $post
  */
 
@@ -23,7 +23,7 @@ $activeForm = ActiveForm::begin([
     'validationUrl' => Url::to('/posts/add-comment'),
 ]) ?>
 <?= $activeForm
-    ->field($model, 'comment', $options)
+    ->field($commentForm, 'comment', $options)
     ->textarea([
         'placeholder' => 'comment',
         'id' => 'commentArea',
@@ -32,7 +32,7 @@ $activeForm = ActiveForm::begin([
     ->label('Комментарий', ['class' => false])
 ?>
 <?= $activeForm
-    ->field($model, 'postId')
+    ->field($commentForm, 'postId')
     ->hiddenInput(['value' => $post->getId()]) ?>
 <button type="button" id="addComment" class="btn btn-dark my-1">Отправить</button>
 <?php ActiveForm::end() ?>

@@ -12,12 +12,12 @@
     <script src="../../assets/js/jquery.js"></script>
     <script src="../../assets/js/main.js"></script>
 </head>
-<body style="background-image: url('../../assets/images/background.webp');height: 100vh">
+<body style="background-image: url('../../assets/images/background.webp');height: 100%">
 <header class="sticky-top">
     <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104)">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="../../assets/images/logo.svg" alt="Logo" width="30" height="24"
+                <img src="../../assets/images/logo.svg" alt="logo" width="30" height="24"
                      class="d-inline-block align-text-top">
                 Блог
             </a>
@@ -82,8 +82,9 @@
     <div class="py-1" style="padding-right:5%;padding-left:5%;background-color:rgba(0,0,0,0);">
         <?= $content ?? '' ?>
     </div>
+    <div id="complaintZone"></div>
 </div>
-<button id="arrowTop" hidden
+<button onclick="goTop()" id="arrowTop" hidden
         style="height: 45px;
 width: 45px;
 position: fixed;

@@ -9,14 +9,14 @@ use yii\db\ActiveRecord;
 class CommentForm extends ActiveRecord
 {
     /**
-     * @var string Комментарий.
+     * @var string Текст комментария.
      */
     public string $comment = '';
 
     /**
      * {@inheritDoc}
      */
-    public static function tableName()
+    public static function tableName(): string
     {
         return 'comments';
     }

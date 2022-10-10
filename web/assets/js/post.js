@@ -11,7 +11,7 @@ $(document).ready(function () {
      */
     $('#like').click(function () {
         $.ajax({
-            url: '/post-interface/like-post',
+            url: '/u-i/like-post',
             cache: false,
             type: 'post',
             data: data,
@@ -26,7 +26,7 @@ $(document).ready(function () {
      */
     $('#dislike').click(function () {
         $.ajax({
-            url: '/post-interface/dislike-post',
+            url: '/u-i/dislike-post',
             cache: false,
             type: 'post',
             data: data,
@@ -45,7 +45,7 @@ $(document).ready(function () {
  */
 function updateRating(data) {
     $.ajax({
-        url: "/post-interface/update-post-rating",
+        url: "/u-i/update-post-rating",
         cache: false,
         type: 'post',
         data: data,
@@ -60,7 +60,7 @@ function updateRating(data) {
  */
 function updateRatingButtons(data) {
     $.ajax({
-        url: '/post-interface/update-rating-buttons',
+        url: '/u-i/update-rating-buttons',
         cache: false,
         type: 'post',
         data: data,
@@ -68,14 +68,55 @@ function updateRatingButtons(data) {
             if (response[0] === true) {
                 document.getElementById('like').style.backgroundColor = 'green';
             } else {
-                document.getElementById('like').style.backgroundColor = 'grey';
+                document.getElementById('like').style.backgroundColor = '#f7f7f7';
             }
 
             if (response[1] === true) {
                 document.getElementById('dislike').style.backgroundColor = 'red';
             } else {
-                document.getElementById('dislike').style.backgroundColor = 'grey';
+                document.getElementById('dislike').style.backgroundColor = '#f7f7f7';
             }
         }
     });
+}
+
+/**
+ * Создает окно жалобы.
+ * @param objectType Тип объекта.
+ * @param objectId ID объекта.
+ * @param subjectId  ID отправителя.
+ */
+function createComplaint(objectType, objectId, subjectId) {
+    let data = {
+        _csrf: $('meta[name=csrf-token]').attr("content"),
+        ajax: {
+            objectType: objectType,
+            objectId: objectId,
+            subjectId: subjectId,
+        },
+    };
+    $.ajax({
+        url: '/u-i/create-complaint-window',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            $('#complaintZone').html(response);
+        }
+    })
+}
+
+/**
+ * Закрывает окно жалобы.
+ */
+function closeComplaintWindow() {
+    $('#complaintZone').html('');
+}
+
+/**
+ * Ловит нажатие кнопки Esc при открытом окне жалобы.
+ */
+window.onkeyup = function(e) {
+    var elementExists = document.getElementById("complaintWindow");
+    if (elementExists !== null && e.keyCode == 27) closeComplaintWindow();
 }
