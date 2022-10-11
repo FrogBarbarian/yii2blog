@@ -64,7 +64,7 @@ if ($visitorIsLogin) {
                             <img src="/assets/images/like.svg" width="24" alt="like"/>
                         </button>
                     <?php endif ?>
-                    <span id="rating-container">
+                    <span id="post-rating">
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </span>
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>

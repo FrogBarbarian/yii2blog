@@ -60,7 +60,7 @@ class ConstructHtml
         $html = '';
 
         foreach ($comments as $comment) {
-            $html .= "<div class='list-group-item mb-1'>" .
+            $html .= "<li class='list-group-item mb-1'>" .
                 "<div class='d-flex w-100 justify-content-between'>" .
                 "<h5 class='mb-1'>" .
                 "<a href='/user?id={$comment->getAuthorId()}'>{$comment->getAuthor()}</a>" .
@@ -68,7 +68,7 @@ class ConstructHtml
                 "<small class='text-muted'>{$comment->getDate()}</small>" .
                 "</div>" . // TODO: Функция отсчета времени (минуты до часа, часы до дня, вчера, день/месяц - если год тот же, точная дата, год другой)
                 "<p class='mb-1 text-break'>{$comment->getComment()}</p>" .
-                "<div id='commentRating{$comment->getId()}'>" .
+                "<div class='comment-rating' id='commentRating{$comment->getId()}'>" .
                 self::rating($comment->getRating()) .
                 '</div>';
 
@@ -88,7 +88,7 @@ class ConstructHtml
                     "</button>";
             }
 
-            $html .= '</div>';
+            $html .= '</li>';
         }
 
         return $html;

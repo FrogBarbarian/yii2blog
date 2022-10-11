@@ -1,122 +1,146 @@
 $(document).ready(function () {
-    var token = $('meta[name=csrf-token]').attr("content");
+    const postId = (new URL(document.location)).searchParams.get('id');
+    const token = $('meta[name=csrf-token]').attr("content");
     let data = {
         _csrf: token,
         ajax: {
-            postId: $('#postId').val()
+            postId: postId,
         }
     };
+
+    /**
+     * Меняет правила комментирования поста.
+     * Отрисовывает соответствующие элементы.
+     */
+    $('#commentsButton').click(function () {
+        $.ajax({
+            url: '/comments-u-i/comment-rule',
+            cache: false,
+            type: 'post',
+            data: data,
+            success: function (response) {
+                if (response === true) {
+                    $("#comments-permissions").html('');
+                    $("#commentsButton").html(
+                        "<img src='../../assets/images/comment-enabled.svg' alt='comment enabled' width='24'>"
+                    );
+                } else {
+                    $("#comments-permissions").html(
+                        "<div class='alert alert-danger text-center' role='alert'>" +
+                        'Комментарии запрещены.' +
+                        '</div>'
+                    );
+                    $("#commentsButton").html(
+                        "<img src='../../assets/images/comment-disabled.svg' alt='comment disabled' width='24'>"
+                    );
+                }
+
+            },
+        });
+    });
+
     /**
      * Ставит лайк посту.
      */
     $('#like').click(function () {
         $.ajax({
-            url: '/u-i/like-post',
+            url: '/post-u-i/like-post',
             cache: false,
             type: 'post',
             data: data,
             success: function () {
-                updateRating(data);
+                updatePostRating(data);
                 updateRatingButtons(data);
             },
         });
     });
+
     /**
      * Ставит дизлайк посту.
      */
     $('#dislike').click(function () {
         $.ajax({
-            url: '/u-i/dislike-post',
+            url: '/post-u-i/dislike-post',
             cache: false,
             type: 'post',
             data: data,
             success: function () {
-                updateRating(data);
+                updatePostRating(data);
                 updateRatingButtons(data);
             }
         });
     });
-    updateRating(data);
-    setInterval('updateRating', 2000, data);
+
+    setInterval(updatePostRating, 2000, data);
+    setInterval(updateCommentsAmount, 2000, data);
 });
 
 /**
  * Обновляет рейтинг поста.
  */
-function updateRating(data) {
+function updatePostRating(data) {
+    let curRating = document.getElementById('post-rating').textContent;
+    data['ajax']['curRating'] = curRating;
     $.ajax({
-        url: "/u-i/update-post-rating",
+        url: '/post-u-i/update-post-rating',
         cache: false,
         type: 'post',
         data: data,
-        success: function (html) {
-            $("#rating-container").html(html);
+        success: function (response) {
+            if (response !== false) {
+                $("#post-rating").html(response);
+            }
+
+            return false;
         }
     });
 }
 
 /**
- * Обновляет цвет кнопок "лайк" и "дизлайк".
+ * Обновляет количество комментариев.
  */
-function updateRatingButtons(data) {
+function updateCommentsAmount(data) {
+    let curCommentsAmount = parseInt(document.getElementById('commentsAmount').textContent);
+    data['ajax']['curCommentsAmount'] = curCommentsAmount;
     $.ajax({
-        url: '/u-i/update-rating-buttons',
+        url: '/comments-u-i/update-comments-amount',
         cache: false,
         type: 'post',
         data: data,
         success: function (response) {
-            if (response[0] === true) {
-                document.getElementById('like').style.backgroundColor = 'green';
-            } else {
-                document.getElementById('like').style.backgroundColor = '#f7f7f7';
+            if (response !== false) {
+                $("#commentsAmount").html(response);
             }
 
-            if (response[1] === true) {
-                document.getElementById('dislike').style.backgroundColor = 'red';
-            } else {
-                document.getElementById('dislike').style.backgroundColor = '#f7f7f7';
-            }
-        }
-    });
-}
-
-/**
- * Создает окно жалобы.
- * @param objectType Тип объекта.
- * @param objectId ID объекта.
- * @param subjectId  ID отправителя.
- */
-function createComplaint(objectType, objectId, subjectId) {
-    let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
-        ajax: {
-            objectType: objectType,
-            objectId: objectId,
-            subjectId: subjectId,
-        },
-    };
-    $.ajax({
-        url: '/u-i/create-complaint-window',
-        cache: false,
-        type: 'post',
-        data: data,
-        success: function (response) {
-            $('#complaintZone').html(response);
+            return false;
         }
     })
 }
 
 /**
- * Закрывает окно жалобы.
+ * Обновляет цвет кнопок "лайк" и "дизлайк" к посту.
  */
-function closeComplaintWindow() {
-    $('#complaintZone').html('');
-}
+function updateRatingButtons(data) {
+    $.ajax({
+        url: '/post-u-i/update-post-rating-buttons',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            $likeButtonColor = document.getElementById('like').style.backgroundColor;
+            $dislikeButtonColor = document.getElementById('dislike').style.backgroundColor;
 
-/**
- * Ловит нажатие кнопки Esc при открытом окне жалобы.
- */
-window.onkeyup = function(e) {
-    var elementExists = document.getElementById("complaintWindow");
-    if (elementExists !== null && e.keyCode == 27) closeComplaintWindow();
+            if (response[0] === true) {
+                $likeButtonColor = 'green';
+            } else {
+                $likeButtonColor = '#f7f7f7';
+            }
+
+            if (response[1] === true) {
+                $dislikeButtonColor = 'red';
+            } else {
+                $dislikeButtonColor = '#f7f7f7';
+            }
+        }
+    });
 }

@@ -30,4 +30,12 @@ class CommentQuery extends ActiveQuery
     {
         return $this->orderBy(['id' => SORT_ASC]);
     }
+
+    /**
+     * Сортирует по ID в обратном порядке.
+     */
+    public function orderDescById(): self
+    {
+        return $this->orderBy(['id' => SORT_DESC]);
+    }
 }

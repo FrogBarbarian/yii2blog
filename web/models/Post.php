@@ -360,11 +360,7 @@ class Post extends ActiveRecord
     {
         $usersIds = explode(' ', $this->getLikedByUsers());
 
-        if (in_array($id, $usersIds, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($id, $usersIds);
     }
 
     /**
@@ -374,11 +370,7 @@ class Post extends ActiveRecord
     {
         $usersIds = explode(' ', $this->getDislikedByUsers());
 
-        if (in_array($id, $usersIds, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($id, $usersIds);
     }
 
     /**

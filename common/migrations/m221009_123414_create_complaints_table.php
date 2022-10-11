@@ -16,7 +16,7 @@ class m221009_123414_create_complaints_table extends Migration
         $this->execute("CREATE TYPE objects AS ENUM ('user', 'post', 'comment')");
         $this->createTable('complaints', [
             'id' => $this->primaryKey(),
-            'object' => 'objects',
+            'object' => 'objects NOT NULL',
             'object_id' => $this->integer()->notNull(),
             'sender_id' => $this->integer()->notNull(),
             'complaint' => $this->string(250)->notNull(),

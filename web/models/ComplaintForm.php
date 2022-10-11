@@ -33,9 +33,9 @@ class ComplaintForm extends ActiveRecord
             [
                 'complaint',
                 'string',
-                'length' => [15, 240],
-                'tooShort' => "Жалоба должна содержать не менее 15 символов (сейчас - {$this->fieldLength()})",
-                'tooLong' => "Жалоба должна содержать не больше 240 символов (сейчас - {$this->fieldLength()})",
+                'length' => [10, 250],
+                'tooShort' => "Жалоба должна содержать не менее 10 символов (сейчас - {$this->fieldLength()})",
+                'tooLong' => "Жалоба должна содержать не больше 250 символов (сейчас - {$this->fieldLength()})",
             ],
         ];
     }

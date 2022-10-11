@@ -1,56 +1,36 @@
 $(document).ready(function () {
-    var token = $('meta[name=csrf-token]').attr("content");
+    const postId = (new URL(document.location)).searchParams.get('id');
+    const token = $('meta[name=csrf-token]').attr("content");
     let data = {
         _csrf: token,
         ajax: {
-            postId: $('#postId').val(),
-            isVisible: $('#commentsAllowed').val(),
+            postId: postId,
         },
     };
-    $('#commentsButton').click(function () {
+
+    $('#addComment').click(function () {
+        let form = $('#comment-form');
+        let formData = form.serialize();
         $.ajax({
-            url: '/u-i/comment-rule',
+            url: '/posts/add-comment',
             cache: false,
             type: 'post',
-            data: data,
-            success: function (html) {
-                $("#commentsButton").html(html);
-            },
-        });
-        $.ajax({
-            url: '/u-i/comments-permissions',
-            cache: false,
-            type: 'post',
-            data: data,
-            success: function (html) {
-                $("#comments-permissions").html(html);
-            },
+            data: formData,
+            success: function (response) {
+                if (typeof (response) === "string") {
+                    document.getElementById("commentArea").value = document.getElementById("commentArea").defaultValue;
+                    $('#errorLabel').html('');
+                    updateComments(data);
+                    updateCommentsAmount(data);
+                } else {
+                    $('#errorLabel').html(response['comment'][0]);
+                }
+            }
         });
     });
-    updateComments();
-    setInterval('updateComments()', 2000);
+
+    setInterval(updateComments, 2000, data);
 });
-
-
-function updateComments() {
-    var token = $('meta[name=csrf-token]').attr("content");
-    let data = {
-        _csrf: token,
-        ajax: {
-            postId: $('#postId').val(),
-        },
-    };
-    $.ajax({
-        url: "/u-i/update-comments",
-        cache: false,
-        type: 'post',
-        data: data,
-        success: function (html) {
-            $("#comments").html(html[0]);
-            $("#commentsAmount").html(html[1]);
-        },
-    });
-};
 
 function likeComment(id) {
     var token = $('meta[name=csrf-token]').attr('content');
@@ -61,16 +41,19 @@ function likeComment(id) {
         },
     };
     $.ajax({
-        url: '/u-i/like-comment',
+        url: '/comments-u-i/like-comment',
         cache: false,
         type: 'post',
         data: data,
-        success: function (html) {
-            $('#commentRating' + id).html(html);
-            updateComments();
+        success: function (response) {
+            $('#commentRating' + id).html(response);
         },
     });
 };
+
+function updateCommentRating(id) {
+
+}
 
 function dislikeComment(id) {
     var token = $('meta[name=csrf-token]').attr('content');
@@ -81,13 +64,38 @@ function dislikeComment(id) {
         },
     };
     $.ajax({
-        url: '/u-i/dislike-comment',
+        url: '/post-u-i/dislike-comment',
         cache: false,
         type: 'post',
         data: data,
         success: function (html) {
             $('#commentRating' + id).html(html);
-            updateComments();
         },
     });
 };
+
+function updateCommentRating(commentRating) {
+    let curRating = commentRating.textContent;
+    data['ajax']['curCommentsAmount'] = curCommentsAmount;
+}
+
+/**
+ * Дорисовывает комментарии, если в посте выведены не все.
+ */
+function updateComments(data) {
+    let comments = document.getElementById('comments');
+    let curCommentsAmount = comments.getElementsByTagName('li').length;
+    data['ajax']['curCommentsAmount'] = curCommentsAmount;
+    $.ajax({
+        url: '/comments-u-i/append-comments',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            if (response !== false) {
+                $html = comments.innerHTML;
+                $('#comments').html($html + response);
+            }
+        }
+    });
+}

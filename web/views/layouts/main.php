@@ -17,7 +17,7 @@
     <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104)">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">
-                <img src="../../assets/images/logo.svg" alt="logo" width="30" height="24"
+                <img src="../../assets/images/logo.svg" alt="logo" width="30"
                      class="d-inline-block align-text-top">
                 Блог
             </a>
@@ -29,7 +29,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <button type="button" id="randomPost" class="nav-link"
+                        <button id="randomPost" class="nav-link"
                                 style="color: #d0e0dc;background-color: rgba(0,0,0,0)">
                             Случайная статья
                         </button>

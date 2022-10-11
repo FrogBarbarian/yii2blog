@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\models;
 
@@ -217,35 +217,27 @@ class Comment extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке лайкнувших комментарий.
      */
-    public function isUserLikeIt(string $id): bool
+    public function isUserLikeIt(int $id): bool
     {
         $usersIds = explode(' ', $this->getUsersLiked());
 
-        if (in_array($id, $usersIds, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($id, $usersIds);
     }
 
     /**
      * Проверяет, есть ли юзер в писке дизлайкнувших комментарий.
      */
-    public function isUserDislikeIt(string $id): bool
+    public function isUserDislikeIt(int $id): bool
     {
         $usersIds = explode(' ', $this->getUsersDisliked());
 
-        if (in_array($id, $usersIds, true)) {
-            return true;
-        }
-
-        return false;
+        return in_array($id, $usersIds);
     }
 
     /**
      * Дополняет список ID пользователей лайкнувших комментарий.
      */
-    public function addLikedByUserId(string $id): self
+    public function addLikedByUserId(int $id): self
     {
         $this->setAttribute('users_liked', "{$this->getUsersLiked()}$id ");
 
@@ -255,7 +247,7 @@ class Comment extends ActiveRecord
     /**
      * Убирает ID из списка ID пользователей лайкнувших комментарий.
      */
-    public function removeLikedByUserId(string $id): self
+    public function removeLikedByUserId(int $id): self
     {
         $usersIds = explode(' ', $this->getUsersLiked());
         $usersIds = array_diff($usersIds, [$id]);

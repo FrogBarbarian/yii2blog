@@ -35,6 +35,10 @@ use yii\widgets\ActiveForm;
                     'validationUrl' => Url::to('/u-i/send-complaint'),
                 ]) ?>
             <div class='modal-body'>
+                <span style="font-size: small">
+                    Изложите суть жалобы. Избегайте размытых выражений и конкретизируйте.
+                    Уложитесь в 250 символов.
+                </span>
                 <?= $activeForm->field($complaintForm, 'complaint', $options)->textarea([
                 'placeholder' => 'complaint',
                 'id' => 'commentArea',
