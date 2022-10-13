@@ -8,6 +8,9 @@ $(document).ready(function () {
         },
     };
 
+    /**
+     * Добавляет комментарий.
+     */
     $('#addComment').click(function () {
         let form = $('#comment-form');
         let formData = form.serialize();
@@ -17,7 +20,7 @@ $(document).ready(function () {
             type: 'post',
             data: formData,
             success: function (response) {
-                if (typeof (response) === "string") {
+                if (response === false) {
                     document.getElementById("commentArea").value = document.getElementById("commentArea").defaultValue;
                     $('#errorLabel').html('');
                     updateComments(data);
@@ -32,6 +35,9 @@ $(document).ready(function () {
     setInterval(updateComments, 2000, data);
 });
 
+/**
+ * Лайкает комментарий.
+ */
 function likeComment(id) {
     var token = $('meta[name=csrf-token]').attr('content');
     let data = {
@@ -46,15 +52,15 @@ function likeComment(id) {
         type: 'post',
         data: data,
         success: function (response) {
+            updateCommentRatingButtons(data, id);
             $('#commentRating' + id).html(response);
         },
     });
 };
 
-function updateCommentRating(id) {
-
-}
-
+/**
+ * Дизлайкает комментарий.
+ */
 function dislikeComment(id) {
     var token = $('meta[name=csrf-token]').attr('content');
     let data = {
@@ -64,20 +70,16 @@ function dislikeComment(id) {
         },
     };
     $.ajax({
-        url: '/post-u-i/dislike-comment',
+        url: '/comments-u-i/dislike-comment',
         cache: false,
         type: 'post',
         data: data,
         success: function (html) {
+            updateCommentRatingButtons(data, id);
             $('#commentRating' + id).html(html);
         },
     });
 };
-
-function updateCommentRating(commentRating) {
-    let curRating = commentRating.textContent;
-    data['ajax']['curCommentsAmount'] = curCommentsAmount;
-}
 
 /**
  * Дорисовывает комментарии, если в посте выведены не все.
@@ -95,6 +97,71 @@ function updateComments(data) {
             if (response !== false) {
                 $html = comments.innerHTML;
                 $('#comments').html($html + response);
+            }
+
+            updateCommentRating(data['_csrf']);
+        }
+    });
+}
+
+/**
+ * Обновляет цвет кнопок "лайк" и "дизлайк" к комментарию.
+ */
+function updateCommentRatingButtons(data, id) {
+    $.ajax({
+        url: '/comments-u-i/update-comment-rating-buttons',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            $likeButton = document.getElementById('commentLikeButton' + id);
+            $dislikeButton = document.getElementById('commentDislikeButton' + id);
+
+            if (response[0] === true) {
+                $likeButton.style.backgroundColor = 'green';
+            } else {
+                $likeButton.style.backgroundColor = '#f7f7f7';
+            }
+
+            if (response[1] === true) {
+                $dislikeButton.style.backgroundColor = 'red';
+            } else {
+                $dislikeButton.style.backgroundColor = '#f7f7f7';
+            }
+        }
+    });
+}
+
+/**
+ *  Обновляет рейтинг всех комментариев к посту.
+ */
+function updateCommentRating(token) {
+    let data = {
+        _csrf: token,
+        ajax: {},
+    }
+    let commentBlock = document.getElementById('comments');
+    let commentsRatingElements = commentBlock.querySelectorAll('div.comment-rating');
+    var comments = [];
+
+    for (i = 0; i < commentsRatingElements.length; i++) {
+        comments.push({
+            id: parseInt(commentsRatingElements[i].id.match(/\d+/)),
+            rating: commentsRatingElements[i].textContent,
+        });
+    }
+
+    data['ajax'].comments = comments;
+    $.ajax({
+        url: '/comments-u-i/comments-update-rating',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            if (response !== false) {
+                for (let i = 0; i < commentsRatingElements.length; i++) {
+                    $(commentsRatingElements[i]).html(response[i]['html'])
+                }
             }
         }
     });

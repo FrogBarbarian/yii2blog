@@ -42,7 +42,7 @@ $(document).ready(function () {
     /**
      * Ставит лайк посту.
      */
-    $('#like').click(function () {
+    $('#likePost').click(function () {
         $.ajax({
             url: '/post-u-i/like-post',
             cache: false,
@@ -58,7 +58,7 @@ $(document).ready(function () {
     /**
      * Ставит дизлайк посту.
      */
-    $('#dislike').click(function () {
+    $('#dislikePost').click(function () {
         $.ajax({
             url: '/post-u-i/dislike-post',
             cache: false,
@@ -127,19 +127,19 @@ function updateRatingButtons(data) {
         type: 'post',
         data: data,
         success: function (response) {
-            $likeButtonColor = document.getElementById('like').style.backgroundColor;
-            $dislikeButtonColor = document.getElementById('dislike').style.backgroundColor;
+            $likeButton = document.getElementById('likePost');
+            $dislikeButton = document.getElementById('dislikePost');
 
             if (response[0] === true) {
-                $likeButtonColor = 'green';
+                $likeButton.style.backgroundColor = 'green';
             } else {
-                $likeButtonColor = '#f7f7f7';
+                $likeButton.style.backgroundColor = '#f7f7f7';
             }
 
             if (response[1] === true) {
-                $dislikeButtonColor = 'red';
+                $dislikeButton.style.backgroundColor = 'red';
             } else {
-                $dislikeButtonColor = '#f7f7f7';
+                $dislikeButton.style.backgroundColor = '#f7f7f7';
             }
         }
     });

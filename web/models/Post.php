@@ -312,7 +312,7 @@ class Post extends ActiveRecord
     /**
      * Дополняет список ID пользователей лайкнувших пост.
      */
-    public function addLikedByUserId(string $id): self
+    public function addLikedByUserId(int $id): self
     {
         $this->setAttribute('liked_by_users', "{$this->getLikedByUsers()}$id ");
 
@@ -322,7 +322,7 @@ class Post extends ActiveRecord
     /**
      * Убирает ID из списка ID пользователей лайкнувших пост.
      */
-    public function bateLikedByUserId(string $id): self
+    public function bateLikedByUserId(int $id): self
     {
         $usersIds = explode(' ', $this->getLikedByUsers());
         $usersIds = array_diff($usersIds, [$id]);
@@ -334,7 +334,7 @@ class Post extends ActiveRecord
     /**
      * Убирает ID из списка ID пользователей дизлайкнувших пост.
      */
-    public function bateDislikedByUserId(string $id): self
+    public function bateDislikedByUserId(int $id): self
     {
         $usersIds = explode(' ', $this->getDislikedByUsers());
         $usersIds = array_diff($usersIds, [$id]);
@@ -346,7 +346,7 @@ class Post extends ActiveRecord
     /**
      * Дополняет список ID пользователей дизлайкнувших пост.
      */
-    public function addDislikedByUserId(string $id): self
+    public function addDislikedByUserId(int $id): self
     {
         $this->setAttribute('disliked_by_users', "{$this->getDislikedByUsers()}$id ");
 
@@ -356,7 +356,7 @@ class Post extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке лайкнувших пост.
      */
-    public function isUserLikeIt(string $id): bool
+    public function isUserLikeIt(int $id): bool
     {
         $usersIds = explode(' ', $this->getLikedByUsers());
 
@@ -366,7 +366,7 @@ class Post extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке дизлайкнувших пост.
      */
-    public function isUserDislikeIt(string $id): bool
+    public function isUserDislikeIt(int $id): bool
     {
         $usersIds = explode(' ', $this->getDislikedByUsers());
 

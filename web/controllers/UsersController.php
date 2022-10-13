@@ -151,6 +151,7 @@ class UsersController extends AppController
             'statistics' => $statistics,
             'isOwn' => $isOwn,
             'tab' => $tab,
+            'session' => $session,
         ]);
     }
 

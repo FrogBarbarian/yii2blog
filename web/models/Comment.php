@@ -259,7 +259,7 @@ class Comment extends ActiveRecord
     /**
      * Дополняет список ID пользователей дизлайкнувших комментарий.
      */
-    public function addDislikedByUserId(string $id): self
+    public function addDislikedByUserId(int $id): self
     {
         $this->setAttribute('users_disliked', "{$this->getUsersDisliked()}$id ");
 
@@ -269,7 +269,7 @@ class Comment extends ActiveRecord
     /**
      * Убирает ID из списка ID пользователей дизлайкнувших комментарий.
      */
-    public function removeDislikedByUserId(string $id): self
+    public function removeDislikedByUserId(int $id): self
     {
         $usersIds = explode(' ', $this->getUsersDisliked());
         $usersIds = array_diff($usersIds, [$id]);

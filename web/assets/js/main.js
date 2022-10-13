@@ -49,7 +49,7 @@ function createComplaint(objectType, objectId, senderId) {
         success: function (response) {
             $('#complaintZone').html(response);
         }
-    })
+    });
 }
 
 /**

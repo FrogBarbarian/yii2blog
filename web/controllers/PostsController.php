@@ -57,7 +57,12 @@ class PostsController extends AppController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('index', ['posts' => $posts, 'pages' => $pages, 'page' => $page, 'search' => $search]);
+        return $this->render('index', [
+            'posts' => $posts,
+            'pages' => $pages,
+            'page' => $page,
+            'search' => $search,
+        ]);
     }
 
     /**
@@ -298,7 +303,7 @@ class PostsController extends AppController
                 ->increaseCommentsAmount()
                 ->save();
 
-            return $this->asJson('');
+            return $this->asJson(false);
         }
 
         return $this->asJson($model->errors);

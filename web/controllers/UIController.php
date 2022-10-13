@@ -1,14 +1,12 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\controllers;
 
-use app\models\Comment;
 use app\models\Complaint;
 use app\models\ComplaintForm;
 use app\models\Post;
-use app\models\Statistics;
-use src\helpers\ConstructHtml;
-use src\helpers\NormalizeData;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -30,63 +28,6 @@ class UIController extends AppController
             ->one();
 
         return $this->asJson('/post?id=' . $post->getId());
-    }
-
-    /**
-     * Добавляет комментарию лайк.
-     * @throws NotFoundHttpException
-     */
-    public function actionDislikeComment(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $commentId = $request->post('ajax')['commentId'];
-        $userId = Yii::$app->session['id'];
-        $comment = Comment::find()
-            ->byId($commentId)
-            ->one();
-        $ownerStatistics = Statistics::find()
-            ->byLogin($comment->getAuthor())
-            ->one();
-
-        if ($comment->isUserLikeIt($userId)) {
-            $comment
-                ->decreaseLikes()
-                ->removeLikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->decreaseLikes()
-                ->save();
-        }
-
-        if ($comment->isUserDislikeIt($userId)) {
-            $comment
-                ->decreaseDislikes()
-                ->removeDislikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->decreaseDislikes()
-                ->save();
-        } else {
-            $comment
-                ->increaseDislikes()
-                ->addDislikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->increaseDislikes()
-                ->save();
-        }
-
-        $ownerStatistics
-            ->updateRating();
-        $comment
-            ->updateRating();
-
-        return $this->asJson(ConstructHtml::rating($comment->getRating()));
     }
 
     /**

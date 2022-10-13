@@ -18,7 +18,7 @@ class m221003_081606_create_comments_table extends Migration
             'author' => $this->string(30)->notNull(),
             'author_id' => $this->integer()->notNull(),
             'comment' => $this->text()->notNull(),
-            'datetime' => $this->dateTime()->defaultValue(new \yii\db\Expression("NOW()"))->notNull(),
+            'datetime' => $this->dateTime()->defaultValue(new \yii\db\Expression("CURRENT_TIMESTAMP(0)"))->notNull(),
             'likes' => $this->integer()->defaultValue(0)->notNull(),
             'dislikes' => $this->integer()->defaultValue(0)->notNull(),
             'rating' => $this->integer()->defaultValue(0)->notNull(),

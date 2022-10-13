@@ -164,4 +164,122 @@ class CommentsUIController extends AppController
 
         return $this->asJson(ConstructHtml::rating($comment->getRating()));
     }
+
+    /**
+     * Добавляет комментарию лайк.
+     * @throws NotFoundHttpException
+     */
+    public function actionDislikeComment(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentId = (int)$request->post('ajax')['commentId'];
+        $userId = (int)Yii::$app->session['id'];
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $ownerStatistics = Statistics::find()
+            ->byLogin($comment->getAuthor())
+            ->one();
+
+        if ($comment->isUserLikeIt($userId)) {
+            $comment
+                ->decreaseLikes()
+                ->removeLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseLikes()
+                ->save();
+        }
+
+        if ($comment->isUserDislikeIt($userId)) {
+            $comment
+                ->decreaseDislikes()
+                ->removeDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseDislikes()
+                ->save();
+        } else {
+            $comment
+                ->increaseDislikes()
+                ->addDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->increaseDislikes()
+                ->save();
+        }
+
+        $ownerStatistics
+            ->updateRating();
+        $comment
+            ->updateRating();
+
+        return $this->asJson(ConstructHtml::rating($comment->getRating()));
+    }
+
+    /**
+     * Обновляет цвет на кнопках лайк/дизлайк комментария.
+     * @throws NotFoundHttpException
+     */
+    public function actionUpdateCommentRatingButtons(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $userId = (int)Yii::$app->session['id'];
+        $commentId = (int)$request->post('ajax')['commentId'];
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $liked = $comment
+            ->isUserLikeIt($userId);
+        $disliked = $comment
+            ->isUserDislikeIt($userId);
+
+        return $this->asJson([$liked, $disliked]);
+    }
+
+    /**
+     * Сверяет текущий рейтинг комментариев с рейтингом в БД.
+     * @throws NotFoundHttpException
+     */
+    public function actionCommentsUpdateRating(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentsData = $request->post('ajax')['comments'];
+        $newCommentData = [];
+        $dataIsDiff = false;
+
+        foreach ($commentsData as $commentData) {
+            $id = (int)$commentData['id'];
+            $rating = (int)$commentData['rating'];
+            $comment = Comment::find()
+                ->byId($id)
+                ->one();
+            $newCommentData[] = ['html' => ConstructHtml::rating($comment->getRating())];
+
+            if ($comment->getRating() !== $rating) {
+                $dataIsDiff = true;
+            }
+        }
+
+        if ($dataIsDiff) {
+            return $this->asJson($newCommentData);
+        }
+
+        return $this->asJson(false);
+    }
 }

@@ -4,11 +4,14 @@
  * @var \app\models\User $owner
  * @var \app\models\User $user
  * @var \app\models\Comment[] $comments
+ * @var \app\models\CommentForm $commentForm
  * @var bool $visitorIsLogin
  */
 
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
+use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 $this->title = $post->getTitle();
 $postIsCommentable = $post->getIsCommentable();
@@ -59,7 +62,7 @@ if ($visitorIsLogin) {
             <div class="hstack">
                 <div class="col">
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
-                        <button class="rounded-circle" type="button" id="like"
+                        <button class="rounded-circle" type="button" id="likePost"
                                 style="background-color: <?= $post->isUserLikeIt($user->getId()) ? 'green' : '#f7f7f7' ?>">
                             <img src="/assets/images/like.svg" width="24" alt="like"/>
                         </button>
@@ -68,7 +71,7 @@ if ($visitorIsLogin) {
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </span>
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
-                        <button class="rounded-circle" id="dislike"
+                        <button class="rounded-circle" id="dislikePost"
                                 style="background-color: <?= $post->isUserDislikeIt($user->getId()) ? 'red' : '#f7f7f7' ?>">
                             <img src="/assets/images/dislike.svg" width="24" alt="dislike"/>
                         </button>
@@ -94,15 +97,18 @@ if ($visitorIsLogin) {
                                 </button>
                             <?php endif ?>
                             <?php if ($userIsAdmin || $userIsAuthor): ?>
-                                <button class="btn btn-light"  type="button" style="width: auto" data-bs-toggle="modal" data-bs-target="#deletePost">
+                                <button class="btn btn-light" type="button" style="width: auto" data-bs-toggle="modal"
+                                        data-bs-target="#deletePost">
                                     <img src="../../assets/images/post-delete.svg"
                                          alt="delete" width="24"
                                          class="d-inline-block">
                                 </button>
-                            <?php require 'widgets/delete-post.php' ?>
+                                <?php require 'widgets/delete-post.php' ?>
                             <?php endif ?>
                             <?php if (!$userIsAuthor && !$userIsAdmin): ?>
-                                <button type="button" onclick="createComplaint('post', <?= $post->getId() ?>, <?= $user->getId() ?>)" class="btn btn-light rounded-end">
+                                <button type="button"
+                                        onclick="createComplaint('post', <?= $post->getId() ?>, <?= $user->getId() ?>)"
+                                        class="btn btn-light rounded-end">
                                     <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
                                 </button>
                             <?php endif ?>
@@ -118,17 +124,57 @@ if ($visitorIsLogin) {
             <div class="alert alert-danger text-center" role="alert">
                 Комментарии запрещены.
             </div>
+        <?php elseif (!$visitorIsLogin): ?>
+            <div class="alert alert-danger text-center" role="alert">
+                Авторизуйтесь, чтобы комментировать.
+            </div>
         <?php elseif (!$userCanComment): ?>
             <div class="alert alert-danger text-center" role="alert">
                 Вам запрещено комментировать.
             </div>
         <?php endif ?>
     </div>
-    <h5 class="mt-2" id="commentsAmount"
-        style="padding-left: 5%;color: #000000"><?= count($comments) . ' ' . NormalizeData::wordForm(count($comments), 'комментариев', 'комментарий', 'комментария') ?></h5>
-    <div id="#commentForm">
-        <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable) require 'widgets/comment-field.php' ?>
-    </div>
+    <h5 class="mt-2" id="commentsAmount" style="padding-left: 5%;color: #000000">
+        <?= count($comments) . ' ' . NormalizeData::wordForm(
+            count($comments),
+            'комментариев',
+            'комментарий',
+            'комментария',
+        ); ?>
+    </h5>
+    <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable): ?>
+        <?php $options = [
+            'options' => ['class' => 'form-floating'],
+            'errorOptions' => ['class' => 'text-danger small', 'id' => 'errorLabel'],
+            'template' => "{input}\n{label}\n{error}",
+        ]; ?>
+        <div class="rounded-2" style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
+            <?php $activeForm = ActiveForm::begin([
+                'id' => 'comment-form',
+                'options' => [
+                    'style' => 'width: 100%;padding: 1%',
+                ],
+                'enableAjaxValidation' => true,
+                'validateOnType' => true,
+                'action' => Url::to('/posts/add-comment'),
+                'validationUrl' => Url::to('/posts/add-comment'),
+            ]) ?>
+            <?= $activeForm
+                ->field($commentForm, 'comment', $options)
+                ->textarea([
+                    'placeholder' => 'comment',
+                    'id' => 'commentArea',
+                    'style' => 'min-height: 150px',
+                ])
+                ->label('Комментарий', ['class' => false])
+            ?>
+            <?= $activeForm
+                ->field($commentForm, 'postId')
+                ->hiddenInput(['value' => $post->getId()]) ?>
+            <button type="button" id="addComment" class="btn btn-dark mt-1">Отправить</button>
+            <?php ActiveForm::end() ?>
+        </div>
+    <?php endif ?>
     <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
         <?= $comments ? ConstructHtml::comments($comments) : '' ?>
     </ul>
