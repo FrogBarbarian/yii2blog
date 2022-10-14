@@ -1,16 +1,13 @@
 /**
  * Открывает страницу с рандомным постом.
  */
-$(function random() {
-    $('#randomPost').click(function () {
-        $.ajax({
+function randomPost() {$.ajax({
             url: '/u-i/random-post',
-            success: function (data) {
-                location.href = (data);
+            success: function (response) {
+                location.href = (response);
             },
         });
-    });
-})
+}
 
 /**
  * Скроллит страницу на самый верх.

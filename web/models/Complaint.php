@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models;
 
+use app\models\queries\ComplaintQuery;
 use yii\db\ActiveRecord;
 
 class Complaint extends ActiveRecord
@@ -17,7 +18,15 @@ class Complaint extends ActiveRecord
     }
 
     /**
-     * Тип объекта жалобы.
+     * {@inheritDoc}
+     */
+    public static function find(): ComplaintQuery
+    {
+        return new ComplaintQuery(self::class);
+    }
+
+    /**
+     * Тип объекта.
      */
     public function setObject(string $object): self
     {
@@ -27,7 +36,7 @@ class Complaint extends ActiveRecord
     }
 
     /**
-     * ID объекта жалобы.
+     * ID объекта.
      */
     public function setObjectId(string $objectId): self
     {
@@ -37,7 +46,7 @@ class Complaint extends ActiveRecord
     }
 
     /**
-     * ID отправителя жалобы.
+     * ID отправителя.
      */
     public function setSenderId(string $senderId): self
     {
@@ -47,12 +56,52 @@ class Complaint extends ActiveRecord
     }
 
     /**
-     * Текст жалобы.
+     * Текст.
      */
     public function setComplaint(string $complaint): self
     {
         $this->setAttribute('complaint', $complaint);
 
         return $this;
+    }
+
+    /**
+     * @return string Текст.
+     */
+    public function getComplaint(): string
+    {
+        return $this->getAttribute('complaint');
+    }
+
+    /**
+     * @return string Объект.
+     */
+    public function getObject(): string
+    {
+        return $this->getAttribute('object');
+    }
+
+    /**
+     * @return string Дата и время написания.
+     */
+    public function getDatetime(): string
+    {
+        return $this->getAttribute('datetime');
+    }
+
+    /**
+     * @return int ID.
+     */
+    public function getId(): int
+    {
+        return $this->getAttribute('id');
+    }
+
+    /**
+     * @return int ID объекта.
+     */
+    public function getObjectId(): int
+    {
+        return $this->getAttribute('object_id');
     }
 }

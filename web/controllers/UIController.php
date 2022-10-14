@@ -67,9 +67,9 @@ class UIController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $model = new ComplaintForm();
+        $complaintForm = new ComplaintForm();
 
-        if ($model->load($request->post()) && $model->validate()) {
+        if ($complaintForm->load($request->post()) && $complaintForm->validate()) {
             $content = $request->post('ComplaintForm')['complaint'];
             $objectType = $request->post('ComplaintForm')['objectType'];
             $objectId = $request->post('ComplaintForm')['objectId'];
@@ -85,6 +85,6 @@ class UIController extends AppController
             return $this->asJson(true);
         }
 
-        return $this->asJson($model->errors);
+        return $this->asJson($complaintForm->errors);
     }
 }

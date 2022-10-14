@@ -1,13 +1,13 @@
-$(document).ready(function () {
-    const postId = (new URL(document.location)).searchParams.get('id');
-    const token = $('meta[name=csrf-token]').attr("content");
-    let data = {
-        _csrf: token,
-        ajax: {
-            postId: postId,
-        }
-    };
+const token = $('meta[name=csrf-token]').attr("content");
+const postId = (new URL(document.location)).searchParams.get('id');
+let data = {
+    _csrf: token,
+    ajax: {
+        postId: postId,
+    }
+};
 
+$(document).ready(function () {
     /**
      * Меняет правила комментирования поста.
      * Отрисовывает соответствующие элементы.
@@ -39,41 +39,41 @@ $(document).ready(function () {
         });
     });
 
-    /**
-     * Ставит лайк посту.
-     */
-    $('#likePost').click(function () {
-        $.ajax({
-            url: '/post-u-i/like-post',
-            cache: false,
-            type: 'post',
-            data: data,
-            success: function () {
-                updatePostRating(data);
-                updateRatingButtons(data);
-            },
-        });
-    });
-
-    /**
-     * Ставит дизлайк посту.
-     */
-    $('#dislikePost').click(function () {
-        $.ajax({
-            url: '/post-u-i/dislike-post',
-            cache: false,
-            type: 'post',
-            data: data,
-            success: function () {
-                updatePostRating(data);
-                updateRatingButtons(data);
-            }
-        });
-    });
-
     setInterval(updatePostRating, 2000, data);
     setInterval(updateCommentsAmount, 2000, data);
 });
+
+/**
+ * Ставит лайк посту.
+ */
+function likePost() {
+    $.ajax({
+        url: '/post-u-i/like-post',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function () {
+            updatePostRating(data);
+            updateRatingButtons(data);
+        },
+    });
+}
+
+/**
+ * Ставит дизлайк посту.
+ */
+function dislikePost() {
+    $.ajax({
+        url: '/post-u-i/dislike-post',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function () {
+            updatePostRating(data);
+            updateRatingButtons(data);
+        }
+    });
+}
 
 /**
  * Обновляет рейтинг поста.
@@ -127,20 +127,35 @@ function updateRatingButtons(data) {
         type: 'post',
         data: data,
         success: function (response) {
-            $likeButton = document.getElementById('likePost');
-            $dislikeButton = document.getElementById('dislikePost');
+            likeImg = document.getElementById('likePost');
+            dislikeImg = document.getElementById('dislikePost');
 
             if (response[0] === true) {
-                $likeButton.style.backgroundColor = 'green';
+                likeImg.src = '/assets/images/liked.svg';
             } else {
-                $likeButton.style.backgroundColor = '#f7f7f7';
+                likeImg.src = '/assets/images/like.svg';
             }
 
             if (response[1] === true) {
-                $dislikeButton.style.backgroundColor = 'red';
+                dislikeImg.src = '/assets/images/disliked.svg';
             } else {
-                $dislikeButton.style.backgroundColor = '#f7f7f7';
+                dislikeImg.src = '/assets/images/dislike.svg';
             }
+        }
+    });
+}
+
+/**
+ * Удаляет пост.
+ */
+function deletePost() {
+    $.ajax({
+        url: '/posts/delete-post',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            location.href = (response);
         }
     });
 }

@@ -32,6 +32,8 @@ class PostsController extends AppController
             throw new NotFoundHttpException();
         }
 
+        $curPage = (int)$page;
+
         if ($search !== null) {
             $posts = Post::find()
                 ->postHasWords($search)
@@ -60,7 +62,7 @@ class PostsController extends AppController
         return $this->render('index', [
             'posts' => $posts,
             'pages' => $pages,
-            'page' => $page,
+            'curPage' => $curPage,
             'search' => $search,
         ]);
     }
@@ -222,53 +224,64 @@ class PostsController extends AppController
         return $this->render('new-post', ['model' => $model, 'post' => $post]);
     }
 
-    //TODO: comment? Ajax?
-    public function actionDelete()
+    /**
+     * Удаляет пост.
+     * @throws NotFoundHttpException
+     * @throws \Throwable
+     * @throws \yii\db\StaleObjectException
+     */
+    public function actionDeletePost(): Response
     {
-        if (Yii::$app->request->post()) {
-            $post = Post::find()
-                ->byId($_POST['id'])
-                ->one();
-            $ownerStatistics = Statistics::find()
-                ->byLogin($post->getAuthor())
-                ->one();
-            $ownerStatistics
-                ->decreasePosts()
-                ->decreaseViews($post->getViews())
-                ->decreaseLikes($post->getLikes())
-                ->decreaseDislikes($post->getDislikes())
-                ->save();
-            $ownerStatistics->updateRating();
-            $comments = Comment::find()
-                ->byPostId($_POST['id'])
-                ->all();
+        $request = Yii::$app->getRequest();
+        $session = Yii::$app->session;
 
-            foreach ($comments as $comment) {
-                $commentOwnerStatistics = Statistics::find()
-                    ->byLogin($comment->getAuthor())
-                    ->one();
-                $commentOwnerStatistics
-                    ->decreaseLikes($comment->getLikes())
-                    ->decreaseDislikes($comment->getDislikes())
-                    ->decreaseComments()
-                    ->save();
-                $commentOwnerStatistics->updateRating();
-                $comment->delete();
-            }
-
-            $post->delete();
-
-            return $this->goHome();
-        } else {
+        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
             throw new NotFoundHttpException();
         }
+
+        $postId = $request->post('ajax')['postId'];
+        $post = Post::find()
+            ->byId($postId)
+            ->one();
+        $ownerStatistics = Statistics::find()
+            ->byLogin($post->getAuthor())
+            ->one();
+        $ownerStatistics
+            ->decreasePosts()
+            ->decreaseViews($post->getViews())
+            ->decreaseLikes($post->getLikes())
+            ->decreaseDislikes($post->getDislikes())
+            ->save();
+        $ownerStatistics->updateRating();
+        $comments = Comment::find()
+            ->byPostId($postId)
+            ->all();
+
+        foreach ($comments as $comment) {
+            $commentOwnerStatistics = Statistics::find()
+                ->byLogin($comment->getAuthor())
+                ->one();
+            $commentOwnerStatistics
+                ->decreaseLikes($comment->getLikes())
+                ->decreaseDislikes($comment->getDislikes())
+                ->decreaseComments()
+                ->save();
+            $commentOwnerStatistics->updateRating();
+            $comment->delete();
+        }
+
+        $session->setFlash('messageForIndex', "Пост '<b>{$post->getTitle()}</b>' удален.");
+        $post->delete();
+
+        return $this->asJson('/');
     }
 
     /**
      * Добавляет комментарий к посту.
      * @throws NotFoundHttpException
      */
-    public function actionAddComment(): Response
+    public
+    function actionAddComment(): Response
     {
         $request = Yii::$app->getRequest();
 
@@ -276,9 +289,9 @@ class PostsController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $model = new CommentForm();
+        $commentForm = new CommentForm();
 
-        if ($model->load($request->post()) && $model->validate()) {
+        if ($commentForm->load($request->post()) && $commentForm->validate()) {
             $postId = $request->post('CommentForm')['postId'];
             $post = Post::find()
                 ->byId($postId)
@@ -291,7 +304,7 @@ class PostsController extends AppController
                 ->setPostId($post->getId())
                 ->setAuthor($user->getLogin())
                 ->setAuthorId($user->getId())
-                ->setComment($model->comment)
+                ->setComment($commentForm->comment)
                 ->save();
             $userStatistics = Statistics::find()
                 ->byLogin($user->getLogin())
@@ -306,6 +319,31 @@ class PostsController extends AppController
             return $this->asJson(false);
         }
 
-        return $this->asJson($model->errors);
+        return $this->asJson($commentForm->errors);
+    }
+
+    /**
+     * Формирует ссылку на комментарий.
+     * @throws NotFoundHttpException
+     */
+    public function actionComment(string $id = null): Response
+    {
+        if ($id === null || $id < 1) {
+            throw new NotFoundHttpException();
+        }
+
+        $id = (int)$id;
+        $comment = Comment::find()
+            ->byId($id)
+            ->one();
+
+        if ($comment === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $postId = $comment
+            ->getPostId();
+
+        return $this->redirect("/post?id=$postId#comment$id");
     }
 }

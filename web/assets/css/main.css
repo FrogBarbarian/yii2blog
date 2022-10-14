@@ -1,0 +1,120 @@
+.post-search form {
+    position: relative;
+    width: 150px;
+    margin: 0 auto;
+}
+
+.post-search {
+    background: rgba(0, 0, 0, 0);
+}
+
+.post-search input {
+    width: 100%;
+    height: 30px;
+    padding-left: 10px;
+    border: 2px solid #b3b8c7;
+    border-radius: 5px;
+    outline: none;
+    background: #F9F0DA;
+    color: #9E9C9C;
+}
+
+.post-search button {
+    position: absolute;
+    top: 0;
+    right: 0px;
+    width: 24px;
+    height: 30px;
+    border: none;
+    background: #b3b8c7;
+    border-radius: 0 5px 5px 0;
+    cursor: pointer;
+
+}.post-search button:hover {
+     background: #7b7d8d;
+ }
+
+.post-search button:before {
+    color: #F9F0DA;
+}
+
+.comment:target {
+    border: 1px solid black;
+    border-radius: 0.5rem;
+    animation: flicker 2s infinite alternate;
+    background: linear-gradient(70deg, #fff2bd 0%, white 50%) right/200%;
+}
+
+@keyframes flicker {
+    to {
+        background-position: left;
+    }
+}
+
+.like-button {
+    border-radius: 50%;
+    border: none;
+    height: 2rem;
+    width: 2rem;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+.like-button:hover {
+    background-color: rgba(75, 75, 75, 0.1);
+}
+
+.author-link {
+    color: dodgerblue;
+    text-decoration: none;
+}
+
+.author-link:hover {
+    color: #5e5e41;
+}
+
+.nav-button {
+    background-color: rgba(0, 0, 0, 0);
+    border: none;
+    color: black;
+    text-decoration: none;
+}
+
+.nav-button:hover {
+    color: #ececec;
+}
+
+.complaint-link {
+    font-style: italic;
+    font-size: small;
+    color: rgba(100, 100, 100, 0.5);
+    text-decoration: none;
+}
+
+.complaint-link:hover {
+    color: #bb8989;
+}
+
+#arrowTop {
+    border-radius: 50%;
+    height: 45px;
+    width: 45px;
+    position: fixed;
+    bottom: 3%;
+    right: 3%;
+    background-color: #fdd50d;
+}
+
+#arrowTop:hover {
+
+    background-color: #fadc0a;
+}
+
+#hideComments {
+    border-radius: 0.5rem;
+    height: 4rem;
+    width: 8rem;
+    position: fixed;
+    bottom: 3%;
+    left: 3%;
+    background: linear-gradient(90deg, #6b5d47 15%, #afada0);
+}

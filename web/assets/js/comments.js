@@ -26,10 +26,21 @@ $(document).ready(function () {
                     updateComments(data);
                     updateCommentsAmount(data);
                 } else {
-                    $('#errorLabel').html(response['comment'][0]);
+                    $('#commentErrorLabel').html(response['comment'][0]);
                 }
             }
         });
+    });
+
+    $('#hideComments').click(function () {
+        if ($('#comments').css('display') == 'none') {
+            $('#comments').show();
+            $('#hideComments').html('Скрыть комментарии')
+        } else {
+            $('#comments').hide();
+            $('#hideComments').html('Показать комментарии')
+        }
+
     });
 
     setInterval(updateComments, 2000, data);
@@ -114,19 +125,19 @@ function updateCommentRatingButtons(data, id) {
         type: 'post',
         data: data,
         success: function (response) {
-            $likeButton = document.getElementById('commentLikeButton' + id);
-            $dislikeButton = document.getElementById('commentDislikeButton' + id);
+            likeImg = document.getElementById('commentLike' + id);
+            dislikeImg = document.getElementById('commentDislike' + id);
 
             if (response[0] === true) {
-                $likeButton.style.backgroundColor = 'green';
+                likeImg.src = '/assets/images/liked.svg';
             } else {
-                $likeButton.style.backgroundColor = '#f7f7f7';
+                likeImg.src = '/assets/images/like.svg';
             }
 
             if (response[1] === true) {
-                $dislikeButton.style.backgroundColor = 'red';
+                dislikeImg.src = '/assets/images/disliked.svg';
             } else {
-                $dislikeButton.style.backgroundColor = '#f7f7f7';
+                dislikeImg.src = '/assets/images/dislike.svg';
             }
         }
     });

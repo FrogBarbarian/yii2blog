@@ -57,37 +57,44 @@ class ConstructHtml
      */
     public static function comments(array $comments): string
     {
+        $session = Yii::$app->session;
         $html = '';
-        $userId = (int)Yii::$app->session['id'];
+        $userId = (int)$session['id'] ?? false;
 
         foreach ($comments as $comment) {
             $timestamp = NormalizeData::passedTime($comment->getDate());
-            $html .= "<li class='list-group-item mb-1'>" .
+            $html .= "<li class='comment list-group-item mb-1' id='comment{$comment->getId()}'>" .
                 "<div class='d-flex w-100 justify-content-between'>" .
                 "<h5 class='mb-1'>" .
-                "<a href='/user?id={$comment->getAuthorId()}'>{$comment->getAuthor()}</a>" .
+                "<a class='author-link' href='/user?id={$comment->getAuthorId()}'>{$comment->getAuthor()}</a>" .
                 "</h5>" .
                 "<small class='text-muted'>$timestamp</small>" .
                 "</div>" .
-                "<p class='mb-1 text-break'>{$comment->getComment()}</p>" .
-                "<div class='comment-rating' id='commentRating{$comment->getId()}'>" .
+                "<p class='mb-1 text-break'>{$comment->getComment()}</p>";
+
+            if ($session->has('login') && $userId !== $comment->getAuthorID()) {
+                $liked = $comment->isUserLikeIt($userId) ? 'd' : '';
+                $html .= "<div class='d-flex justify-content-between'>" .
+                    "<div class='d-flex justify-content-between'>" .
+                    "<button class='like-button' onclick='likeComment({$comment->getId()})'>" .
+                    "<img id='commentLike{$comment->getId()}' src='/assets/images/like{$liked}.svg' width='24' alt='like' />" .
+                    "</button>";
+            }
+
+            $html .= "<div class='comment-rating m-auto' id='commentRating{$comment->getId()}'>" .
                 self::rating($comment->getRating()) .
                 '</div>';
 
-            if (Yii::$app->session->has('login') && $userId !== $comment->getAuthorID()) {
-                $likeColor = $comment->isUserLikeIt($userId) ? 'green' : '#f7f7f7';
-                $dislikeColor = $comment->isUserDislikeIt($userId) ? 'red' : '#f7f7f7';
-                $html .= "<small>" .
-                    "<button id='commentLikeButton{$comment->getId()}' class='rounded-circle' onclick='likeComment({$comment->getId()})' style='background-color:$likeColor'>" .
-                    "<img src='/assets/images/like.svg' width='24' alt='like'/>" .
+            if ($session->has('login') && $userId !== $comment->getAuthorID()) {
+                $disliked = $comment->isUserDislikeIt($userId) ? 'd' : '';
+                $html .= "<button class='like-button' onclick='dislikeComment({$comment->getId()})'>" .
+                    "<img id='commentDislike{$comment->getId()}' src='/assets/images/dislike{$disliked}.svg' width='24' alt='dislike'/>" .
                     "</button>" .
-                    "<button id='commentDislikeButton{$comment->getId()}' class='rounded-circle' onclick='dislikeComment({$comment->getId()})' style='background-color:$dislikeColor'>" .
-                    "<img src='/assets/images/dislike.svg' width='24' alt='dislike'/>" .
-                    "</button>" .
-                    "</small>" .
-                    "<button type='button' onclick='createComplaint(\"comment\", {$comment->getId()}, $userId)' class='btn btn-light rounded-end'>" .
+                    "</div>" .
+                    "<button type='button' onclick='createComplaint(\"comment\", {$comment->getId()}, $userId)' class='btn btn-light'>" .
                     "<img src='/assets/images/create-complaint.svg' width='24' alt='create complaint'/>" .
-                    "</button>";
+                    "</button>" .
+                    "</div>";
             }
 
             $html .= '</li>';

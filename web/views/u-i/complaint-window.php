@@ -22,7 +22,7 @@ use yii\widgets\ActiveForm;
                 <?php
                 $options = [
                 'options' => ['class' => 'form-floating'],
-                'errorOptions' => ['class' => 'text-danger small', 'id' => 'errorLabel'],
+                'errorOptions' => ['class' => 'text-danger small', 'id' => 'complaintErrorLabel'],
                 'template' => "{input}\n{label}\n{error}",
                 ] ?>
                 <?php $activeForm = ActiveForm::begin(['id' => 'complaint-form',
@@ -80,7 +80,7 @@ use yii\widgets\ActiveForm;
                         closeComplaintWindow();
                         alert('Жалоба успешно отправлена.');
                     } else {
-                        $('#errorLabel').html(response['complaint'][0]);
+                        $('#complaintErrorLabel').html(response['complaint'][0]);
                     }
                 }
             });

@@ -2,12 +2,14 @@
 
 namespace app\controllers;
 
+use app\models\Complaint;
 use app\models\LoginForm;
 use app\models\Post;
 use app\models\PostTmp;
 use app\models\Statistics;
 use app\models\User;
 use app\models\RegisterForm;
+use yii\base\InvalidConfigException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -93,11 +95,19 @@ class UsersController extends AppController
         return $this->render('login', ['model' => $model]);
     }
 
-    //TODO: Add the comment
-    public function actionUser(string $id = null, string $tab = 'overview')
+    /**
+     * Профиль пользователя.
+     * @param string|null $id
+     * @param string $tab
+     * @return string|Response
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
+     */
+    public function actionUser(string $id = null, string $tab = 'overview'): Response|string
     {
         $path = Yii::$app->request->getPathInfo();
         $session = Yii::$app->session;
+
         if ($path === 'user') {
             if ($id === null || $id < 1) {
                 throw new NotFoundHttpException();
@@ -106,6 +116,7 @@ class UsersController extends AppController
             $user = User::find()
                 ->byId($id)
                 ->one();
+
             if ($user === null) {
                 throw new NotFoundHttpException();
             }
@@ -113,6 +124,7 @@ class UsersController extends AppController
             if ($user->getLogin() === $session['login']) {
                 return $this->redirect('/profile');
             }
+
             $isOwn = false;
             $tab = 'overview';
         } else {
@@ -136,11 +148,15 @@ class UsersController extends AppController
 
         if ($session->has('admin')) {
             $postsTmp = PostTmp::find()
-            ->all();
-
+                ->all();
+            $complaints = Complaint::find()
+                ->all();
         } else {
             $postsTmp = PostTmp::find()
                 ->byAuthor($user->getLogin())
+                ->all();
+            $complaints = Complaint::find()
+                ->bySenderId($user->getId())
                 ->all();
         }
 
@@ -148,6 +164,7 @@ class UsersController extends AppController
             'user' => $user,
             'posts' => $posts,
             'postsTmp' => $postsTmp,
+            'complaints' => $complaints,
             'statistics' => $statistics,
             'isOwn' => $isOwn,
             'tab' => $tab,

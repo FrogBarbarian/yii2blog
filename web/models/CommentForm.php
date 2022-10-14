@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models;
 
+use src\services\StringService;
 use yii\db\ActiveRecord;
 
 class CommentForm extends ActiveRecord
@@ -34,7 +35,19 @@ class CommentForm extends ActiveRecord
                     $this->addError($attribute, 'Похоже, что в тексте, только HTML теги');
                 }
             }],
-            ['comment', 'string', 'max' => 500, 'tooLong' => 'Комментарий не должен содержать больше 500 символов'],
+            ['comment', 'string', 'max' => 500, 'tooLong' => "Комментарий не должен содержать больше 500 символов (сейчас - {$this->fieldLength()})"],
         ];
+    }
+
+    /**
+     * Получает длину строки жалобы.
+     * @return int
+     */
+    private function fieldLength(): int
+    {
+        $attribute = $_POST['CommentForm']['comment'] ?? '';
+
+        return (new StringService($attribute))
+            ->getLength();
     }
 }

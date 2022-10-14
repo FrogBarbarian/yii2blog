@@ -167,6 +167,14 @@ class Comment extends ActiveRecord
     }
 
     /**
+     * @return int ID поста.
+     */
+    public function getPostId(): int
+    {
+        return $this->getAttribute('post_id');
+    }
+
+    /**
      * @return int Количество лайков.
      */
     public function getLikes(): int

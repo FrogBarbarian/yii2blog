@@ -50,7 +50,7 @@ if ($visitorIsLogin) {
                 <div class="col text-end" style="font-size: small">
                     <?= NormalizeData::date($post->getDate()) ?>
                     &nbsp;
-                    <a href="/user?id=<?= $owner->getId() ?>" style="color: dodgerblue;text-decoration:none">
+                    <a class="author-link" href="/user?id=<?= $owner->getId() ?>">
                         <?= $post->getAuthor() ?>
                     </a>
                 </div>
@@ -62,18 +62,20 @@ if ($visitorIsLogin) {
             <div class="hstack">
                 <div class="col">
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
-                        <button class="rounded-circle" type="button" id="likePost"
-                                style="background-color: <?= $post->isUserLikeIt($user->getId()) ? 'green' : '#f7f7f7' ?>">
-                            <img src="/assets/images/like.svg" width="24" alt="like"/>
+                        <button class="like-button" type="button" onclick="likePost()">
+                            <img id="likePost"
+                                 src="/assets/images/like<?= $post->isUserLikeIt($user->getId()) ? 'd' : '' ?>.svg"
+                                 width="24" alt="like"/>
                         </button>
                     <?php endif ?>
                     <span id="post-rating">
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </span>
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
-                        <button class="rounded-circle" id="dislikePost"
-                                style="background-color: <?= $post->isUserDislikeIt($user->getId()) ? 'red' : '#f7f7f7' ?>">
-                            <img src="/assets/images/dislike.svg" width="24" alt="dislike"/>
+                        <button class="like-button" onclick="dislikePost()">
+                            <img id="dislikePost"
+                                 src="/assets/images/dislike<?= $post->isUserDislikeIt($user->getId()) ? 'd' : '' ?>.svg"
+                                 width="24" alt="dislike"/>
                         </button>
                     <?php endif ?>
                 </div>
@@ -103,7 +105,40 @@ if ($visitorIsLogin) {
                                          alt="delete" width="24"
                                          class="d-inline-block">
                                 </button>
-                                <?php require 'widgets/delete-post.php' ?>
+                                <!--TODO: удаление поста-->
+                                <div class="modal fade" id="deletePost" tabindex="-1"
+                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="staticBackdropLabel">Вы уверены, что хотите
+                                                    удалить пост?</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>Статистика поста</h5>
+                                                <p><?= $post->getViews() ?> просмотра(ов)</p>
+                                                <div>
+                                                    <span>Рейтинг - <?= $post->getRating() ?></span>
+                                                    <span>Лайков - <?= $post->getLikes() ?></span>
+                                                    <span>Дизлайков - <?= $post->getDislikes() ?></span>
+                                                    <p class="text-warning">Будет удален пост и все комментарии, а также
+                                                        будет изменена соответствующим образом статистика всех
+                                                        затронутых пользователей.</p>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Назад
+                                                </button>
+                                                <button type="button" onclick="deletePost()" class="btn btn-primary">
+                                                    Удалить
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php endif ?>
                             <?php if (!$userIsAuthor && !$userIsAdmin): ?>
                                 <button type="button"
@@ -145,7 +180,7 @@ if ($visitorIsLogin) {
     <?php if ($visitorIsLogin && $userCanComment && $postIsCommentable): ?>
         <?php $options = [
             'options' => ['class' => 'form-floating'],
-            'errorOptions' => ['class' => 'text-danger small', 'id' => 'errorLabel'],
+            'errorOptions' => ['class' => 'text-danger small', 'id' => 'commentErrorLabel'],
             'template' => "{input}\n{label}\n{error}",
         ]; ?>
         <div class="rounded-2" style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
@@ -175,7 +210,13 @@ if ($visitorIsLogin) {
             <?php ActiveForm::end() ?>
         </div>
     <?php endif ?>
-    <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
-        <?= $comments ? ConstructHtml::comments($comments) : '' ?>
-    </ul>
+    <?php if ($comments): ?>
+        <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
+            <?= ConstructHtml::comments($comments) ?>
+
+        </ul>
+        <button class="d-none d-xl-block" id="hideComments">
+            Скрыть комментарии
+        </button>
+    <?php endif ?>
 </div>
