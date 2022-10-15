@@ -17,6 +17,7 @@ class LoginForm extends ActiveRecord
      * @var string Пароль.
      */
     public string $password = '';
+    public bool $rememberMe = true;
 
     /**
      * @return array Правила валидации входа юзера.
@@ -29,6 +30,7 @@ class LoginForm extends ActiveRecord
             ['email' , 'email', 'message' => 'Введенный email не корректный'],
             ['password', 'required', 'message' => 'Заполните поле пароль'],
             [['email', 'password'], 'checkData'],
+            ['rememberMe', 'boolean'],
         ];
     }
 

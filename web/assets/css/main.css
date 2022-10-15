@@ -122,3 +122,25 @@
     background-color: rgba(82, 166, 255, 0.58);
     color: #000000;
 }
+
+#togglePassword {
+    border-radius: 0 .5rem .5rem 0;
+    background-color: #f7f7f7;
+}
+
+#togglePassword:hover {
+    background-color: #c8c8c8;
+}
+
+.tag-card {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    display: inline-block;
+    cursor: pointer;
+    padding: 0px 5px 1px 5px;
+    margin: 1px;
+    background-color: #dcdcdc;
+    font-size: small;
+}

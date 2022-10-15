@@ -78,10 +78,9 @@ class UsersController extends AppController
             $user = User::find()
                 ->byEmail($loginForm->email)
                 ->one();
-
             Yii::$app
                 ->user
-                ->login($user, false ? 3600 * 24 * 30 : 0);
+                ->login($user, $loginForm->rememberMe ? 3600 * 24 * 30 : 0);
 
             return $this->redirect('/profile');
         }

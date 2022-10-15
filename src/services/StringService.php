@@ -45,7 +45,7 @@ class StringService
      * @param int $limit Лимит элементов в массиве (по умолчанию PHP_INT_MAX).
      * @return array
      */
-    public function explode(string $separator = ';', int $limit = PHP_INT_MAX): array
+    public function explode(string $separator = '#', int $limit = PHP_INT_MAX): array
     {
         return explode($separator, $this->string, $limit);
     }

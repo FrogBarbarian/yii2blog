@@ -58,7 +58,7 @@ class ConstructHtml
     public static function comments(array $comments): string
     {
         $html = '';
-        $userId = Yii::$app->user->getId();
+        $user = Yii::$app->user->getIdentity();
 
         foreach ($comments as $comment) {
             $timestamp = NormalizeData::passedTime($comment->getDate());
@@ -71,8 +71,8 @@ class ConstructHtml
                 "</div>" .
                 "<p class='mb-1 text-break'>{$comment->getComment()}</p>";
 
-            if ($userId !== null && $userId !== $comment->getAuthorID()) {
-                $liked = $comment->isUserAlreadyLikedComment($userId) ? 'd' : '';
+            if ($user !== null && $user->getId() !== $comment->getAuthorID()) {
+                $liked = $comment->isUserAlreadyLikedComment($user->getId()) ? 'd' : '';
                 $html .= "<div class='d-flex justify-content-between'>" .
                     "<div class='d-flex justify-content-between'>" .
                     "<button class='like-button' onclick='likeComment({$comment->getId()})'>" .
@@ -84,16 +84,19 @@ class ConstructHtml
                 self::rating($comment->getRating()) .
                 '</div>';
 
-            if ($userId !== null && $userId !== $comment->getAuthorID()) {
-                $disliked = $comment->isUserAlreadyDislikedComment($userId) ? 'd' : '';
+            if ($user !== null && $user->getId() !== $comment->getAuthorID()) {
+                $disliked = $comment->isUserAlreadyDislikedComment($user->getId()) ? 'd' : '';
                 $html .= "<button class='like-button' onclick='dislikeComment({$comment->getId()})'>" .
                     "<img id='commentDislike{$comment->getId()}' src='/assets/images/dislike$disliked.svg' width='24' alt='dislike'/>" .
                     "</button>" .
-                    "</div>" .
-                    "<button type='button' onclick='createComplaint(\"comment\", {$comment->getId()}, $userId)' class='btn btn-light'>" .
-                    "<img src='/assets/images/create-complaint.svg' width='24' alt='create complaint'/>" .
-                    "</button>" .
                     "</div>";
+
+                if (!$user->getIsAdmin()) {
+                    $html .= "<button type='button' onclick='createComplaint(\"comment\", {$comment->getId()}, {$user->getId()})' class='btn btn-light'>" .
+                        "<img src='/assets/images/create-complaint.svg' width='24' alt='create complaint'/>" .
+                        "</button>";
+                }
+                $html .= '</div>';
             }
 
             $html .= '</li>';

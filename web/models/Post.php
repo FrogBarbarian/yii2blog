@@ -164,9 +164,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает автора поста в таблице.
-     * @param string $author
-     * @return self
+     * Записывает автора.
      */
     public function setAuthor(string $author): self
     {
@@ -176,9 +174,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает тэги поста в таблице.
-     * @param string $tags
-     * @return self
+     * Записывает теги.
      */
     public function setTags(string $tags): self
     {
@@ -215,15 +211,14 @@ class Post extends ActiveRecord
 
     /**
      * Из строги тегов делает массив с тегами.
-     * @param string $tags Строка с тегами.
-     * @param string $separator Разделитель (по умолчанию ';').
-     * @param int $limit Лимит элементов массива (по умолчанию PHP_INT_MAX).
-     * @return array
      */
-    public function getTagsArray(string $tags, string $separator = ';', int $limit = PHP_INT_MAX): array
+    public function getTagsArray(): array
     {
-        return(new StringService($tags))
-            ->explode($separator, $limit);
+        $array = (new StringService($this->getTags()))
+            ->explode();
+        unset($array[0]);
+
+        return $array;
     }
 
     /**

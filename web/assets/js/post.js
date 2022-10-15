@@ -79,8 +79,7 @@ function dislikePost() {
  * Обновляет рейтинг поста.
  */
 function updatePostRating(data) {
-    let curRating = document.getElementById('post-rating').textContent;
-    data['ajax']['curRating'] = curRating;
+    data['ajax']['curRating'] = document.getElementById('post-rating').textContent;
     $.ajax({
         url: '/post-u-i/update-post-rating',
         cache: false,
@@ -100,8 +99,7 @@ function updatePostRating(data) {
  * Обновляет количество комментариев.
  */
 function updateCommentsAmount(data) {
-    let curCommentsAmount = parseInt(document.getElementById('commentsAmount').textContent);
-    data['ajax']['curCommentsAmount'] = curCommentsAmount;
+    data['ajax']['curCommentsAmount'] = parseInt(document.getElementById('commentsAmount').textContent);
     $.ajax({
         url: '/comments-u-i/update-comments-amount',
         cache: false,
@@ -158,4 +156,11 @@ function deletePost() {
             location.href = (response);
         }
     });
+}
+
+/**
+ * Открывает страницу результатов поиска по тегу.
+ */
+function search(tag) {
+    location.href = '/?search=' + tag;
 }

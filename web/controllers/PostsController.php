@@ -134,19 +134,22 @@ class PostsController extends AppController
      */
     public function actionNewPost(): Response|string
     {
-        $session = Yii::$app->session;
-        if (!$session->has('login')) {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null) {
             return $this->redirect('/login');
         }
-        $model = new PostInteractionsForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($session->has('admin')) {
+
+        $postInteractionsForm = new PostInteractionsForm();
+
+        if ($postInteractionsForm->load(Yii::$app->request->post()) && $postInteractionsForm->validate()) {
+            if ($user->getIsAdmin()) {
                 $post = new Post();
                 $post
-                    ->setTitle($model->title)
-                    ->setBody($model->body)
-                    ->setAuthor($session['login'])
-                    ->setTags('test;') //TODO: нужна система присвоения тегов
+                    ->setTitle($postInteractionsForm->title)
+                    ->setBody($postInteractionsForm->body)
+                    ->setAuthor($user->getusername())
+                    ->setTags($postInteractionsForm->tags)
                     ->save();
                 $statistics = Statistics::find()
                     ->byUsername($post->getAuthor())
@@ -159,9 +162,10 @@ class PostsController extends AppController
             }
             $postTmp = new PostTmp();
             $postTmp
-                ->setTitle($model->title)
-                ->setBody($model->body)
-                ->setAuthor($session['login'])
+                ->setTitle($postInteractionsForm->title)
+                ->setBody($postInteractionsForm->body)
+                ->setTags($postInteractionsForm->tags)
+                ->setAuthor($user->getUsername())
                 ->setTags('test;') //TODO: нужна система присвоения тегов
                 ->save();
             //TODO: Админу приходит на почту сообщение о новом посте пользователя
@@ -170,7 +174,7 @@ class PostsController extends AppController
             return $this->goHome();
         }
 
-        return $this->render('new-post', ['model' => $model]);
+        return $this->render('new-post', ['postInteractionsForm' => $postInteractionsForm]);
     }
 
     /**
@@ -182,48 +186,51 @@ class PostsController extends AppController
      */
     public function actionEditPost(string $id = '0'): Response|string
     {
-        $session = Yii::$app->session;
+        $user = Yii::$app->user->getIdentity();
 
-        if (!$session->has('login')) { //Пользователь не залогинен
+        if (!$user === null) {
             return $this->redirect('/login');
         }
+
+        $id = (int)$id;
 
         if ($id < 1) {
             throw new NotFoundHttpException();
         }
 
-        $user = $session['login'];
         $post = Post::find()
             ->byId($id)
             ->one();
 
-        if ($post === null || $post->getAuthor() !== $user) { //Пост по ID не найден или пользователь не автор поста
+        if ($post === null || $post->getAuthor() !== $user->getUsername()) {
             throw new NotFoundHttpException();
         }
 
-        $model = new PostInteractionsForm();
+        $postInteractionsForm = new PostInteractionsForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) { //Проходим проверку формы
-            if ($session->has('admin')) {
+        if ($postInteractionsForm->load(Yii::$app->request->post()) && $postInteractionsForm->validate()) {
+            if ($user->getIsAdmin()) {
                 $post
-                    ->setTitle($model->title)
-                    ->setBody($model->body)
+                    ->setTitle($postInteractionsForm->title)
+                    ->setBody($postInteractionsForm->body)
+                    ->setTags($postInteractionsForm->tags)
                     ->save();
 
                 return $this->redirect('/post?id=' . $post->getId());
             } else {
-                if (PostTmp::find()->byUpdatedId($post->getId())->one() !== null) { //Если пост уже редактировался, то переправляем на страницу поста и выводим сообщение пользователю
+                if (PostTmp::find()->byUpdatedId($post->getId())->one() !== null) {
                     $message = 'Пост уже редактировался и ожидает одобрения админом.';
-                    $session->setFlash('postAlreadyUpdated', $message);
+                    Yii::$app->session->setFlash('postAlreadyUpdated', $message);
 
                     return $this->redirect('/post?id=' . $post->getId());
                 }
 
                 $postTmp = new PostTmp();
                 $postTmp
-                    ->setTitle($model->title)
-                    ->setBody($model->body)
-                    ->setAuthor($user)
+                    ->setTitle($postInteractionsForm->title)
+                    ->setBody($postInteractionsForm->body)
+                    ->setTags($postInteractionsForm->tags)
+                    ->setAuthor($user->getUsername())
                     ->setIsNew(false)
                     ->setUpdateId($post->getId())
                     ->save();
@@ -234,7 +241,7 @@ class PostsController extends AppController
             }
         }
 
-        return $this->render('new-post', ['model' => $model, 'post' => $post]);
+        return $this->render('new-post', ['postInteractionsForm' => $postInteractionsForm, 'post' => $post]);
     }
 
     /**

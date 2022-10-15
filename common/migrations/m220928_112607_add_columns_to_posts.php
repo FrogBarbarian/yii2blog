@@ -16,10 +16,10 @@ class m220928_112607_add_columns_to_posts extends Migration
     {
         $posts = 'posts';
         $postsTmp = 'posts_tmp';
-        $this->addColumn($posts, 'tags', $this->string()->notNull());
+        $this->addColumn($posts, 'tags', $this->text()->notNull());
         $this->addColumn($posts, 'main_image', $this->string()->defaultValue(null));
         $this->addColumn($posts, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
-        $this->addColumn($postsTmp, 'tags', $this->string()->notNull());
+        $this->addColumn($postsTmp, 'tags', $this->text()->notNull());
         $this->addColumn($postsTmp, 'main_image', $this->string()->defaultValue(null));
         $this->addColumn($postsTmp, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
     }

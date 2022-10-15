@@ -1,7 +1,8 @@
 /**
  * Открывает страницу с рандомным постом.
  */
-function randomPost() {$.ajax({
+function randomPost() {
+    $.ajax({
             url: '/u-i/random-post',
             success: function (response) {
                 location.href = (response);
@@ -27,15 +28,13 @@ window.addEventListener('scroll', function () {
  * Создает окно жалобы.
  * @param objectType Тип объекта.
  * @param objectId ID объекта.
- * @param subjectId  ID отправителя.
  */
-function createComplaint(objectType, objectId, senderId) {
+function createComplaint(objectType, objectId) {
     let data = {
         _csrf: $('meta[name=csrf-token]').attr("content"),
         ajax: {
             objectType: objectType,
             objectId: objectId,
-            senderId: senderId,
         },
     };
     $.ajax({
@@ -60,6 +59,6 @@ function closeComplaintWindow() {
  * Ловит нажатие кнопки Esc при открытом окне жалобы.
  */
 window.onkeyup = function (e) {
-    var elementExists = document.getElementById("complaintWindow");
-    if (elementExists !== null && e.keyCode == 27) closeComplaintWindow();
+    const elementExists = document.getElementById("complaintWindow");
+    if (elementExists !== null && e.keyCode === 27) closeComplaintWindow();
 }

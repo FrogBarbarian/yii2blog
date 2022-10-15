@@ -20,7 +20,7 @@ class m220923_101506_create_table_users extends Migration
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->text()->notNull()->unique(),
-            'isAdmin' => $this->boolean()->defaultValue(false)->notNull(),
+            'is_admin' => $this->boolean()->defaultValue(false)->notNull(),
             'created' => $this->timestamp()->defaultValue(new Expression("NOW()")),
             'status' => $this->smallInteger()->defaultValue(10)->notNull(),
             'created_at' => $this->integer()->notNull(),

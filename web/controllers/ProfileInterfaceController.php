@@ -23,7 +23,7 @@ class ProfileInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = $request->post('id');
+        $userId = (int)$request->post('id');
         $user = User::find()
             ->byId($userId)
             ->one();
@@ -46,7 +46,7 @@ class ProfileInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = $request->post('id');
+        $userId = (int)$request->post('id');
         $user = User::find()
             ->byId($userId)
             ->one();
@@ -69,7 +69,7 @@ class ProfileInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = $request->post('id');
+        $userId = (int)$request->post('id');
         $user = User::find()
             ->byId($userId)
             ->one();
@@ -92,7 +92,7 @@ class ProfileInterfaceController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = $request->post('id');
+        $userId = (int)$request->post('id');
         $user = User::find()
             ->byId($userId)
             ->one();

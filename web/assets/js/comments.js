@@ -66,7 +66,7 @@ function likeComment(id) {
             $('#commentRating' + id).html(response);
         },
     });
-};
+}
 
 /**
  * Дизлайкает комментарий.
@@ -96,8 +96,7 @@ function dislikeComment(id) {
  */
 function updateComments(data) {
     let comments = document.getElementById('comments');
-    let curCommentsAmount = comments.getElementsByTagName('li').length;
-    data['ajax']['curCommentsAmount'] = curCommentsAmount;
+    data['ajax']['curCommentsAmount'] = comments.getElementsByTagName('li').length;
     $.ajax({
         url: '/comments-u-i/append-comments',
         cache: false,
@@ -105,8 +104,8 @@ function updateComments(data) {
         data: data,
         success: function (response) {
             if (response !== false) {
-                $html = comments.innerHTML;
-                $('#comments').html($html + response);
+                const html = comments.innerHTML;
+                $('#comments').html(html + response);
             }
 
             updateCommentRating(data['_csrf']);

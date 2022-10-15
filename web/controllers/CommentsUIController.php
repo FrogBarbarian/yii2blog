@@ -265,7 +265,12 @@ class CommentsUIController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $commentsData = $request->post('ajax')['comments'];
+        $commentsData = $request->post('ajax')['comments'] ?? null;
+
+        if ($commentsData === null) {
+            return $this->asJson(false);
+        }
+
         $newCommentData = [];
         $dataIsDiff = false;
 

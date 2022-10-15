@@ -139,7 +139,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function getIsAdmin(): bool
     {
-        return $this->getAttribute('isAdmin');
+        return $this->getAttribute('is_admin');
     }
 
     /**

@@ -38,7 +38,7 @@ class Complaint extends ActiveRecord
     /**
      * ID объекта.
      */
-    public function setObjectId(string $objectId): self
+    public function setObjectId(int $objectId): self
     {
         $this->setAttribute('object_id', $objectId);
 
@@ -48,9 +48,19 @@ class Complaint extends ActiveRecord
     /**
      * ID отправителя.
      */
-    public function setSenderId(string $senderId): self
+    public function setSenderId(int $senderId): self
     {
         $this->setAttribute('sender_id', $senderId);
+
+        return $this;
+    }
+
+    /**
+     * ID отправителя.
+     */
+    public function setSenderUsername(string $senderUsername): self
+    {
+        $this->setAttribute('sender_username', $senderUsername);
 
         return $this;
     }
@@ -103,5 +113,21 @@ class Complaint extends ActiveRecord
     public function getObjectId(): int
     {
         return $this->getAttribute('object_id');
+    }
+
+    /**
+     * @return int ID отправителя.
+     */
+    public function getSenderId(): int
+    {
+        return $this->getAttribute('sender_id');
+    }
+
+    /**
+     * @return string  Имя пользователя отправителя.
+     */
+    public function getSenderUsername(): string
+    {
+        return $this->getAttribute('sender_username');
     }
 }

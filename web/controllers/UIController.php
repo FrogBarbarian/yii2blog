@@ -46,13 +46,12 @@ class UIController extends AppController
         $complaintForm = new ComplaintForm();
         $objectType = $request->post('ajax')['objectType'];
         $objectId = $request->post('ajax')['objectId'];
-        $senderId = $request->post('ajax')['senderId'];
+
 
         return $this->renderAjax('complaint-window', [
             'complaintForm' => $complaintForm,
             'objectType' => $objectType,
             'objectId' => $objectId,
-            'senderId' => $senderId,
         ]);
     }
 
@@ -71,15 +70,18 @@ class UIController extends AppController
         $complaintForm = new ComplaintForm();
 
         if ($complaintForm->load($request->post()) && $complaintForm->validate()) {
+            $sender = Yii::$app
+                ->user
+                ->getIdentity();
             $content = $request->post('ComplaintForm')['complaint'];
             $objectType = $request->post('ComplaintForm')['objectType'];
-            $objectId = $request->post('ComplaintForm')['objectId'];
-            $senderId = $request->post('ComplaintForm')['senderId'];
+            $objectId = (int)$request->post('ComplaintForm')['objectId'];
             $complaint = new Complaint();
             $complaint
                 ->setObject($objectType)
                 ->setObjectId($objectId)
-                ->setSenderId($senderId)
+                ->setSenderId($sender->getId())
+                ->setSenderUsername($sender->getUsername())
                 ->setComplaint($content)
                 ->save();
 

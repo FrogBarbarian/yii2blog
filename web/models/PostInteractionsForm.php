@@ -10,16 +10,20 @@ use yii\db\ActiveRecord;
 class PostInteractionsForm extends ActiveRecord
 {
     /**
-     * @var string Название нового поста.
+     * @var string Название.
      */
     public string $title = '';
     /**
-     * @var string Текст нового поста.
+     * @var string Текст.
      */
     public string $body = '';
+    /**
+     * @var string Теги.
+     */
+    public string $tags = '';
 
     /**
-     * @return string Название таблицы с постами.
+     * {@inheritDoc}
      */
     public static function tableName(): string
     {
@@ -27,13 +31,14 @@ class PostInteractionsForm extends ActiveRecord
     }
 
     /**
-     * @return array Правила валидации нового поста.
+     * {@inheritDoc}
      */
     public function rules(): array
     {
         return [
             [['title', 'body'], 'trim'],
             ['title', 'required', 'message' => 'Придумайте название поста'],
+            ['tags', 'required', 'message' => 'Выберете как минимум 1 тег'],
             [
                 'title',
                 'string',

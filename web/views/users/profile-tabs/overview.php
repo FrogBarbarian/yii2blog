@@ -6,7 +6,6 @@
  * @var \app\models\Post[] $posts
  * @var \app\models\PostTmp[] $postsTmp
  * @var \app\models\Complaint[] $complaints
- * @var \yii\web\Session $session
  */
 
 use src\helpers\ConstructHtml;
@@ -20,7 +19,7 @@ use src\helpers\NormalizeData;
     </div>
 <?php endif ?>
 
-<?php if ($user->getIsHidden() && !$isOwn && !$session->has('admin')): ?>
+<?php if ($user->getIsHidden() && !$isOwn && !$user->getIsAdmin()): ?>
     <p class="text-danger">Профиль скрыт</p>
 <?php else: ?>
     <hr>
@@ -85,7 +84,7 @@ use src\helpers\NormalizeData;
 <?php endif ?>
 
 <?php if ($isOwn): ?>
-    <?php if ($postsTmp && !$session->has('admin')): ?>
+    <?php if ($postsTmp && !$user->getIsAdmin()): ?>
         <hr>
         <h5 class="text-center">Посты, ожидающие проверки администрацией.</h5>
         <div class="list-group">
@@ -98,7 +97,7 @@ use src\helpers\NormalizeData;
             <?php endforeach ?>
         </div>
     <?php endif ?>
-    <?php if ($complaints && !$session->has('admin')): ?>
+    <?php if ($complaints && !$user->getIsAdmin()): ?>
         <hr>
         <h5 class="text-center">Отправленные жалобы.</h5>
         <div class="accordion accordion-flush" id="complaints">

@@ -12,45 +12,49 @@ $options = [
 ?>
 
 <div class="align-items-center vstack justify-content-center" style="height: 90vh">
-
-    <div class="col-md-6 rounded-4 p-4" style="background-color: rgba(185,146,69,0.84)">
-        <h3 class="mb-5">Вход</h3>
+    <div class="col-md-6 px-2" style="background-color: white">
+        <h3 class="py-1">Вход</h3>
         <?php $activeForm = ActiveForm::begin([
             'id' => 'login-form',
         ]) ?>
-        <?=$activeForm
+        <?= $activeForm
             ->field($loginForm, 'email', $options)
             ->input('email', [
-                'class' => 'form-control placeholder-wave',
+                'class' => 'form-control',
                 'id' => 'emailInput',
                 'placeholder' => 'email',
-                'style' => 'background-color: #899aa2;',
+                'style' => 'background-color: #f7f7f7;max-height: 2.5rem',
             ])
-            ->label('Почта', ['class' => false]) ?>
-        <?=$activeForm
+            ->label('Почта', ['class' => false, 'style' => 'font-size: small']) ?>
+
+        <div class="input-group">
+        <?= $activeForm
             ->field($loginForm, 'password', $options)
             ->input('password', [
-                'class' => 'form-control placeholder-wave',
+                'class' => 'form-control',
                 'id' => 'passwordInput',
                 'placeholder' => 'password',
                 'autocomplete' => 'new-password',
-                'style' => 'background-color: #899aa2;',
-                ])
-            ->label('Пароль', ['class' => false]) ?>
-        <a class="link-dark" id="togglePassword" style="cursor: pointer;text-decoration: none;">Показать пароль</a>
-        <button type="submit" class="btn btn-lg btn-outline-dark mt-5 d-block">Войти</button>
+                'style' => 'background-color: #f7f7f7;max-height: 2.5rem',
+                'aria-describedby' => 'togglePassword',
+            ])
+            ->label('Пароль', ['class' => false, 'style' => 'font-size: small']) ?>
+            <button type="button" id="togglePassword" style="max-height: 2.5rem;">
+                <img src="/assets/images/password-hide.svg" alt="show password">
+            </button>
+        </div>
+        <div class="hstack justify-content-between">
+            <?= $activeForm->field($loginForm, 'rememberMe')->checkbox([
+                'class' => 'form-check-input',
+                'label' => 'Запомнить меня',
+            ])
+            ?>
+            <!--                   TODO: реализовать восстановление пароля -->
+            <a class="small" href="#">Забыли пароль?</a>
+        </div>
+        <button type="submit" class="btn my-2 btn-outline-dark ">Войти</button>
         <?php ActiveForm::end() ?>
     </div>
 </div>
 
-<script>
-    const togglePassword = document.querySelector('#togglePassword');
-    const password = document.querySelector('#passwordInput');
-    const confirmPassword = document.querySelector('#confirmPasswordInput');
-
-
-    togglePassword.addEventListener('click', function () {
-        const typeP = password.getAttribute('type') === 'password' ? 'text' : 'password';
-        password.setAttribute('type', typeP);
-    });
-</script>
+<script src="../../assets/js/password-visibility.js"></script>

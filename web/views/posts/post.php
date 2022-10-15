@@ -41,6 +41,13 @@ if ($visitorIsLogin) {
         </div>
         <div class="card-body">
             <p class="card-text"><?= $post->getBody() ?></p>
+            <hr>
+            <!--TODO: по тегу можно перейти в поиск по тегу. Сделать теги-->
+            <?php foreach ($post->getTagsArray() as $tag): ?>
+                <span class="tag-card" onclick="search('<?= $tag ?>')">
+                    <?= $tag ?>
+                </span>
+            <?php endforeach ?>
         </div>
         <div class="card-footer">
             <div class="hstack">
@@ -55,10 +62,6 @@ if ($visitorIsLogin) {
                     </a>
                 </div>
             </div>
-            <!--TODO: по тегу можно перейти в поиск по тегу. Сделать теги-->
-            <?php foreach ($post->getTagsArray($post->getTags()) as $tag): ?>
-                <?= $tag ?>
-            <?php endforeach ?>
             <div class="hstack">
                 <div class="col">
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
@@ -183,7 +186,8 @@ if ($visitorIsLogin) {
             'errorOptions' => ['class' => 'text-danger small', 'id' => 'commentErrorLabel'],
             'template' => "{input}\n{label}\n{error}",
         ]; ?>
-        <div class="rounded-2 border-end" style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
+        <div class="rounded-2 border-end"
+             style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
             <?php $activeForm = ActiveForm::begin([
                 'id' => 'comment-form',
                 'options' => [
@@ -210,13 +214,12 @@ if ($visitorIsLogin) {
             <?php ActiveForm::end() ?>
         </div>
     <?php endif ?>
-    <?php if ($comments): ?>
-        <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
+    <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
+        <?php if ($comments): ?>
             <?= ConstructHtml::comments($comments) ?>
-
-        </ul>
-        <span id="hideComments">
+        <?php endif ?>
+    </ul>
+    <span id="hideComments">
                 Скрыть комментарии
         </span>
-    <?php endif ?>
 </div>
