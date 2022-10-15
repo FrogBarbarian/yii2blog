@@ -13,8 +13,13 @@ class m221009_094834_add_author_id_to_posts extends Migration
     public function up()
     {
         $this->addColumn('posts', 'author_id', $this->integer()->notNull());
-        $this->addForeignKey('author_id_fk', 'posts', 'author_id', 'users', 'id');
-
+        $this->addForeignKey(
+            'author_id_fk',
+            'posts',
+            'author_id',
+            'users',
+            'id',
+        );
     }
 
     /**

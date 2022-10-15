@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\controllers;
 
 use app\models\Comment;
 use app\models\CommentForm;
-use app\models\ComplaintForm;
 use app\models\PostInteractionsForm;
 use app\models\Post;
 use app\models\PostTmp;
@@ -20,7 +21,7 @@ class PostsController extends AppController
     /**
      * Главная страница постами, здесь же выводятся результаты поиска постов.
      * @return string Вид "главная страница".
-     * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionIndex(string $page = '1', string $search = null): string
     {
@@ -59,11 +60,16 @@ class PostsController extends AppController
             throw new NotFoundHttpException();
         }
 
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
         return $this->render('index', [
             'posts' => $posts,
             'pages' => $pages,
             'curPage' => $curPage,
             'search' => $search,
+            'user' => $user,
         ]);
     }
 
@@ -71,12 +77,14 @@ class PostsController extends AppController
      * Отображает страницу с выбранным (по ID из $_GET) постом, если поста с таким ID нет, открывает 404.
      * @param string $id
      * @return string Вид "пост".
-     * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionPost(string $id = '0'): string
     {
-        $session = Yii::$app->session;
-        $visitorIsLogin = $session->has('login');
+        $visitorIsLogin = !Yii::$app
+            ->user
+            ->isGuest;
+        $id = (int)$id;
 
         if ($id > 0) {
             $post = Post::find()
@@ -84,18 +92,9 @@ class PostsController extends AppController
                 ->one();
 
             if ($post !== null) {
-                if ($visitorIsLogin) {
-                    $user = User::find()
-                        ->byLogin($session['login'])
-                        ->one();
-                } else {
-                    $user = null;
-                }
-
                 $commentForm = new CommentForm();
-                $complaintForm = new ComplaintForm();
                 $ownerStatistics = Statistics::find()
-                    ->byLogin($post->getAuthor())
+                    ->byUsername($post->getAuthor())
                     ->one();
                 $ownerStatistics
                     ->increaseViews()
@@ -103,14 +102,16 @@ class PostsController extends AppController
                 $post
                     ->increasePostViews()
                     ->save();
-
                 $owner = User::find()
-                    ->byLogin($post->getAuthor())
+                    ->byUsername($post->getAuthor())
                     ->one();
                 $comments = Comment::find()
                     ->byPostId($post->getId())
                     ->orderAscById()
                     ->all();
+                $user = Yii::$app
+                    ->user
+                    ->getIdentity();
 
                 return $this->render('post', [
                     'post' => $post,
@@ -118,7 +119,6 @@ class PostsController extends AppController
                     'owner' => $owner,
                     'comments' => $comments,
                     'commentForm' => $commentForm,
-                    'complaintForm' => $complaintForm,
                     'visitorIsLogin' => $visitorIsLogin,
                 ]);
             }
@@ -127,6 +127,7 @@ class PostsController extends AppController
     }
 
     /**
+     * TODO: переделать
      * Страница создания нового поста.
      * Отправляет валидированные данные в таблицу постов (основную либо во временное хранилище).
      * @return Response|string Редирект на главную/на пост (если данные провалидированы и пост отправлен в БД)/на логин, если не залогинен|Вид "новый пост".
@@ -148,7 +149,7 @@ class PostsController extends AppController
                     ->setTags('test;') //TODO: нужна система присвоения тегов
                     ->save();
                 $statistics = Statistics::find()
-                    ->byLogin($post->getAuthor())
+                    ->byUsername($post->getAuthor())
                     ->one();
                 $statistics
                     ->increasePosts()
@@ -173,6 +174,7 @@ class PostsController extends AppController
     }
 
     /**
+     * TODO: переделать
      * Страница редактирования уже созданного поста пользователя.
      * Если автор админ - сразу обновляет пост, если обычный пользователь, то отдает на проверку админу.
      * @return Response|string Отправляет на разные страницы в соответствии с условием|Вид "редактирование поста".
@@ -180,32 +182,43 @@ class PostsController extends AppController
      */
     public function actionEditPost(string $id = '0'): Response|string
     {
-        if (!Yii::$app->session->has('login')) { //Пользователь не залогинен
+        $session = Yii::$app->session;
+
+        if (!$session->has('login')) { //Пользователь не залогинен
             return $this->redirect('/login');
         }
+
         if ($id < 1) {
             throw new NotFoundHttpException();
         }
-        $user = Yii::$app->session['login'];
-        $post = Post::find()->byId($id)->one();
+
+        $user = $session['login'];
+        $post = Post::find()
+            ->byId($id)
+            ->one();
+
         if ($post === null || $post->getAuthor() !== $user) { //Пост по ID не найден или пользователь не автор поста
             throw new NotFoundHttpException();
         }
+
         $model = new PostInteractionsForm();
+
         if ($model->load(Yii::$app->request->post()) && $model->validate()) { //Проходим проверку формы
-            if (Yii::$app->session->has('admin')) {
+            if ($session->has('admin')) {
                 $post
                     ->setTitle($model->title)
                     ->setBody($model->body)
                     ->save();
+
                 return $this->redirect('/post?id=' . $post->getId());
             } else {
                 if (PostTmp::find()->byUpdatedId($post->getId())->one() !== null) { //Если пост уже редактировался, то переправляем на страницу поста и выводим сообщение пользователю
                     $message = 'Пост уже редактировался и ожидает одобрения админом.';
-                    Yii::$app->session->setFlash('postAlreadyUpdated', $message);
+                    $session->setFlash('postAlreadyUpdated', $message);
 
                     return $this->redirect('/post?id=' . $post->getId());
                 }
+
                 $postTmp = new PostTmp();
                 $postTmp
                     ->setTitle($model->title)
@@ -228,23 +241,21 @@ class PostsController extends AppController
      * Удаляет пост.
      * @throws NotFoundHttpException
      * @throws \Throwable
-     * @throws \yii\db\StaleObjectException
      */
     public function actionDeletePost(): Response
     {
         $request = Yii::$app->getRequest();
-        $session = Yii::$app->session;
 
         if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
             throw new NotFoundHttpException();
         }
 
-        $postId = $request->post('ajax')['postId'];
+        $postId = (int)$request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
         $ownerStatistics = Statistics::find()
-            ->byLogin($post->getAuthor())
+            ->byUsername($post->getAuthor())
             ->one();
         $ownerStatistics
             ->decreasePosts()
@@ -259,7 +270,7 @@ class PostsController extends AppController
 
         foreach ($comments as $comment) {
             $commentOwnerStatistics = Statistics::find()
-                ->byLogin($comment->getAuthor())
+                ->byUsername($comment->getAuthor())
                 ->one();
             $commentOwnerStatistics
                 ->decreaseLikes($comment->getLikes())
@@ -270,7 +281,9 @@ class PostsController extends AppController
             $comment->delete();
         }
 
-        $session->setFlash('messageForIndex', "Пост '<b>{$post->getTitle()}</b>' удален.");
+        Yii::$app
+            ->session
+            ->setFlash('messageForIndex', "Пост '<b>{$post->getTitle()}</b>' удален.");
         $post->delete();
 
         return $this->asJson('/');
@@ -278,7 +291,7 @@ class PostsController extends AppController
 
     /**
      * Добавляет комментарий к посту.
-     * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public
     function actionAddComment(): Response
@@ -292,22 +305,22 @@ class PostsController extends AppController
         $commentForm = new CommentForm();
 
         if ($commentForm->load($request->post()) && $commentForm->validate()) {
-            $postId = $request->post('CommentForm')['postId'];
+            $postId = (int)$request->post('CommentForm')['postId'];
             $post = Post::find()
                 ->byId($postId)
                 ->one();
-            $user = User::find()
-                ->byId(Yii::$app->session['id'])
-                ->one();
+            $user = Yii::$app
+                ->user
+                ->getIdentity();
             $comment = new Comment();
             $comment
                 ->setPostId($post->getId())
-                ->setAuthor($user->getLogin())
+                ->setAuthor($user->getUsername())
                 ->setAuthorId($user->getId())
                 ->setComment($commentForm->comment)
                 ->save();
             $userStatistics = Statistics::find()
-                ->byLogin($user->getLogin())
+                ->byUsername($user->getUsername())
                 ->one();
             $userStatistics
                 ->increaseComments()
@@ -328,7 +341,7 @@ class PostsController extends AppController
      */
     public function actionComment(string $id = null): Response
     {
-        if ($id === null || $id < 1) {
+        if ($id === null) {
             throw new NotFoundHttpException();
         }
 
@@ -341,8 +354,7 @@ class PostsController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $postId = $comment
-            ->getPostId();
+        $postId = $comment->getPostId();
 
         return $this->redirect("/post?id=$postId#comment$id");
     }

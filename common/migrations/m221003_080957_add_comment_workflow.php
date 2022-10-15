@@ -3,7 +3,8 @@
 use yii\db\Migration;
 
 /**
- * Добавляет в таблицу постов и пользователей параметр возможности комментировать.
+ * Добавляет в таблицу постов и пользователей столбец.
+ * Он отражает возможность комментирования.
  */
 class m221003_080957_add_comment_workflow extends Migration
 {
@@ -12,8 +13,8 @@ class m221003_080957_add_comment_workflow extends Migration
      */
     public function up()
     {
-        $this->addColumn('users', 'can_comment', $this->boolean()->defaultValue(true));
-        $this->addColumn('posts', 'is_commentable', $this->boolean()->defaultValue(true));
+        $this->addColumn('users', 'can_comment', $this->boolean()->defaultValue(true)->notNull());
+        $this->addColumn('posts', 'is_commentable', $this->boolean()->defaultValue(true)->notNull());
     }
 
     /**

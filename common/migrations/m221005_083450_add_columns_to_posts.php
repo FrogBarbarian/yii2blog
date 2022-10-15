@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Добавляет колонки 'лайки', 'дизлайки' и 'рейтинг' к таблице постов 'posts'.
+ * Добавляет колонки к таблице постов.
  */
 class m221005_083450_add_columns_to_posts extends Migration
 {

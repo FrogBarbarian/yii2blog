@@ -48,7 +48,7 @@ if ($visitorIsLogin) {
                     <?= $post->getViews() . ' ' . NormalizeData::wordForm($post->getViews(), 'просмотров', 'просмотр', 'просмотра') ?>
                 </div>
                 <div class="col text-end" style="font-size: small">
-                    <?= NormalizeData::date($post->getDate()) ?>
+                    <?= NormalizeData::passedTime($post->getDatetime()) ?>
                     &nbsp;
                     <a class="author-link" href="/user?id=<?= $owner->getId() ?>">
                         <?= $post->getAuthor() ?>
@@ -64,7 +64,7 @@ if ($visitorIsLogin) {
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
                         <button class="like-button" type="button" onclick="likePost()">
                             <img id="likePost"
-                                 src="/assets/images/like<?= $post->isUserLikeIt($user->getId()) ? 'd' : '' ?>.svg"
+                                 src="/assets/images/like<?= $post->isUserAlreadyLikedPost($user->getId()) ? 'd' : '' ?>.svg"
                                  width="24" alt="like"/>
                         </button>
                     <?php endif ?>
@@ -74,7 +74,7 @@ if ($visitorIsLogin) {
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
                         <button class="like-button" onclick="dislikePost()">
                             <img id="dislikePost"
-                                 src="/assets/images/dislike<?= $post->isUserDislikeIt($user->getId()) ? 'd' : '' ?>.svg"
+                                 src="/assets/images/dislike<?= $post->isUserAlreadyDislikedPost($user->getId()) ? 'd' : '' ?>.svg"
                                  width="24" alt="dislike"/>
                         </button>
                     <?php endif ?>
@@ -183,7 +183,7 @@ if ($visitorIsLogin) {
             'errorOptions' => ['class' => 'text-danger small', 'id' => 'commentErrorLabel'],
             'template' => "{input}\n{label}\n{error}",
         ]; ?>
-        <div class="rounded-2" style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
+        <div class="rounded-2 border-end" style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
             <?php $activeForm = ActiveForm::begin([
                 'id' => 'comment-form',
                 'options' => [
@@ -215,8 +215,8 @@ if ($visitorIsLogin) {
             <?= ConstructHtml::comments($comments) ?>
 
         </ul>
-        <button class="d-none d-xl-block" id="hideComments">
-            Скрыть комментарии
-        </button>
+        <span id="hideComments">
+                Скрыть комментарии
+        </span>
     <?php endif ?>
 </div>

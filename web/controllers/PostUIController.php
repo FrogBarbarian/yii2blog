@@ -29,16 +29,18 @@ class PostUIController extends AppController
 
         }
 
-        $userId = (int)Yii::$app->session['id'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
         $postId = (int)$request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
         $ownerStatistics = Statistics::find()
-            ->byLogin($post->getAuthor())
+            ->byUsername($post->getAuthor())
             ->one();
 
-        if ($post->isUserLikeIt($userId)) {
+        if ($post->isUserAlreadyLikedPost($userId)) {
             $post
                 ->decreaseLikes()
                 ->bateLikedByUserId($userId)
@@ -56,7 +58,7 @@ class PostUIController extends AppController
                 ->save();
         }
 
-        if ($post->isUserDislikeIt($userId)) {
+        if ($post->isUserAlreadyDislikedPost($userId)) {
             $post
                 ->decreaseDislikes()
                 ->bateDislikedByUserId($userId)
@@ -84,16 +86,18 @@ class PostUIController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = (int)Yii::$app->session['id'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
         $postId = (int)$request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
         $ownerStatistics = Statistics::find()
-            ->byLogin($post->getAuthor())
+            ->byUsername($post->getAuthor())
             ->one();
 
-        if ($post->isUserDislikeIt($userId)) {
+        if ($post->isUserAlreadyDislikedPost($userId)) {
             $post
                 ->decreaseDislikes()
                 ->bateDislikedByUserId($userId)
@@ -111,7 +115,7 @@ class PostUIController extends AppController
                 ->save();
         }
 
-        if ($post->isUserLikeIt($userId)) {
+        if ($post->isUserAlreadyLikedPost($userId)) {
             $post
                 ->decreaseLikes()
                 ->bateLikedByUserId($userId)
@@ -121,10 +125,8 @@ class PostUIController extends AppController
                 ->save();
         }
 
-        $post
-            ->updateRating();
-        $ownerStatistics
-            ->updateRating();
+        $post->updateRating();
+        $ownerStatistics->updateRating();
     }
 
     /**
@@ -139,15 +141,15 @@ class PostUIController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = (int)Yii::$app->session['id'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
         $postId = (int)$request->post('ajax')['postId'];
         $post = Post::find()
             ->byId($postId)
             ->one();
-        $liked = $post
-            ->isUserLikeIt($userId);
-        $disliked = $post
-            ->isUserDislikeIt($userId);
+        $liked = $post->isUserAlreadyLikedPost($userId);
+        $disliked = $post->isUserAlreadyDislikedPost($userId);
 
         return $this->asJson([$liked, $disliked]);
     }

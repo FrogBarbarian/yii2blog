@@ -121,15 +121,17 @@ class CommentsUIController extends AppController
         }
 
         $commentId = (int)$request->post('ajax')['commentId'];
-        $userId = (int)Yii::$app->session['id'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
         $comment = Comment::find()
             ->byId($commentId)
             ->one();
         $ownerStatistics = Statistics::find()
-            ->byLogin($comment->getAuthor())
+            ->byUsername($comment->getAuthor())
             ->one();
 
-        if ($comment->isUserDislikeIt($userId)) {
+        if ($comment->isUserAlreadyDislikedComment($userId)) {
             $comment
                 ->decreaseDislikes()
                 ->removeDislikedByUserId($userId)
@@ -139,7 +141,7 @@ class CommentsUIController extends AppController
                 ->save();
         }
 
-        if ($comment->isUserLikeIt($userId)) {
+        if ($comment->isUserAlreadyLikedComment($userId)) {
             $comment
                 ->decreaseLikes()
                 ->removeLikedByUserId($userId)
@@ -178,15 +180,17 @@ class CommentsUIController extends AppController
         }
 
         $commentId = (int)$request->post('ajax')['commentId'];
-        $userId = (int)Yii::$app->session['id'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
         $comment = Comment::find()
             ->byId($commentId)
             ->one();
         $ownerStatistics = Statistics::find()
-            ->byLogin($comment->getAuthor())
+            ->byUsername($comment->getAuthor())
             ->one();
 
-        if ($comment->isUserLikeIt($userId)) {
+        if ($comment->isUserAlreadyLikedComment($userId)) {
             $comment
                 ->decreaseLikes()
                 ->removeLikedByUserId($userId)
@@ -196,7 +200,7 @@ class CommentsUIController extends AppController
                 ->save();
         }
 
-        if ($comment->isUserDislikeIt($userId)) {
+        if ($comment->isUserAlreadyDislikedComment($userId)) {
             $comment
                 ->decreaseDislikes()
                 ->removeDislikedByUserId($userId)
@@ -234,15 +238,17 @@ class CommentsUIController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $userId = (int)Yii::$app->session['id'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
         $commentId = (int)$request->post('ajax')['commentId'];
         $comment = Comment::find()
             ->byId($commentId)
             ->one();
         $liked = $comment
-            ->isUserLikeIt($userId);
+            ->isUserAlreadyLikedComment($userId);
         $disliked = $comment
-            ->isUserDislikeIt($userId);
+            ->isUserAlreadyDislikedComment($userId);
 
         return $this->asJson([$liked, $disliked]);
     }

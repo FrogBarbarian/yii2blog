@@ -4,17 +4,102 @@ declare(strict_types = 1);
 
 namespace app\models;
 
+use Yii;
 use app\models\queries\UserQuery;
+use yii\base\Exception;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
+use yii\web\IdentityInterface;
 
-class User extends ActiveRecord
+class User extends ActiveRecord implements IdentityInterface
 {
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 10;
+
+    /**
+     * {@inheritDoc}
+     * @throws Exception
+     */
+    public function beforeSave($insert): bool
+    {
+        if (parent::beforeSave($insert)) {
+            if ($this->isNewRecord) {
+                $this->setAuthKey(Yii::$app->security->generateRandomString());
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * {@inheritDoc}
      */
     public static function tableName(): string
     {
         return 'users';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors(): array
+    {
+        return [
+            TimestampBehavior::class,
+        ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function findIdentity($id): self
+    {
+        return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public static function findIdentityByAccessToken($token, $type = null): self
+    {
+        return static::findOne(['access_token' => $token]);
+    }
+
+    /**
+     * @return string Ключ аутентификации.
+     */
+    public function getAuthKey(): string
+    {
+        return $this->getAttribute('auth_key');
+    }
+
+    /**
+     * Записывает ключ аутентификации.
+     */
+    private function setAuthKey(string $authKey)
+    {
+        $this->setAttribute('auth_key', $authKey);
+    }
+
+    /**
+     * Проверяет совпадение ключа аутентификации.
+     */
+    public function validateAuthKey($authKey): bool
+    {
+        return $this->getAuthKey() === $authKey;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function rules():array
+    {
+        return [
+            ['status', 'default', 'value' => self::STATUS_ACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+        ];
     }
 
     /**
@@ -34,11 +119,11 @@ class User extends ActiveRecord
     }
 
     /**
-     * @return string Логин пользователя.
+     * @return string Имя пользователя.
      */
-    public function getLogin(): string
+    public function getUsername(): string
     {
-        return $this->getAttribute('login');
+        return $this->getAttribute('username');
     }
 
     /**
@@ -90,13 +175,13 @@ class User extends ActiveRecord
     }
 
     /**
-     * Записывает псевдоним пользователя.
-     * @param string $login
+     * Записывает имя пользователя.
+     * @param string $username
      * @return self
      */
-    public function setLogin(string $login): self
+    public function setUsername(string $username): self
     {
-        $this->setAttribute('login', $login);
+        $this->setAttribute('username', $username);
 
         return $this;
     }
@@ -115,12 +200,38 @@ class User extends ActiveRecord
 
     /**
      * Записывает пароль пользователя.
-     * @param string $password
-     * @return self
+     * @throws Exception
      */
     public function setPassword(string $password): self
     {
-        $this->setAttribute('password', password_hash($password, PASSWORD_DEFAULT));
+        $this->setAttribute('password_hash', Yii::$app->security->generatePasswordHash($password));
+
+        return $this;
+    }
+
+    /**
+     * @return string Хеш пароля.
+     */
+    private function getPasswordHash(): string
+    {
+        return $this->getAttribute('password_hash');
+    }
+
+    /**
+     * Проверяет на валидность введенный пароль.
+     */
+    public function validatePassword(string $password): bool
+    {
+        return Yii::$app->security->validatePassword($password, $this->getPasswordHash());
+    }
+
+    /**
+     * Генерирует аутентификационный ключ.
+     * @throws Exception
+     */
+    public function generateAuthKey(): self
+    {
+        $this->setAuthKey(Yii::$app->security->generateRandomString());
 
         return $this;
     }

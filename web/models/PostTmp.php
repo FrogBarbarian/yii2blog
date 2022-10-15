@@ -29,7 +29,7 @@ class PostTmp extends Post
      */
     public function getIsNew(): bool
     {
-        return $this->getAttribute('isNew');
+        return $this->getAttribute('is_new');
     }
 
     /**
@@ -59,7 +59,7 @@ class PostTmp extends Post
      */
     public function setIsNew(bool $isNew): self
     {
-        $this->setAttribute('isNew', $isNew);
+        $this->setAttribute('is_new', $isNew);
 
         return $this;
     }

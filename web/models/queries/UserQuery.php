@@ -17,11 +17,11 @@ class UserQuery extends ActiveQuery
     }
 
     /**
-     * Поиск по псевдониму пользователя.
+     * Поиск по имени пользователя.
      */
-    public function byLogin(string $login): self
+    public function byUsername(string $username): self
     {
-        return $this->where(['login' => $login]);
+        return $this->where(['username' => $username]);
     }
 
     /**

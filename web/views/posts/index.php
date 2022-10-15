@@ -4,14 +4,15 @@
  * @var int $pages
  * @var int $curPage
  * @var string $search
+ * @var \app\models\User $user
  */
 
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
 use src\helpers\PaginationHelper;
 
-$session = Yii::$app->session;
 $this->title = 'Главная страница';
+$session = Yii::$app->session;
 
 ?>
 <?php if ($session->hasFlash('messageForIndex')): ?>
@@ -82,14 +83,13 @@ $this->title = 'Главная страница';
         <?php foreach ($posts as $post): ?>
             <div class="card rounded-0 mx-auto mb-1">
                 <div class="card-header hstack">
-                    <div class="col" style="font-size:small;text-align:start;">
-                        <?= $post->getViews() . ' ' . NormalizeData::wordForm($post->getViews(), 'просмотров', 'просмотр', 'просмотра') ?>
+                    <div class="col text-muted" style="font-size:small;text-align:start;">
+                        <?= $post->getViews() ?>
+                        <img src="/assets/images/views.svg" width="18" alt="views">
+                        &nbsp;
+                        <?= $post->getCommentsAmount() ?>
+                        <img src="/assets/images/comments.svg" width="18" alt="comments"/>
                         <?= ConstructHtml::rating($post->getRating()) ?>
-                        <?php if ($post->getCommentsAmount() > 0): ?>
-                            &nbsp;
-                            <?= $post->getCommentsAmount() ?>
-                            <img src="/assets/images/comments.svg" width="18" alt="comments"/>
-                        <?php endif ?>
                     </div>
                     <div class="col" style="font-size:small;text-align:end;">
                         <a class="author-link" href="/user?id=<?= $post->getAuthorId() ?>">
@@ -110,15 +110,15 @@ $this->title = 'Главная страница';
                     </p>
                 </div>
                 <div class="hstack card-footer" style="font-size: small">
-                    <?php if ($session->has('login') && !$session->has('admin')): ?>
+                    <?php if ($user !== null && !$user->getIsAdmin()): ?>
                         <button type="button" style="max-width: 48px"
-                                onclick="createComplaint('post', <?= $post->getId() ?>, <?= $session['id'] ?>)"
+                                onclick="createComplaint('post', <?= $post->getId() ?>, <?= $user->getId() ?>)"
                                 class="btn btn-light col">
                             <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
                         </button>
                     <?php endif ?>
                     <span class="text-end col">
-                        <?= NormalizeData::date($post->getDate()) ?>
+                        <?= NormalizeData::passedTime($post->getDatetime()) ?>
                     </span>
                 </div>
             </div>

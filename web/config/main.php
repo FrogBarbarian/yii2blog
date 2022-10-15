@@ -15,6 +15,9 @@ return [
     ],
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'components' => [
+        'user' => [
+            'identityClass' => 'app\models\User',
+        ],
         'request' => [
             'baseUrl' => '',
             'cookieValidationKey' => 'Mgw2YR5XFMuUXvBkNHQ0qwYeKJiDsQ',
@@ -22,7 +25,7 @@ return [
         'cache' => [
             'class' => 'yii\caching\FileCache',
             'cachePath' => dirname(__DIR__, 2) . '/cache',
-            ],
+        ],
         'db' => require __DIR__ . '/db.php',
         'urlManager' => [
             'enableStrictParsing' => true,
@@ -46,7 +49,7 @@ return [
             'categories' => [
                 'yii\db\*',
                 'yii\web\HttpException:*',
-                ],
             ],
         ],
-    ];
+    ],
+];

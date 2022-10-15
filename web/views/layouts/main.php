@@ -15,6 +15,18 @@
 </head>
 <body style="background-image: url('../../assets/images/background.webp');height: 100%">
 <header class="sticky-top">
+    <?php
+    $user = Yii::$app->user;
+    $admin = false;
+
+    if (!$user->isGuest) {
+        try {
+            $admin = $user->getIdentity()->getIsAdmin();
+        } catch (Throwable $e) {
+            throw new yii\web\HttpException(500, 'На сервере произошла ошибка');
+        }
+    }
+    ?>
     <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104);">
         <div class="container-fluid">
             <a class="nav-button d-flex justify-content-between mx-1 my-auto" href="/">
@@ -34,11 +46,11 @@
                             Случайная статья
                         </a>
                     </li>
-                    <?php if (isset(Yii::$app->session['login'])): ?>
+                    <?php if (!$user->isGuest): ?>
                         <li class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/new-post">Создать пост</a>
                         </li>
-                        <?php if (isset(Yii::$app->session['admin'])): ?>
+                        <?php if ($admin): ?>
                             <li class="nav-item mx-1 my-auto">
                                 <a class="nav-button" href="<?= ADMIN_PANEL ?>">Админ-панель</a>
                             </li>
@@ -47,13 +59,12 @@
                         echo '</ul>';
                         require 'widgets/search.php';
                         ?>
-                        <!--TODO: Реализовать систему поиска по статьям-->
-                        <div class="nav-item me-2 my-auto">
+                        <div class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/profile">
                                 Профиль
                             </a>
                         </div>
-                        <div class="nav-item my-auto">
+                        <div class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/users/logout">
                                 Выйти
                             </a>
@@ -63,12 +74,12 @@
                         echo '</ul>';
                         require 'widgets/search.php';
                         ?>
-                        <div class="nav-item me-2 my-auto">
+                        <div class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/login">
                                 Вход
                             </a>
                         </div>
-                        <div class="nav-item my-auto">
+                        <div class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/register">
                                 Зарегистрироваться
                             </a>

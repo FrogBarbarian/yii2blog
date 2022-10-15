@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Создаем таблицу, в которой будут храниться созданные тэги для постов.
+ * Создает таблицу для хранения списка тегов к постам.
  */
 class m220929_132334_create_tags_table extends Migration
 {
@@ -14,7 +14,7 @@ class m220929_132334_create_tags_table extends Migration
     {
         $this->createTable('tags', [
             'id' => $this->primaryKey(),
-            'tag' => $this->string()->notNull(),
+            'tag' => $this->text()->notNull(),
         ]);
     }
 

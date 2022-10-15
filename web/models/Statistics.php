@@ -26,7 +26,7 @@ class Statistics extends ActiveRecord
     }
 
     /**
-     * Логин пользователя, за которым ведется статистика.
+     * Имя пользователя, за которым ведется статистика.
      */
     public function setOwner(string $owner): self
     {

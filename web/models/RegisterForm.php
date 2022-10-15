@@ -11,33 +11,33 @@ use yii\db\Exception;
 class RegisterForm extends ActiveRecord
 {
     /**
-     * @var string Псевдоним, введенный в форму регистрации.
+     * @var string Имя пользователя.
      */
-    public string $login = '';
+    public string $username = '';
     /**
-     * @var string Email, введенный в форму регистрации.
+     * @var string Email.
      */
     public string $email = '';
     /**
-     * @var string Пароль, введенный в форму регистрации.
+     * @var string Пароль.
      */
     public string $password = '';
     /**
-     * @var string Подтверждающий пароль, введенный в форму регистрации.
+     * @var string Подтверждение пароля.
      */
     public string $confirmPassword = '';
 
     /**
-     * @return array Правила валидации регистрации нового юзера.
+     * {@inheritDoc}
      */
     public function rules(): array
     {
         return [
-            [['login', 'email', 'password', 'confirmPassword'], 'trim'],
-            ['login', 'required', 'message' => 'Придумайте псевдоним'],
-            ['login', 'string', 'length' => [3, 20], 'tooLong' => 'Максимум 20 символов', 'tooShort' => 'Минимум 3 символа'],
-            ['login', 'match', 'pattern' => '/^[\da-zА-яёЁ][\wА-яёЁ]+/i', 'message' => 'Используются недопустимые символы'],
-            ['login', 'uniqueCaseInsensitiveValidation'],
+            [['username', 'email', 'password', 'confirmPassword'], 'trim'],
+            ['username', 'required', 'message' => 'Придумайте имя пользователя'],
+            ['username', 'string', 'length' => [3, 30], 'tooLong' => 'Максимум 30 символов', 'tooShort' => 'Минимум 3 символа'],
+            ['username', 'match', 'pattern' => '/^[\da-zА-яёЁ][\wА-яёЁ]+/i', 'message' => 'Используются недопустимые символы'],
+            ['username', 'uniqueCaseInsensitiveValidation'],
             ['email', 'required', 'message' => 'Введите Ваш email'],
             ['email' , 'email', 'message' => 'Введенный email не корректный'],
             ['email', 'uniqueCaseInsensitiveValidation'],
@@ -50,7 +50,7 @@ class RegisterForm extends ActiveRecord
     }
 
     /**
-     * @return string Название таблицы с пользователями.
+     * {@inheritDoc}
      */
     public static function tableName(): string
     {
@@ -58,7 +58,7 @@ class RegisterForm extends ActiveRecord
     }
 
     /**
-     * Проверяет на регистронезависимую уникальность введенные email/login при регистрации.
+     * Проверяет на регистронезависимую уникальность введенные email/username при регистрации.
      * @param string $attribute Проверяемый атрибут.
      * @return void
      * @throws Exception
@@ -71,11 +71,11 @@ class RegisterForm extends ActiveRecord
             )
             ->queryOne()
         ) {
-            $field = match ($attribute) {
-                'login' => 'псевдоним',
-                default => 'email',
+            $error = match ($attribute) {
+                'username' => 'Данное имя пользователя уже занято',
+                default => 'Данный email уже занят',
             };
-            $this->addError($attribute, "Данный $field уже занят");
+            $this->addError($attribute, $error);
         }
     }
 }

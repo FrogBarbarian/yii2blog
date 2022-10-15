@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace app\controllers;
 
 use app\models\Post;
@@ -15,6 +17,7 @@ use yii\web\Response;
 class AdminController extends AppController
 {
     /**
+     * TODO: переделать
      * Отображает пост из временного хранилища по ID из GET (если такой пост найден).
      * @param string $id
      * @return string Вид "пост пользователя".
@@ -42,6 +45,7 @@ class AdminController extends AppController
     }
 
     /**
+     * TODO: переделать
      * Проверяет входные данные и на их основе создает/изменяет существующий пост на основе данных из таблицы хранилища.
      * @return Response
      * @throws NotFoundHttpException
@@ -64,7 +68,7 @@ class AdminController extends AppController
                         ->save();
                     $postTmp->delete();
                     $statistics = Statistics::find()
-                        ->byLogin($post->getAuthor())
+                        ->byUsername($post->getAuthor())
                         ->one();
                     $statistics
                         ->increasePosts()
@@ -91,6 +95,7 @@ class AdminController extends AppController
     }
 
     /**
+     * TODO: переделать
      * @return string Вид "панель админа". Обзорная страница.
      * @throws NotFoundHttpException
      */
@@ -111,6 +116,7 @@ class AdminController extends AppController
     }
 
     /**
+     * TODO: переделать
      * @return string  Вид "панель админа". Внутри переправляет на посты пользователей в хранилище.
      * @throws NotFoundHttpException
      */
@@ -125,6 +131,7 @@ class AdminController extends AppController
     }
 
     /**
+     * TODO: переделать
      * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
      * @throws NotFoundHttpException
      */

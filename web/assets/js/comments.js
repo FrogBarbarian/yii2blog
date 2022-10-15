@@ -33,7 +33,7 @@ $(document).ready(function () {
     });
 
     $('#hideComments').click(function () {
-        if ($('#comments').css('display') == 'none') {
+        if ($('#comments').css('display') === 'none') {
             $('#comments').show();
             $('#hideComments').html('Скрыть комментарии')
         } else {
@@ -50,9 +50,8 @@ $(document).ready(function () {
  * Лайкает комментарий.
  */
 function likeComment(id) {
-    var token = $('meta[name=csrf-token]').attr('content');
     let data = {
-        _csrf: token,
+        _csrf: $('meta[name=csrf-token]').attr('content'),
         ajax: {
             commentId: id,
         },

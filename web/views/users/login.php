@@ -1,5 +1,5 @@
 <?php
-/** @var \app\models\LoginForm $model */
+/** @var \app\models\LoginForm $loginForm */
 
 use yii\widgets\ActiveForm;
 
@@ -19,7 +19,7 @@ $options = [
             'id' => 'login-form',
         ]) ?>
         <?=$activeForm
-            ->field($model, 'email', $options)
+            ->field($loginForm, 'email', $options)
             ->input('email', [
                 'class' => 'form-control placeholder-wave',
                 'id' => 'emailInput',
@@ -28,7 +28,7 @@ $options = [
             ])
             ->label('Почта', ['class' => false]) ?>
         <?=$activeForm
-            ->field($model, 'password', $options)
+            ->field($loginForm, 'password', $options)
             ->input('password', [
                 'class' => 'form-control placeholder-wave',
                 'id' => 'passwordInput',

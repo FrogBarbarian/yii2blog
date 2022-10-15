@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace app\controllers;
 
 use app\models\Complaint;
@@ -9,7 +11,7 @@ use app\models\PostTmp;
 use app\models\Statistics;
 use app\models\User;
 use app\models\RegisterForm;
-use yii\base\InvalidConfigException;
+use yii\base\Exception;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -17,99 +19,111 @@ use Yii;
 class UsersController extends AppController
 {
     /**
-     * Страница регистрации пользователя, если пользователь залогинен, то переадресует на домашнюю страницу.
-     * Если данные из формы провалидированы, то создается запись в БД с пользователем.
-     * @return Response|string Переадресация на домашнюю/страницу пользователя | Вид "регистрация пользователя".
-     * @throws NotFoundHttpException
+     * Страница регистрации пользователя,
+     * если пользователь залогинен, то переадресует на домашнюю страницу.
+     * @throws Exception
      */
     public function actionRegister(): Response|string
     {
-        if (Yii::$app->session->has('login')) {
-            throw new NotFoundHttpException();
+        if (!Yii::$app->user->isGuest) {
+            $this->goHome();
         }
-        $model = new RegisterForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+        $registerForm = new RegisterForm();
+
+        if ($registerForm->load(Yii::$app->request->post()) && $registerForm->validate()) {
             $user = new User();
             $user
-                ->setLogin($model->login)
-                ->setEmail($model->email)
-                ->setPassword($model->password)
+                ->setUsername($registerForm->username)
+                ->setEmail($registerForm->email)
+                ->setPassword($registerForm->password)
                 ->save();
             $statistics = new Statistics();
             $statistics
-                ->setOwner($model->login)
+                ->setOwner($registerForm->username)
                 ->save();
-            $session = Yii::$app->session;
-            $session->open();
-            $session['login'] = $model->login;
-            $session['id'] = $user->getId();
+
+            Yii::$app
+                ->user
+                ->login($user, true ? 3600 * 24 * 30 : 0);
 
             return $this->redirect('/profile');
         }
 
-        return $this->render('register', ['model' => $model]);
+        return $this->render('register', ['registerForm' => $registerForm]);
     }
 
     /**
      * Разлогинивает пользователя и отправляет на главную страницу.
-     * @return Response
-     * @throws NotFoundHttpException
      */
     public function actionLogout(): Response
     {
-        $session = Yii::$app->session;
-        if ($session->has('login')) {
-            $session->removeAll();
-            $session->destroy();
-            return $this->goHome();
-        }
-        throw new NotFoundHttpException();
+        Yii::$app->user->logout();
+
+        return $this->goHome();
     }
 
     /**
      * Страница для входа пользователя, если пользователь уже залогинен - переправляет на главную страницу.
-     * Логинит пользователя, если данные для входа корректны.
-     * @return Response|string Переадресация на страницу пользователя | Страница входа пользователя.
      */
     public function actionLogin(): Response|string
     {
-        if (Yii::$app->session->has('login')) {
+        if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+
+        $loginForm = new LoginForm();
+
+        if ($loginForm->load(Yii::$app->request->post()) && $loginForm->validate()) {
             $user = User::find()
-                ->byEmail($model->email)
+                ->byEmail($loginForm->email)
                 ->one();
-            $session = Yii::$app->session;
-            $session->open();
-            $session['login'] = $user->getLogin();
-            $session['id'] = $user->getId();
-            if ($user->getIsAdmin()) {
-                $session['admin'] = true;
-            }
+
+            Yii::$app
+                ->user
+                ->login($user, false ? 3600 * 24 * 30 : 0);
 
             return $this->redirect('/profile');
         }
 
-        return $this->render('login', ['model' => $model]);
+        return $this->render('login', ['loginForm' => $loginForm]);
     }
 
     /**
-     * Профиль пользователя.
-     * @param string|null $id
-     * @param string $tab
-     * @return string|Response
-     * @throws NotFoundHttpException
-     * @throws InvalidConfigException
+     * Показывает профиль пользователя.
+     * @throws \Throwable
      */
     public function actionUser(string $id = null, string $tab = 'overview'): Response|string
     {
         $path = Yii::$app->request->getPathInfo();
-        $session = Yii::$app->session;
+        $user = Yii::$app->user->getIdentity();
+        $id = (int)$id;
 
-        if ($path === 'user') {
-            if ($id === null || $id < 1) {
+        if ($path === 'profile') {
+            if ($user === null) {
+                return $this->redirect('/login');
+            }
+            $isOwn = true;
+
+            if ($user->getIsAdmin()) {
+                $postsTmp = PostTmp::find()
+                    ->all();
+                $complaints = Complaint::find()
+                    ->all();
+            } else {
+                $postsTmp = PostTmp::find()
+                    ->byAuthor($user->getUsername())
+                    ->all();
+                $complaints = Complaint::find()
+                    ->bySenderId($user->getId())
+                    ->all();
+            }
+        } else {
+            if ($id === $user->getId()) {
+                return $this->redirect('/profile');
+            }
+
+            if ($id < 1) {
                 throw new NotFoundHttpException();
             }
 
@@ -121,78 +135,28 @@ class UsersController extends AppController
                 throw new NotFoundHttpException();
             }
 
-            if ($user->getLogin() === $session['login']) {
-                return $this->redirect('/profile');
-            }
-
+            $visitor = Yii::$app->user->getIdentity();
             $isOwn = false;
             $tab = 'overview';
-        } else {
-            if (!$session->has('login')) {
-                return $this->redirect('/login');
-            }
-
-            $user = User::find()
-                ->byLogin($session['login'])
-                ->one();
-            $isOwn = true;
         }
 
         $posts = Post::find()
-            ->byAuthor($user->getLogin())
+            ->byAuthor($user->getUsername())
             ->orderDescById()
             ->all();
         $statistics = Statistics::find()
-            ->byLogin($user->getLogin())
+            ->byUsername($user->getUsername())
             ->one();
-
-        if ($session->has('admin')) {
-            $postsTmp = PostTmp::find()
-                ->all();
-            $complaints = Complaint::find()
-                ->all();
-        } else {
-            $postsTmp = PostTmp::find()
-                ->byAuthor($user->getLogin())
-                ->all();
-            $complaints = Complaint::find()
-                ->bySenderId($user->getId())
-                ->all();
-        }
 
         return $this->render('profile', [
             'user' => $user,
+            'visitor' => $visitor ?? null,
             'posts' => $posts,
-            'postsTmp' => $postsTmp,
-            'complaints' => $complaints,
+            'postsTmp' => $postsTmp ?? null,
+            'complaints' => $complaints ?? null,
             'statistics' => $statistics,
             'isOwn' => $isOwn,
             'tab' => $tab,
-            'session' => $session,
         ]);
-    }
-
-    //TODO: add the comment
-    public function actionChangeVisibility()
-    {
-        //TODO: Переделать под аякс
-        if (!isset($_POST['_csrf'])) {
-            throw new NotFoundHttpException();
-        }
-        $user = User::find()
-            ->byId($_POST['id'])
-            ->one();
-        if (isset($_POST['hide'])) {
-            $user
-                ->setIsHidden(true)
-                ->save();
-        }
-        if (isset($_POST['show'])) {
-            $user
-                ->setIsHidden(false)
-                ->save();
-        }
-
-        return $this->redirect('/profile');
     }
 }

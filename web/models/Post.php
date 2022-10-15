@@ -69,9 +69,9 @@ class Post extends ActiveRecord
     /**
      * @return string|null Дата создания поста.
      */
-    public function getDate(): string|null
+    public function getDatetime(): string|null
     {
-        return $this->getAttribute('date');
+        return $this->getAttribute('datetime');
     }
 
     /**
@@ -298,7 +298,7 @@ class Post extends ActiveRecord
      */
     public function getLikedByUsers(): string
     {
-        return $this->getAttribute('liked_by_users');
+        return $this->getAttribute('users_liked');
     }
 
     /**
@@ -306,7 +306,7 @@ class Post extends ActiveRecord
      */
     public function getDislikedByUsers(): string
     {
-        return $this->getAttribute('disliked_by_users');
+        return $this->getAttribute('users_disliked');
     }
 
     /**
@@ -314,7 +314,7 @@ class Post extends ActiveRecord
      */
     public function addLikedByUserId(int $id): self
     {
-        $this->setAttribute('liked_by_users', "{$this->getLikedByUsers()}$id ");
+        $this->setAttribute('users_liked', "{$this->getLikedByUsers()}$id ");
 
         return $this;
     }
@@ -326,7 +326,7 @@ class Post extends ActiveRecord
     {
         $usersIds = explode(' ', $this->getLikedByUsers());
         $usersIds = array_diff($usersIds, [$id]);
-        $this->setAttribute('liked_by_users', implode(' ', $usersIds));
+        $this->setAttribute('users_liked', implode(' ', $usersIds));
 
         return $this;
     }
@@ -338,7 +338,7 @@ class Post extends ActiveRecord
     {
         $usersIds = explode(' ', $this->getDislikedByUsers());
         $usersIds = array_diff($usersIds, [$id]);
-        $this->setAttribute('disliked_by_users', implode(' ', $usersIds));
+        $this->setAttribute('user_disliked', implode(' ', $usersIds));
 
         return $this;
     }
@@ -348,7 +348,7 @@ class Post extends ActiveRecord
      */
     public function addDislikedByUserId(int $id): self
     {
-        $this->setAttribute('disliked_by_users', "{$this->getDislikedByUsers()}$id ");
+        $this->setAttribute('users_disliked', "{$this->getDislikedByUsers()}$id ");
 
         return $this;
     }
@@ -356,7 +356,7 @@ class Post extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке лайкнувших пост.
      */
-    public function isUserLikeIt(int $id): bool
+    public function isUserAlreadyLikedPost(int $id): bool
     {
         $usersIds = explode(' ', $this->getLikedByUsers());
 
@@ -366,7 +366,7 @@ class Post extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке дизлайкнувших пост.
      */
-    public function isUserDislikeIt(int $id): bool
+    public function isUserAlreadyDislikedPost(int $id): bool
     {
         $usersIds = explode(' ', $this->getDislikedByUsers());
 

@@ -1,5 +1,6 @@
 <?php
-/** @var \app\models\RegisterForm $model */
+/** @var \app\models\RegisterForm $registerForm */
+
 use yii\widgets\ActiveForm;
 
 $this->title = 'Регистрация';
@@ -17,17 +18,17 @@ $options = [
         <?php $activeForm = ActiveForm::begin([
                 'id' => 'register-form',
         ]) ?>
-            <?=$activeForm->field($model, 'login', $options)
+            <?=$activeForm->field($registerForm, 'username', $options)
                 ->input('text', [
                     'class' => 'form-control placeholder-wave',
-                    'id' => 'loginInput',
-                    'placeholder' => 'login',
+                    'id' => 'usernameInput',
+                    'placeholder' => 'username',
                     'data-toggle' => 'tooltip',
                     'data-placement' => 'top',
-                    'title' => 'Псевдоним не должен начинаться с нижнего подчеркивания, можно использовать латиницу и кириллицу, цифры и нижнее подчеркивание. От 3 до 20 символов.',
+                    'title' => 'Имя пользователя не должно начинаться с нижнего подчеркивания, можно использовать латиницу и кириллицу, цифры и нижнее подчеркивание. От 3 до 30 символов.',
                     'style' => 'background-color: #899aa2;',
-                ])->label('Псевдоним', ['class' => false]) ?>
-            <?=$activeForm->field($model, 'email', $options)
+                ])->label('Имя пользователя', ['class' => false]) ?>
+            <?=$activeForm->field($registerForm, 'email', $options)
                 ->input('email', [
                     'class' => 'form-control placeholder-wave',
                     'id' => 'emailInput',
@@ -35,7 +36,7 @@ $options = [
                     'autocomplete' => 'email',
                     'style' => 'background-color: #899aa2;',
                 ])->label('Почта', ['class' => false]) ?>
-            <?=$activeForm->field($model, 'password', $options)
+            <?=$activeForm->field($registerForm, 'password', $options)
                 ->input('password', [
                     'class' => 'form-control placeholder-wave',
                     'id' => 'passwordInput',
@@ -46,7 +47,7 @@ $options = [
                     'title' => 'Пароль может содержать буквы латинского алфавита, цифры, - и _. От 5 до 30 символов.',
                     'style' => 'background-color: #899aa2;',
                 ])->label('Пароль', ['class' => false]) ?>
-            <?=$activeForm->field($model, 'confirmPassword', $options)
+            <?=$activeForm->field($registerForm, 'confirmPassword', $options)
                 ->input('password', [
                     'class' => 'form-control placeholder-wave',
                     'id' => 'confirmPasswordInput',

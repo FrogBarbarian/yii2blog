@@ -6,16 +6,15 @@ namespace app\models;
 
 use yii\db\ActiveRecord;
 use yii\db\Exception;
-use Yii;
 
 class LoginForm extends ActiveRecord
 {
     /**
-     * @var string Email, введенный в форму логина.
+     * @var string Email.
      */
     public string $email = '';
     /**
-     * @var string Пароль, введенный в форму логина.
+     * @var string Пароль.
      */
     public string $password = '';
 
@@ -49,11 +48,11 @@ class LoginForm extends ActiveRecord
      */
     public function checkData(string $attribute): void
     {
-        $user = Yii::$app
-            ->getDb()
-            ->createCommand('SELECT * FROM ' . self::tableName() . ' WHERE email = \'' . $this->email . '\'')
-            ->queryOne();
-        if (!$user || !password_verify($this->password, $user['password'])) {
+        $user = User::find()
+            ->byEmail($this->email)
+            ->one();
+
+        if (!$user || !$user->validatePassword($this->password)) {
             $this->addError($attribute, "Почта или пароль введены не верно");
         }
     }

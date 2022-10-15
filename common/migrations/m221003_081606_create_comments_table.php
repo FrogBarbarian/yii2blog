@@ -28,9 +28,27 @@ class m221003_081606_create_comments_table extends Migration
             'is_deleted' => $this->boolean()->defaultValue(false)->notNull(),
         ]);
 
-        $this->addForeignKey('author_fk', 'comments', 'author', 'users', 'login');
-        $this->addForeignKey('author_id_fk', 'comments', 'author_id', 'users', 'id');
-        $this->addForeignKey('post_id_fk', 'comments', 'post_id', 'posts', 'id');
+        $this->addForeignKey(
+            'author_fk',
+            'comments',
+            'author',
+            'users',
+            'username'
+        );
+        $this->addForeignKey(
+            'author_id_fk',
+            'comments',
+            'author_id',
+            'users',
+            'id'
+        );
+        $this->addForeignKey(
+            'post_id_fk',
+            'comments',
+            'post_id',
+            'posts',
+            'id'
+        );
     }
 
     /**
@@ -38,6 +56,9 @@ class m221003_081606_create_comments_table extends Migration
      */
     public function down()
     {
+        $this->dropForeignKey('author_fk', 'comments');
+        $this->dropForeignKey('author_id_fk', 'comments');
+        $this->dropForeignKey('post_id_fk', 'comments');
         $this->dropTable('comments');
     }
 }

@@ -3,7 +3,7 @@
  * @var \app\models\ComplaintForm $complaintForm
  * @var string $objectType
  * @var string $objectId
- * @var string $subjectId
+ * @var string $senderId
  */
 
 use yii\helpers\Url;
@@ -52,8 +52,8 @@ use yii\widgets\ActiveForm;
                     ->field($complaintForm, 'objectId')
                     ->hiddenInput(['value' => $objectId]) ?>
                 <?= $activeForm
-                    ->field($complaintForm, 'subjectId')
-                    ->hiddenInput(['value' => $subjectId]) ?>
+                    ->field($complaintForm, 'senderId')
+                    ->hiddenInput(['value' => $senderId]) ?>
             </div>
             <?php ActiveForm::end() ?>
             <div class='modal-footer'>

@@ -7,6 +7,7 @@ namespace app\controllers;
 use app\models\Complaint;
 use app\models\ComplaintForm;
 use app\models\Post;
+use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -51,7 +52,7 @@ class UIController extends AppController
             'complaintForm' => $complaintForm,
             'objectType' => $objectType,
             'objectId' => $objectId,
-            'subjectId' => $senderId,
+            'senderId' => $senderId,
         ]);
     }
 
@@ -73,12 +74,12 @@ class UIController extends AppController
             $content = $request->post('ComplaintForm')['complaint'];
             $objectType = $request->post('ComplaintForm')['objectType'];
             $objectId = $request->post('ComplaintForm')['objectId'];
-            $subjectId = $request->post('ComplaintForm')['subjectId'];
+            $senderId = $request->post('ComplaintForm')['senderId'];
             $complaint = new Complaint();
             $complaint
                 ->setObject($objectType)
                 ->setObjectId($objectId)
-                ->setSenderId($subjectId)
+                ->setSenderId($senderId)
                 ->setComplaint($content)
                 ->save();
 

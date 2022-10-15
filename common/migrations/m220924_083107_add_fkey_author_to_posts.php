@@ -3,8 +3,8 @@
 use yii\db\Migration;
 
 /**
- * В таблицу с постами 'posts' добавляется строка автор.
- * Она является внешним ключом поля 'login' таблицы 'users'.
+ * В таблицу с постами добавляется столбец автор.
+ * Он является внешним ключом поля имя пользователя таблицы пользователей.
  */
 class m220924_083107_add_fkey_author_to_posts extends Migration
 {
@@ -19,11 +19,11 @@ class m220924_083107_add_fkey_author_to_posts extends Migration
             $this->string(30)->notNull(),
         );
         $this->addForeignKey(
-            'author',
+            'author_fk',
             'posts',
             'author',
             'users',
-            'login',
+            'username',
         );
     }
 
@@ -33,7 +33,7 @@ class m220924_083107_add_fkey_author_to_posts extends Migration
     public function down()
     {
         $this->dropForeignKey(
-            'author',
+            'author_fk',
             'posts',
         );
         $this->dropColumn('posts', 'author');

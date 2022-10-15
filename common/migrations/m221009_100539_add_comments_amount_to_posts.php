@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Class m221009_100539_add_comments_amount_to_posts
+ * Добавляет колонку с количеством комментариев в таблицу постов.
  */
 class m221009_100539_add_comments_amount_to_posts extends Migration
 {

@@ -9,10 +9,10 @@ use yii\db\ActiveQuery;
 class StatisticsQuery extends ActiveQuery
 {
     /**
-     * Поиск по логину пользователя.
+     * Поиск по имени пользователя.
      */
-    public function byLogin(string $login): self
+    public function byUsername(string $username): self
     {
-        return $this->where(['owner' => $login]);
+        return $this->where(['owner' => $username]);
     }
 }

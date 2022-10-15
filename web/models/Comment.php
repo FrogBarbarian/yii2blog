@@ -225,7 +225,7 @@ class Comment extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке лайкнувших комментарий.
      */
-    public function isUserLikeIt(int $id): bool
+    public function isUserAlreadyLikedComment(int $id): bool
     {
         $usersIds = explode(' ', $this->getUsersLiked());
 
@@ -235,7 +235,7 @@ class Comment extends ActiveRecord
     /**
      * Проверяет, есть ли юзер в писке дизлайкнувших комментарий.
      */
-    public function isUserDislikeIt(int $id): bool
+    public function isUserAlreadyDislikedComment(int $id): bool
     {
         $usersIds = explode(' ', $this->getUsersDisliked());
 

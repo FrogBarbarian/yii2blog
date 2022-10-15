@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Добавляет два столбца в таблицу 'posts'.
+ * Добавляет столбцы в таблицу постов.
  */
 class m221005_141802_add_columns_to_posts extends Migration
 {
@@ -12,8 +12,8 @@ class m221005_141802_add_columns_to_posts extends Migration
      */
     public function up()
     {
-        $this->addColumn('posts', 'liked_by_users', $this->text()->defaultValue(''));
-        $this->addColumn('posts', 'disliked_by_users', $this->text()->defaultValue(''));
+        $this->addColumn('posts', 'users_liked', $this->text()->defaultValue('')->notNull());
+        $this->addColumn('posts', 'users_disliked', $this->text()->defaultValue('')->notNull());
     }
 
     /**
@@ -21,7 +21,7 @@ class m221005_141802_add_columns_to_posts extends Migration
      */
     public function down()
     {
-        $this->dropColumn('posts', 'liked_by_users');
-        $this->dropColumn('posts', 'disliked_by_users');
+        $this->dropColumn('posts', 'users_liked');
+        $this->dropColumn('posts', 'users_disliked');
     }
 }

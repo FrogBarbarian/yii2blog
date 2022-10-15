@@ -9,6 +9,7 @@
  * @var \yii\web\Session $session
  */
 
+use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
 
 ?>
@@ -56,14 +57,30 @@ use src\helpers\NormalizeData;
                    aria-current="true">
                     <div class="d-flex w-100 justify-content-between">
                         <h5 class="mb-1"><?= $post->getPreview($post->getTitle(), 50, '') ?></h5>
-                        <small>Написан <?= $post->getDate() ?> просмотров: <?= $post->getViews() ?></small>
+
                     </div>
                     <p class="mb-1"><?= $post->getPreview($post->getBody(), 150) ?></p>
+                    <small class="hstack">
+                        <span style="font-style: italic">
+                        <?= NormalizeData::passedTime($post->getDatetime()) ?>
+                        </span>
+                        <div class="col text-muted" style="font-size:small;text-align:end;">
+                            <?= ConstructHtml::rating($post->getRating()) ?>
+                            <span>
+                                <?= $post->getViews() ?>
+                                <img src="/assets/images/views.svg" width="16" alt="views">
+                            </span>
+                            <span>
+                                <?= $post->getCommentsAmount() ?>
+                                <img src="/assets/images/comments.svg" width="16" alt="comments"/>
+                            </span>
+                        </div>
+                    </small>
                 </a>
             <?php endforeach ?>
         </div>
     <?php else: ?>
-        <?= $isOwn ? 'Вы еще не опубликовали ни одного поста.' : "{$user->getLogin()} еще не написал ни одного поста." ?>
+        <?= $isOwn ? 'Вы еще не опубликовали ни одного поста.' : "{$user->getUsername()} еще не написал ни одного поста." ?>
     <?php endif ?>
 <?php endif ?>
 
@@ -98,7 +115,7 @@ use src\helpers\NormalizeData;
                                 data-bs-target="#flush-collapse<?= $complaint->getId() ?>" aria-expanded="false"
                                 aria-controls="flush-collapse<?= $complaint->getId() ?>">
                         <span class="col text-start">
-                                 Жалоба на <?= $object?>
+                                 Жалоба на <?= $object ?>
                             </span>
                             <span class="col text-end me-2 small fst-italic">
                                 <?= NormalizeData::passedTime($complaint->getDatetime()) ?>
@@ -110,7 +127,9 @@ use src\helpers\NormalizeData;
                         <div class="accordion-body">
                             <?= $complaint->getComplaint() ?>
                             <br>
-                            <a class="complaint-link" href="/<?= "{$complaint->getObject()}?id={$complaint->getObjectId()}" ?>" target="_blank">
+                            <a class="complaint-link"
+                               href="/<?= "{$complaint->getObject()}?id={$complaint->getObjectId()}" ?>"
+                               target="_blank">
                                 Ссылка на <?= $object ?>
                             </a>
                         </div>

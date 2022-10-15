@@ -57,9 +57,8 @@ class ConstructHtml
      */
     public static function comments(array $comments): string
     {
-        $session = Yii::$app->session;
         $html = '';
-        $userId = (int)$session['id'] ?? false;
+        $userId = Yii::$app->user->getId();
 
         foreach ($comments as $comment) {
             $timestamp = NormalizeData::passedTime($comment->getDate());
@@ -72,12 +71,12 @@ class ConstructHtml
                 "</div>" .
                 "<p class='mb-1 text-break'>{$comment->getComment()}</p>";
 
-            if ($session->has('login') && $userId !== $comment->getAuthorID()) {
-                $liked = $comment->isUserLikeIt($userId) ? 'd' : '';
+            if ($userId !== null && $userId !== $comment->getAuthorID()) {
+                $liked = $comment->isUserAlreadyLikedComment($userId) ? 'd' : '';
                 $html .= "<div class='d-flex justify-content-between'>" .
                     "<div class='d-flex justify-content-between'>" .
                     "<button class='like-button' onclick='likeComment({$comment->getId()})'>" .
-                    "<img id='commentLike{$comment->getId()}' src='/assets/images/like{$liked}.svg' width='24' alt='like' />" .
+                    "<img id='commentLike{$comment->getId()}' src='/assets/images/like$liked.svg' width='24' alt='like' />" .
                     "</button>";
             }
 
@@ -85,10 +84,10 @@ class ConstructHtml
                 self::rating($comment->getRating()) .
                 '</div>';
 
-            if ($session->has('login') && $userId !== $comment->getAuthorID()) {
-                $disliked = $comment->isUserDislikeIt($userId) ? 'd' : '';
+            if ($userId !== null && $userId !== $comment->getAuthorID()) {
+                $disliked = $comment->isUserAlreadyDislikedComment($userId) ? 'd' : '';
                 $html .= "<button class='like-button' onclick='dislikeComment({$comment->getId()})'>" .
-                    "<img id='commentDislike{$comment->getId()}' src='/assets/images/dislike{$disliked}.svg' width='24' alt='dislike'/>" .
+                    "<img id='commentDislike{$comment->getId()}' src='/assets/images/dislike$disliked.svg' width='24' alt='dislike'/>" .
                     "</button>" .
                     "</div>" .
                     "<button type='button' onclick='createComplaint(\"comment\", {$comment->getId()}, $userId)' class='btn btn-light'>" .

@@ -3,7 +3,7 @@
 use yii\db\Migration;
 
 /**
- * Добавляет bool поле is_hidden в таблицу users.
+ * Добавляет колонку таблицу пользователей.
  * Она отражает настройки профиля пользователя - скрыт или виден.
  */
 class m220930_150738_add_ishidden_column_to_users extends Migration

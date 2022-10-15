@@ -1,13 +1,15 @@
 <?php
 /**
  * @var \app\models\User $user
+ * @var \app\models\User $visitor
  * @var \app\models\Statistics $statistics
  * @var bool $isOwn
  * @var string $tab
- * @var \yii\web\Session $session
  */
 
-$this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user->getLogin();
+use src\helpers\ConstructHtml;
+
+$this->title = $isOwn ? 'Профиль' : $user->getUsername();
 ?>
 
 
@@ -30,21 +32,15 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                 <div class="hstack card-title">
                     <div class="col">
                         <h5 style="text-align: left">
-                            <?= $user->getLogin() ?>
+                            <?= $user->getUsername() ?>
                             <span style="font-size: x-small"><?= !$isOwn ? ($user->getIsAdmin() ? '(администратор)' : '(пользователь)') : '' ?></span>
-                            <?= (!$isOwn && $session->has('admin') && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : '' ?>
+                            <?= (!$isOwn && $visitor->getIsAdmin() && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : '' ?>
                         </h5>
-                        <span style="font-size: small;color:
-                        <?php
-                        if ($statistics->getRating() > 0): echo 'green';
-                        elseif ($statistics->getRating() < 0): echo 'red';
-                        else: echo 'grey';
-                        endif;
-                        ?>"><?= ($statistics->getRating() > 0 ? '+' : '') . $statistics->getRating() ?></span>
+                        <?= ConstructHtml::rating($statistics->getRating()) ?>
                     </div>
-                    <?php if ($session->has('login') && !$session->has('admin') && !$isOwn): ?>
+                    <?php if ($visitor !== null && !$visitor->getIsAdmin() && !$isOwn): ?>
                         <button type="button" style="max-width: 48px"
-                                onclick="createComplaint('user', <?= $user->getId() ?>, <?= $session['id'] ?>)"
+                                onclick="createComplaint('user', <?= $user->getId() ?>, <?= $visitor->getId() ?>)"
                                 class="btn btn-light col">
                             <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
                         </button>
@@ -59,7 +55,7 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                 ?>
             </div>
         </div>
-        <?php if (!$user->getIsAdmin() && !$isOwn && $session->has('admin')): ?>
+        <?php if (!$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()): ?>
             <script src="../../assets/js/profile-admin.js"></script>
             <input type="hidden" id="userId" value="<?= $user->getId() ?>">
             <button type="button" data-bs-toggle="modal" data-bs-target="#adminApply">Сделать админом</button>
@@ -78,7 +74,7 @@ $this->title = $isOwn ? 'Профиль' : 'Пользователь - ' . $user
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Это назначит пользователя <b><?= $user->getLogin() ?></b> администратором. Отменить возможно
+                            Это назначит пользователя <b><?= $user->getUsername() ?></b> администратором. Отменить возможно
                             через прямой доступ к БД.
                         </div>
                         <div class="modal-footer">

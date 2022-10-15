@@ -1,9 +1,11 @@
 <?php
 
+use yii\db\Expression;
 use yii\db\Migration;
 
 /**
- * Добавляет в таблицу с постами 'posts' и таблицу для хранения новых и измененных постов пользователей 'posts_tmp' новые столбцы.
+ * Добавляет в таблицу с постами и таблицу для временного хранения новых
+ * и отредактированных постов пользователей новые столбцы - теги, главное изображение, дата и время создания.
  */
 class m220928_112607_add_columns_to_posts extends Migration
 {
@@ -16,10 +18,10 @@ class m220928_112607_add_columns_to_posts extends Migration
         $postsTmp = 'posts_tmp';
         $this->addColumn($posts, 'tags', $this->string()->notNull());
         $this->addColumn($posts, 'main_image', $this->string()->defaultValue(null));
-        $this->addColumn($posts, 'date', $this->date()->defaultValue(new \yii\db\Expression("NOW()")));
+        $this->addColumn($posts, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
         $this->addColumn($postsTmp, 'tags', $this->string()->notNull());
         $this->addColumn($postsTmp, 'main_image', $this->string()->defaultValue(null));
-        $this->addColumn($postsTmp, 'date', $this->date()->defaultValue(new \yii\db\Expression("NOW()")));
+        $this->addColumn($postsTmp, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
     }
 
     /**
@@ -31,9 +33,9 @@ class m220928_112607_add_columns_to_posts extends Migration
         $postsTmp = 'posts_tmp';
         $this->dropColumn($posts, 'tags');
         $this->dropColumn($posts, 'main_image');
-        $this->dropColumn($posts, 'date');
+        $this->dropColumn($posts, 'datetime');
         $this->dropColumn($postsTmp, 'tags');
         $this->dropColumn($postsTmp, 'main_image');
-        $this->dropColumn($postsTmp, 'date');
+        $this->dropColumn($postsTmp, 'datetime');
     }
 }

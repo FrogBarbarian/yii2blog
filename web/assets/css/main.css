@@ -1,33 +1,27 @@
 .post-search form {
     position: relative;
     width: 150px;
-    margin: 0 auto;
-}
-
-.post-search {
-    background: rgba(0, 0, 0, 0);
 }
 
 .post-search input {
     width: 100%;
-    height: 30px;
-    padding-left: 10px;
+    height: 25px;
     border: 2px solid #b3b8c7;
-    border-radius: 5px;
+    border-radius: .4rem;
     outline: none;
-    background: #F9F0DA;
-    color: #9E9C9C;
+    background: rgba(250, 230, 200, 0.75);
+    color: #651717;
 }
 
 .post-search button {
     position: absolute;
     top: 0;
     right: 0px;
-    width: 24px;
-    height: 30px;
+    width: 25px;
+    height: 25px;
     border: none;
     background: #b3b8c7;
-    border-radius: 0 5px 5px 0;
+    border-radius: 0 .4rem .4rem 0;
     cursor: pointer;
 
 }.post-search button:hover {
@@ -110,11 +104,21 @@
 }
 
 #hideComments {
-    border-radius: 0.5rem;
-    height: 4rem;
-    width: 8rem;
+    border-radius: 0 .5rem .5rem 0;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none; /* Standard */
+    padding-bottom: .5rem;
+    text-align: right;
+    cursor: pointer;
+    writing-mode: vertical-lr;
+    -webkit-writing-mode: vertical-lr;
+    border-left: none;
     position: fixed;
+    height: 12rem;
     bottom: 3%;
-    left: 3%;
-    background: linear-gradient(90deg, #6b5d47 15%, #afada0);
+    left: 0;
+    background-color: rgba(82, 166, 255, 0.58);
+    color: #000000;
 }
