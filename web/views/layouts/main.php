@@ -8,7 +8,7 @@
     <?= yii\helpers\Html::csrfMetaTags() ?>
     <title><?= $this->title ?? 'Need to setup name' ?></title>
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="../../assets/css/main.css" />
+    <link rel="stylesheet" type="text/css" href="../../assets/css/main.css"/>
     <script src="../../assets/js/bootstrap.bundle.js"></script>
     <script src="../../assets/js/jquery.js"></script>
     <script src="../../assets/js/main.js"></script>
@@ -16,15 +16,13 @@
 <body style="background-image: url('../../assets/images/background.webp');height: 100%">
 <header class="sticky-top">
     <?php
-    $user = Yii::$app->user;
-    $admin = false;
 
-    if (!$user->isGuest) {
-        try {
-            $admin = $user->getIdentity()->getIsAdmin();
-        } catch (Throwable $e) {
-            throw new yii\web\HttpException(500, 'На сервере произошла ошибка');
-        }
+    $user = Yii::$app->user->getIdentity();
+    $admin = false;
+    $isGuest = $user === null;
+
+    if (!$isGuest) {
+        $admin = $user->getIsAdmin();
     }
     ?>
     <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104);">
@@ -46,10 +44,12 @@
                             Случайная статья
                         </a>
                     </li>
-                    <?php if (!$user->isGuest): ?>
-                        <li class="nav-item mx-1 my-auto">
-                            <a class="nav-button" href="/new-post">Создать пост</a>
-                        </li>
+                    <?php if (!$isGuest): ?>
+                        <?php if ($user->getCanWritePosts()): ?>
+                            <li class="nav-item mx-1 my-auto">
+                                <a class="nav-button" href="/new-post">Создать пост</a>
+                            </li>
+                        <?php endif ?>
                         <?php if ($admin): ?>
                             <li class="nav-item mx-1 my-auto">
                                 <a class="nav-button" href="<?= ADMIN_PANEL ?>">Админ-панель</a>

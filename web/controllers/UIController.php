@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\controllers;
 
@@ -89,5 +89,31 @@ class UIController extends AppController
         }
 
         return $this->asJson($complaintForm->errors);
+    }
+
+    /**
+     * Предлагает статьи для открытия.
+     * @throws NotFoundHttpException
+     */
+    public function actionSearchSuggest(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $input = $request->get('input');
+
+        $post = Post::find()
+            ->postHasWords($input)
+            ->limit(5)
+            ->all();
+
+        if ($post === []) {
+            return $this->asJson(false);
+        }
+
+        return $this->asJson($post);
     }
 }

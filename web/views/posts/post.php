@@ -216,10 +216,12 @@ if ($visitorIsLogin) {
     <?php endif ?>
     <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
         <?php if ($comments): ?>
-            <?= ConstructHtml::comments($comments) ?>
+        <?= ConstructHtml::comments($comments) ?>
         <?php endif ?>
     </ul>
+    <?php if ($comments): ?>
     <span id="hideComments">
-                Скрыть комментарии
-        </span>
+        Скрыть комментарии
+    </span>
+    <?php endif ?>
 </div>

@@ -58,16 +58,17 @@ class NormalizeData
                 if ($diff['mday'] === 1) {
                     $res = 'вчера';
                 } elseif ($diff['mday'] === 0) {
-                    if ($diff['hours'] > 0) {
+                    if ($diff['hours'] > 1) {
                         $res = "{$diff['hours']} " . self::wordForm(
                                 $diff['hours'],
                                 'часов',
                                 'час',
                                 'часа'
                             ) . ' назад';
-                    } elseif ($diff['hours'] === 0 && $diff['minutes'] > 0) {
-                        $res = "{$diff['minutes']} " . self::wordForm(
-                                $diff['minutes'],
+                    } elseif ($diff['minutes'] != 0) {
+                        $minutes = $diff['minutes'] < 0 ? $diff['minutes']+ 60 : $diff['minutes'];
+                        $res = "$minutes " . self::wordForm(
+                                $minutes,
                                 'минут',
                                 'минуту',
                                 'минуты'

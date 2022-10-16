@@ -27,63 +27,63 @@ class Post extends ActiveRecord
     }
 
     /**
-     * @return int|null ID поста.
+     * @return int ID.
      */
-    public function getId(): int|null
+    public function getId(): int
     {
         return $this->getAttribute('id');
     }
 
     /**
-     * @return string|null Имя поста.
+     * @return string Название.
      */
-    public function getTitle(): string|null
+    public function getTitle(): string
     {
         return $this->getAttribute('title');
     }
 
     /**
-     * @return string|null Текст поста.
+     * @return string Содержание.
      */
-    public function getBody(): string|null
+    public function getBody(): string
     {
         return $this->getAttribute('body');
     }
 
     /**
-     * @return int|null Количество просмотров поста.
+     * @return int Количество просмотров.
      */
-    public function getViews(): int|null
+    public function getViews(): int
     {
         return $this->getAttribute('viewed');
     }
 
     /**
-     * @return string|null Автора поста.
+     * @return string Автор.
      */
-    public function getAuthor(): string|null
+    public function getAuthor(): string
     {
         return $this->getAttribute('author');
     }
 
     /**
-     * @return string|null Дата создания поста.
+     * @return string Дата создания.
      */
-    public function getDatetime(): string|null
+    public function getDatetime(): string
     {
         return $this->getAttribute('datetime');
     }
 
     /**
-     * @return string|null Теги поста.
+     * @return string Теги.
      */
-    public function getTags(): string|null
+    public function getTags(): string
     {
         return $this->getAttribute('tags');
     }
 
     /**
-     * @return bool Можно ли комментировать пост.
+     * @return bool Доступность комментирования.
      */
     public function getIsCommentable(): bool
     {
@@ -107,7 +107,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * @return int Рейтинг поста.
+     * @return int Рейтинг.
      */
     public function getRating(): int
     {
@@ -115,9 +115,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает имя поста в таблице.
-     * @param string $title
-     * @return self
+     * Название.
      */
     public function setTitle(string $title): self
     {
@@ -127,9 +125,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает текст поста в таблице.
-     * @param string $body
-     * @return self
+     * Содержание.
      */
     public function setBody(string $body): self
     {
@@ -139,8 +135,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает количество просмотров поста в таблице.
-     * @param int $views
+     * Количество просмотров.
      */
     private function setViews(int $views)
     {
@@ -148,7 +143,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает количество лайков поста.
+     * Количество лайков.
      */
     private function setLikes(int $likes)
     {
@@ -156,7 +151,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает количество дизлайков поста.
+     * Количество дизлайков.
      */
     private function setDislikes(int $dislikes)
     {
@@ -164,7 +159,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Записывает автора.
+     * Автор.
      */
     public function setAuthor(string $author): self
     {
@@ -174,7 +169,45 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Записывает теги.
+     * @return string  Название до сохранения формы.
+     */
+    public function getOldTitle(): string
+    {
+        return $this->getOldAttribute('title');
+    }
+
+    /**
+     * @return string Содержание до сохранения формы.
+     */
+    public function getOldBody(): string
+    {
+        return $this->getOldAttribute('body');
+    }
+
+    /**
+     * @return string Теги до сохранения формы.
+     */
+    public function getOldTags(): string
+    {
+        return $this->getOldAttribute('tags');
+    }
+
+    /**
+     * @return array Теги до сохранения формы.
+     */
+    public function getOldTagsArray(): array
+    {
+        $tags = $this->getOldTags();
+
+        $array = (new StringService($tags))
+            ->explode();
+        unset($array[0]);
+
+        return $array;
+    }
+
+    /**
+     * Теги.
      */
     public function setTags(string $tags): self
     {
@@ -184,9 +217,7 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Устанавливает можно ли комментировать пост.
-     * @param bool $isCommentable
-     * @return self
+     * Доступность комментирования.
      */
     public function setIsCommentable(bool $isCommentable): self
     {
@@ -366,6 +397,16 @@ class Post extends ActiveRecord
         $usersIds = explode(' ', $this->getDislikedByUsers());
 
         return in_array($id, $usersIds);
+    }
+
+    /**
+     * ID автора.
+     */
+    public function setAuthorId(int $authorId):self
+    {
+        $this->setAttribute('author_id', $authorId);
+
+        return $this;
     }
 
     /**

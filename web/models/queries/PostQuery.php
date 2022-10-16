@@ -58,4 +58,14 @@ class PostQuery extends ActiveQuery
             ->orWhere(['ILIKE', 'body', $words])
             ->orWhere(['ILIKE', 'tags', $words]);
     }
+
+    /**
+     *  Поиск по наличию тега.
+     */
+    public function byTag(string $tag): self
+    {
+        $tag = "#$tag";
+
+        return $this->where(['ILIKE', 'tags', $tag]);
+    }
 }

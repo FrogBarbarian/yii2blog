@@ -105,10 +105,7 @@
 
 #hideComments {
     border-radius: 0 .5rem .5rem 0;
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none; /* Standard */
+    user-select: none;
     padding-bottom: .5rem;
     text-align: right;
     cursor: pointer;
@@ -133,14 +130,52 @@
 }
 
 .tag-card {
-    -webkit-user-select: none; /* Safari */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* IE10+/Edge */
-    user-select: none; /* Standard */
+    user-select: none;
     display: inline-block;
     cursor: pointer;
     padding: 0px 5px 1px 5px;
     margin: 1px;
     background-color: #dcdcdc;
     font-size: small;
+}
+
+.suggested-tag {
+    color: #232836;
+    user-select: none;
+    cursor: pointer;
+}
+
+.suggested-tag:hover {
+    background-color: #f0f0f0;
+}
+
+.admin-user-control {
+    padding: 5px;
+    background-color: white;
+    margin: 0 1rem 0 1rem;
+    border-radius: 1rem;
+    border: solid 2px #2c3034;
+}
+
+.admin-user-control button {
+    margin: 1px;
+    background-color: #ffd272;
+    border-radius: inherit;
+    border: inherit;
+}
+
+.admin-user-control button:hover {
+    background-color: #eeba4c;
+}
+
+.admin-user-control button:active {
+    background-color: #f5d099;
+    transform: translateY(1px);
+}
+
+.admin-panel-header {
+    display: block;
+    text-align: center;
+    font-size: x-large;
+    margin: .5rem 0 .5rem 0;
 }

@@ -14,7 +14,8 @@ class m220929_132334_create_tags_table extends Migration
     {
         $this->createTable('tags', [
             'id' => $this->primaryKey(),
-            'tag' => $this->text()->notNull(),
+            'tag' => $this->string(30)->notNull(),
+            'amount_of_uses' => $this->integer()->defaultValue(1)->notNull(),
         ]);
     }
 

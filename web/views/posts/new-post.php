@@ -28,8 +28,9 @@ $options = [
 <script src="../../assets/js/post-edit.js"></script>
 <div class="card mx-auto rounded-0">
     <div class="card-header alert alert-warning small" role="alert">
-        Название должно содержать от 30 до 150 символов. <br>
+        Название должно содержать от 30 до 150 символов.
         Текст поста должен содержать от 300 до 10000 символов. <br>
+        Рекомендуется использовать не более 5 тегов и не менее 2. <br>
         Остальные правила - бла бла бла бла.
     </div>
     <?php $activeForm = ActiveForm::begin([
@@ -59,6 +60,12 @@ $options = [
     </div>
     <hr>
 <!--TODO: механизм тегов-->
+    <div class="input-group px-3">
+        <span class="input-group-text">теги</span>
+        <input oninput="fillTagField(this)" type="text" class="form-control" id="tagField">
+        <button onclick="addTag()" class="btn btn-outline-secondary" type="button">+</button>
+    </div>
+    <ul class="list-group px-3" id="suggestedTags"></ul>
     <div class="m-3" id="tagsArea"></div>
     <div class="card-footer">
         <div>

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\controllers;
 
@@ -8,6 +8,7 @@ use app\models\Post;
 use app\models\PostInteractionsForm;
 use app\models\PostTmp;
 use app\models\Statistics;
+use app\models\Tag;
 use app\models\User;
 use Yii;
 use yii\db\StaleObjectException;
@@ -96,23 +97,37 @@ class AdminController extends AppController
 
     /**
      * TODO: переделать
-     * @return string Вид "панель админа". Обзорная страница.
-     * @throws NotFoundHttpException
      */
-    public function actionIndex(): string
+    public function actionIndex(string $tab = 'overview'): string
     {
-        if (!Yii::$app->session->has('admin')) {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();
         }
-        if (isset($_POST['changeStatus'])) {
-            $user = User::find()->byId($_POST['id'])->one();
-            $user
-                ->setIsAdmin(!$_POST['isAdmin'])
-                ->save();
-        }
-        $users = User::find()->orderAscById()->all();
 
-        return $this->render('panel', ['users' => $users]);
+        $cache = Yii::$app->cache;
+        $users = $cache->get('users');
+
+        if ($users === null) {
+            $users = User::find()
+                ->orderAscById()
+                ->all();
+            $cache->set('users', $users, 3600);
+        }
+
+        $tags = $cache->get('tags');
+
+        if ($tags === null) {
+            $tags = Tag::find()->all();
+            $cache->set('tags', $tags, 3600);
+        }
+
+        return $this->render('panel', [
+            'tab' => $tab,
+            'users' => $users,
+            'tags' => $tags,
+        ]);
     }
 
     /**

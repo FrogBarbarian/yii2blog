@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\controllers;
 
@@ -10,6 +10,7 @@ use app\models\PostInteractionsForm;
 use app\models\Post;
 use app\models\PostTmp;
 use app\models\Statistics;
+use app\models\Tag;
 use app\models\User;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -148,7 +149,8 @@ class PostsController extends AppController
                 $post
                     ->setTitle($postInteractionsForm->title)
                     ->setBody($postInteractionsForm->body)
-                    ->setAuthor($user->getusername())
+                    ->setAuthor($user->getUsername())
+                    ->setAuthorId($user->getId())
                     ->setTags($postInteractionsForm->tags)
                     ->save();
                 $statistics = Statistics::find()
@@ -158,6 +160,24 @@ class PostsController extends AppController
                     ->increasePosts()
                     ->save();
 
+                foreach ($post->getTagsArray() as $tag) {
+                    $tagObj = Tag::find()
+                        ->byTag($tag)
+                        ->one();
+
+                    if ($tagObj === null) {
+                        $tagObj = new Tag();
+                        $tagObj
+                            ->setTag($tag)
+                            ->save();
+                    } else {
+                        $tagObj
+                            ->increaseAmountOfUse()
+                            ->save();
+                    }
+
+                }
+
                 return $this->redirect('/post?id=' . $post->getId());
             }
             $postTmp = new PostTmp();
@@ -166,7 +186,7 @@ class PostsController extends AppController
                 ->setBody($postInteractionsForm->body)
                 ->setTags($postInteractionsForm->tags)
                 ->setAuthor($user->getUsername())
-                ->setTags('test;') //TODO: нужна система присвоения тегов
+                ->setAuthorId($user->getId())
                 ->save();
             //TODO: Админу приходит на почту сообщение о новом посте пользователя
             //TODO: Flash message Пост создан и отправлен на одобрение
@@ -210,11 +230,46 @@ class PostsController extends AppController
 
         if ($postInteractionsForm->load(Yii::$app->request->post()) && $postInteractionsForm->validate()) {
             if ($user->getIsAdmin()) {
+                $oldTags = $post->getOldTagsArray();
                 $post
                     ->setTitle($postInteractionsForm->title)
                     ->setBody($postInteractionsForm->body)
                     ->setTags($postInteractionsForm->tags)
                     ->save();
+                $newTags = $post->getTagsArray();
+                $unsetTags = array_diff($oldTags, $newTags);
+                $setTags = array_diff($newTags, $oldTags);
+
+                foreach ($newTags as $tag) {
+                    $tagObj = Tag::find()
+                        ->byTag($tag)
+                        ->one();
+
+                    if ($tagObj === null) {
+                        $tagObj = new Tag();
+                        $tagObj
+                            ->setTag($tag)
+                            ->save();
+                    }
+                }
+
+                foreach ($unsetTags as $tag) {
+                    $tagObj = Tag::find()
+                        ->byTag($tag)
+                        ->one();
+                    $tagObj
+                        ->decreaseAmountOfUse()
+                        ->save();
+                }
+
+                foreach ($setTags as $tag) {
+                    $tagObj = Tag::find()
+                        ->byTag($tag)
+                        ->one();
+                    $tagObj
+                        ->increaseAmountOfUse()
+                        ->save();
+                }
 
                 return $this->redirect('/post?id=' . $post->getId());
             } else {
@@ -231,6 +286,9 @@ class PostsController extends AppController
                     ->setBody($postInteractionsForm->body)
                     ->setTags($postInteractionsForm->tags)
                     ->setAuthor($user->getUsername())
+                    ->setOldTitle($post->getOldTitle())
+                    ->setOldBody($post->getOldBody())
+                    ->setOldTags($post->getOldTags())
                     ->setIsNew(false)
                     ->setUpdateId($post->getId())
                     ->save();
@@ -274,6 +332,15 @@ class PostsController extends AppController
         $comments = Comment::find()
             ->byPostId($postId)
             ->all();
+
+        foreach ($post->getTagsArray() as $tag) {
+            $tagObj = Tag::find()
+                ->byTag($tag)
+                ->one();
+            $tagObj
+                ->decreaseAmountOfUse()
+                ->save();
+        }
 
         foreach ($comments as $comment) {
             $commentOwnerStatistics = Statistics::find()
@@ -319,6 +386,15 @@ class PostsController extends AppController
             $user = Yii::$app
                 ->user
                 ->getIdentity();
+
+            if (!$user->getCanComment() || !$post->getIsCommentable()) {
+                $commentForm->addError(
+                    'comment',
+                    'Что-то пошло не так, попробуйте обновить страницу'
+                );
+                return $this->asJson($commentForm->errors);
+            }
+
             $comment = new Comment();
             $comment
                 ->setPostId($post->getId())
@@ -364,5 +440,45 @@ class PostsController extends AppController
         $postId = $comment->getPostId();
 
         return $this->redirect("/post?id=$postId#comment$id");
+    }
+
+    /**
+     * Выгружает статьи по определенному тегу.
+     * @throws \Throwable
+     */
+    public function actionTag(string $page = '1'): string
+    {
+        $tag = Yii::$app->request->getPathInfo();
+
+        if ($tag === 'tag') {
+            throw new NotFoundHttpException();
+        }
+
+        $tag = ltrim(strrchr($tag, '/'), '/');
+        $posts = Post::find()
+            ->byTag($tag)
+            ->all();
+
+        if ($posts === []) {
+            throw new NotFoundHttpException();
+        }
+
+        $pages = intval(ceil(count($posts) / POSTS_ON_PAGE));
+        $curPage = (int)$page;
+        $posts = Post::find()->byTag($tag)
+            ->orderDescById()
+            ->offset(($page - 1) * POSTS_ON_PAGE)
+            ->limit(POSTS_ON_PAGE)->all();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        return $this->render('index', [
+            'user' => $user,
+            'posts' => $posts,
+            'pages' => $pages,
+            'curPage' => $curPage,
+            'search' => null,
+        ]);
     }
 }

@@ -13,7 +13,7 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
 ?>
 
 
-<div class="mx-3 py-5">
+<div class="mx-3 pt-5 pb-2">
     <div class="col">
         <?php if ($isOwn): ?>
             <div class="col-2">
@@ -48,42 +48,53 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                 </div>
                 <?php
                 try {
-                    require "profile-tabs/{$tab}.php";
+                    require "profile-tabs/$tab.php";
                 } catch (Exception) {
                     require "profile-tabs/overview.php";
                 }
                 ?>
             </div>
         </div>
-        <?php if (!$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()): ?>
-            <script src="../../assets/js/profile-admin.js"></script>
-            <input type="hidden" id="userId" value="<?= $user->getId() ?>">
-            <button type="button" data-bs-toggle="modal" data-bs-target="#adminApply">Сделать админом</button>
-            <button onclick="setCommentsPermissions(this)">
-                Комментарии <?= $user->getCanComment() ? 'разрешены' : 'запрещены' ?></button>
-            <button onclick="setCreatePostsPermissions(this)">Писать
-                посты <?= $user->getCanWritePosts() ? 'разрешено' : 'запрещено' ?></button>
-            <button onclick="setPrivateMessagesPermissions(this)">
-                ЛС <?= $user->getCanWriteMessages() ? 'разрешены' : 'запрещены' ?></button>
-            <button type="submit" name="settings" value="ban">Забанить</button> <!--TODO: remark-->
-            <div class="modal fade" id="adminApply" tabindex="-1" aria-labelledby="adminApplyLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="adminApplyLabel">Вы уверены?</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            Это назначит пользователя <b><?= $user->getUsername() ?></b> администратором. Отменить возможно
-                            через прямой доступ к БД.
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" data-bs-dismiss="modal">Отмена</button>
-                            <button onclick="setUserAdmin()">Подтвердить</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <?php endif ?>
     </div>
 </div>
+<?php if (!$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()): ?>
+    <script src="../../assets/js/profile-admin.js"></script>
+    <input type="hidden" id="userId" value="<?= $user->getId() ?>">
+    <div class="admin-user-control">
+        <p style="text-align: center">Манипуляции с пользователем</p>
+        <button type="button" data-bs-toggle="modal" data-bs-target="#adminApply">
+            Назначить админом
+        </button>
+        <button onclick="setCommentsPermissions(this)">
+            Комментарии <?= $user->getCanComment() ? 'разрешены' : 'запрещены' ?>
+        </button>
+        <button onclick="setCreatePostsPermissions(this)">Писать
+            посты <?= $user->getCanWritePosts() ? 'разрешено' : 'запрещено' ?>
+        </button>
+        <button onclick="setPrivateMessagesPermissions(this)">
+            ЛС <?= $user->getCanWriteMessages() ? 'разрешены' : 'запрещены' ?>
+        </button>
+        <button type="submit" name="settings" value="ban">
+            Забанить
+        </button> <!--TODO: remark-->
+    </div>
+    <div class="modal fade" id="adminApply" tabindex="-1" aria-labelledby="adminApplyLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="adminApplyLabel">Вы уверены?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Это назначит пользователя <b><?= $user->getUsername() ?></b> администратором. Отменить возможно
+                    через прямой доступ к БД.
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" type="button" data-bs-dismiss="modal">Отмена</button>
+                    <button class="btn" onclick="setUserAdmin()">Подтвердить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endif ?>
+

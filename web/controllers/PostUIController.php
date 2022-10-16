@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\models\Tag;
 use src\helpers\ConstructHtml;
 use app\models\Post;
 use app\models\Statistics;
@@ -177,5 +178,32 @@ class PostUIController extends AppController
         }
 
         return $this->asJson(ConstructHtml::rating($post->getRating()));
+    }
+
+    /**
+     * Поиск по тегам.
+     * @throws NotFoundHttpException
+     */
+    public function actionSearchTags(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $input = $request->get('input');
+
+        $tags = Tag::find()
+            ->byChars($input)
+            ->limit(5)
+            ->asArray()
+            ->all();
+
+        if ($tags === []) {
+            return $this->asJson(false);
+        }
+
+        return $this->asJson($tags);
     }
 }

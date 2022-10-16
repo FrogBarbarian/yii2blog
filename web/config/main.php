@@ -23,7 +23,7 @@ return [
             'cookieValidationKey' => 'Mgw2YR5XFMuUXvBkNHQ0qwYeKJiDsQ',
         ],
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => yii\caching\FileCache::class,
             'cachePath' => dirname(__DIR__, 2) . '/cache',
         ],
         'db' => require __DIR__ . '/db.php',
@@ -40,6 +40,7 @@ return [
                 'admin/panel' => 'admin/index',
                 'admin/panel/<action>' => 'admin/<action>',
                 '/<action>' => 'posts/<action>',
+                'tag/<action>' => 'posts/tag',
                 '<controller>/<action>' => '<controller>/<action>',
             ],
         ],

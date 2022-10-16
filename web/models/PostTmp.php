@@ -63,4 +63,34 @@ class PostTmp extends Post
 
         return $this;
     }
+
+    /**
+     * Название до изменений.
+     */
+    public function setOldTitle(string $title): self
+    {
+        $this->setAttribute('old_title', $title);
+
+        return $this;
+    }
+
+    /**
+     * Содержание до изменений.
+     */
+    public function setOldBody(string $body): self
+    {
+        $this->setAttribute('old_body', $body);
+
+        return $this;
+    }
+
+    /**
+     * Теги до изменений.
+     */
+    public function setOldTags(string $tags): self
+    {
+        $this->setAttribute('old_tags', $tags);
+
+        return $this;
+    }
 }
