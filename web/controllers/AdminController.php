@@ -8,8 +8,8 @@ use app\models\Post;
 use app\models\PostInteractionsForm;
 use app\models\PostTmp;
 use app\models\Statistics;
-use app\models\Tag;
 use app\models\User;
+use src\helpers\Get;
 use Yii;
 use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
@@ -106,27 +106,23 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $cache = Yii::$app->cache;
-        $users = $cache->get('users');
+        $users = Get::data('users');
 
-        if ($users === null) {
-            $users = User::find()
-                ->orderAscById()
-                ->all();
-            $cache->set('users', $users, 3600);
-        }
+        $tags = Get::data('tags');
 
-        $tags = $cache->get('tags');
+        $unusedTags = [];
 
-        if ($tags === null) {
-            $tags = Tag::find()->all();
-            $cache->set('tags', $tags, 3600);
+        foreach ($tags as $tag) {
+            if ($tag->getAmountOfUses() === 0) {
+                $unusedTags[] = $tag;
+            }
         }
 
         return $this->render('panel', [
             'tab' => $tab,
             'users' => $users,
             'tags' => $tags,
+            'unusedTags' => $unusedTags,
         ]);
     }
 

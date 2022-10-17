@@ -59,7 +59,6 @@ $options = [
             ])?>
     </div>
     <hr>
-<!--TODO: механизм тегов-->
     <div class="input-group px-3">
         <span class="input-group-text">теги</span>
         <input oninput="fillTagField(this)" type="text" class="form-control" id="tagField">

@@ -4,6 +4,7 @@ const ADMIN_PANEL = '/admin/panel';
 const POSTS_ON_PAGE = 5;
 const POSTS_ON_PROFILE = 5;
 const IMAGES = '../../assets/images/';
+const BASE_CACHE_TIME = 3600;
 //TODO: Организовать хранение констант
 
 return [

@@ -26,6 +26,14 @@ class Tag extends ActiveRecord
     }
 
     /**
+     * @return int ID.
+     */
+    public function getId(): int
+    {
+        return $this->getAttribute('id');
+    }
+
+    /**
      * @return string Тег.
      */
     public function getTag(): string

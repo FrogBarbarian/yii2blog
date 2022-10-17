@@ -9,6 +9,14 @@ use yii\db\ActiveQuery;
 class TagQuery extends ActiveQuery
 {
     /**
+     * Поиск по ID.
+     */
+    public function byId(int $id): self
+    {
+        return $this->where(['id' => $id]);
+    }
+
+    /**
      * Поиск по символам.
      */
     public function byChars(string $chars): self

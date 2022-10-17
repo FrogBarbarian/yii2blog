@@ -140,6 +140,7 @@
 }
 
 .suggested-tag {
+    text-decoration: none;
     color: #232836;
     user-select: none;
     cursor: pointer;
@@ -178,4 +179,32 @@
     text-align: center;
     font-size: x-large;
     margin: .5rem 0 .5rem 0;
+}
+
+.sort-panel {
+    user-select: none;
+    padding-left: .5rem;
+    color: black;
+    margin-top: 3px;
+    background-color: #7bafe5;
+}
+
+.sort {
+    margin: 0 3px;
+    cursor: pointer;
+    color: #323232;
+    font-size: small;
+}
+
+.sort:hover {
+    color: #ffffff;
+}
+
+.user-card {
+    margin: 0 1px 0 1px;
+    display: inline-block;
+    padding: 1px 3px 1px 3px;
+    background-color: #e6eef3;
+    border: solid 1px black;
+    border-radius: .5rem;
 }

@@ -44,9 +44,9 @@ if ($visitorIsLogin) {
             <hr>
             <!--TODO: по тегу можно перейти в поиск по тегу. Сделать теги-->
             <?php foreach ($post->getTagsArray() as $tag): ?>
-                <span class="tag-card" onclick="search('<?= $tag ?>')">
+                <a class="tag-card suggested-tag" href="/tag/<?= $tag ?>">
                     <?= $tag ?>
-                </span>
+                </a>
             <?php endforeach ?>
         </div>
         <div class="card-footer">

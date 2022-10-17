@@ -157,10 +157,3 @@ function deletePost() {
         }
     });
 }
-
-/**
- * Открывает страницу результатов поиска по тегу.
- */
-function search(tag) {
-    location.href = '/tag/' + tag;
-}
