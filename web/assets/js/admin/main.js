@@ -1,6 +1,6 @@
 let sortParam = 'id';
 let sortAsc = true;
-let tab = new URLSearchParams(window.location.search).get('tab')
+let table = '';
 
 /**
  * Получает объекты из БД.
@@ -19,7 +19,7 @@ function getObjects(callback, object = 'tags', param = 'id', type = 4, useCache 
 /**
  *  Сортирует объекты.
  */
-function sort(param) {
+function sort(param, customTable = table) {
     let isNewParam = param !== sortParam;
 
     if (isNewParam) {
@@ -34,13 +34,9 @@ function sort(param) {
         })
     } else {
         sortAsc = !sortAsc;
-        if (sortAsc) {
-            $('#arrow_' + param).html('&darr;');
-        } else {
-            $('#arrow_' + param).html('&uarr;');
-        }
+        $('#arrow_' + param).html(sortAsc ? '&darr;' : '&uarr;');
     }
 
     let type = sortAsc ? 4 : 3;
-    getObjects(construct, tab, sortParam, type, false);
+    getObjects(construct, customTable, sortParam, type, false);
 }

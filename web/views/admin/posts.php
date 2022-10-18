@@ -1,13 +1,16 @@
 <?php
-/** @var \app\models\PostTmp[] $posts */
+/** @var \app\models\TmpPost[] $tmpPosts */
 
+use app\components\AdminMenuWidget;
+
+echo AdminMenuWidget::widget(['tmpPosts' => $tmpPosts]);
 ?>
 <h5 class="card-title">Посты пользователей</h5>
 
-<?php if ($posts): ?>
+<?php if ($tmpPosts): ?>
     Список постов пользователей к рассмотрению:
     <br>
-    <?php foreach ($posts as $post): ?>
+    <?php foreach ($tmpPosts as $post): ?>
         <br>
         <a href="<?=ADMIN_PANEL?>/user-post?id=<?=$post->getId()?>" data-toggle="tooltip" data-placement="top"
            title="<?=$post->getTitle()?>">

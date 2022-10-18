@@ -2,6 +2,8 @@ $(document).ready(function () {
     getObjects(construct);
 });
 
+table = 'tags';
+
 /**
  * Удаляет тег.
  */

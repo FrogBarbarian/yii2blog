@@ -20,7 +20,15 @@ class Get
      */
     public static function data(string $object, string $param = 'id', int $sort = SORT_ASC, bool $useCache = true): array
     {
-        $class = 'app\models\\' . ucfirst(rtrim($object, 's'));
+
+        $class = explode('_', $object);
+
+        foreach ($class as &$str) {
+            $str = ucfirst($str);
+        }
+
+        $class = 'app\models\\' . (rtrim(implode('', $class), 's'));
+
 
         if ($useCache) {
             $cache = Yii::$app->cache;

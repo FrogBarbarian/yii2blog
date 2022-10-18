@@ -1,3 +1,7 @@
+<?php
+
+use app\components\SearchWidget;
+?>
 <!doctype html>
 <html lang="ru">
 <head>
@@ -16,7 +20,6 @@
 <body style="background-image: url('../../assets/images/background.webp');height: 100%">
 <header class="sticky-top">
     <?php
-
     $user = Yii::$app->user->getIdentity();
     $admin = false;
     $isGuest = $user === null;
@@ -57,7 +60,7 @@
                         <?php
                         endif;
                         echo '</ul>';
-                        require 'widgets/search.php';
+                        echo SearchWidget::widget();
                         ?>
                         <div class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/profile">
@@ -72,7 +75,7 @@
                     <?php else: ?>
                         <?php
                         echo '</ul>';
-                        require 'widgets/search.php';
+                        echo SearchWidget::widget();
                         ?>
                         <div class="nav-item mx-1 my-auto">
                             <a class="nav-button" href="/login">

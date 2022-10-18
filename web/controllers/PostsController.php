@@ -8,8 +8,8 @@ use app\models\Comment;
 use app\models\CommentForm;
 use app\models\PostInteractionsForm;
 use app\models\Post;
-use app\models\PostTmp;
-use app\models\Statistics;
+use app\models\TmpPost;
+use app\models\Statistic;
 use app\models\Tag;
 use app\models\User;
 use yii\web\NotFoundHttpException;
@@ -94,7 +94,7 @@ class PostsController extends AppController
 
             if ($post !== null) {
                 $commentForm = new CommentForm();
-                $ownerStatistics = Statistics::find()
+                $ownerStatistics = Statistic::find()
                     ->byUsername($post->getAuthor())
                     ->one();
                 $ownerStatistics
@@ -153,7 +153,7 @@ class PostsController extends AppController
                     ->setAuthorId($user->getId())
                     ->setTags($postInteractionsForm->tags)
                     ->save();
-                $statistics = Statistics::find()
+                $statistics = Statistic::find()
                     ->byUsername($post->getAuthor())
                     ->one();
                 $statistics
@@ -175,12 +175,11 @@ class PostsController extends AppController
                             ->increaseAmountOfUse()
                             ->save();
                     }
-
                 }
 
                 return $this->redirect('/post?id=' . $post->getId());
             }
-            $postTmp = new PostTmp();
+            $postTmp = new TmpPost();
             $postTmp
                 ->setTitle($postInteractionsForm->title)
                 ->setBody($postInteractionsForm->body)
@@ -273,14 +272,14 @@ class PostsController extends AppController
 
                 return $this->redirect('/post?id=' . $post->getId());
             } else {
-                if (PostTmp::find()->byUpdatedId($post->getId())->one() !== null) {
+                if (TmpPost::find()->byUpdatedId($post->getId())->one() !== null) {
                     $message = 'Пост уже редактировался и ожидает одобрения админом.';
                     Yii::$app->session->setFlash('postAlreadyUpdated', $message);
 
                     return $this->redirect('/post?id=' . $post->getId());
                 }
 
-                $postTmp = new PostTmp();
+                $postTmp = new TmpPost();
                 $postTmp
                     ->setTitle($postInteractionsForm->title)
                     ->setBody($postInteractionsForm->body)
@@ -319,7 +318,7 @@ class PostsController extends AppController
         $post = Post::find()
             ->byId($postId)
             ->one();
-        $ownerStatistics = Statistics::find()
+        $ownerStatistics = Statistic::find()
             ->byUsername($post->getAuthor())
             ->one();
         $ownerStatistics
@@ -343,7 +342,7 @@ class PostsController extends AppController
         }
 
         foreach ($comments as $comment) {
-            $commentOwnerStatistics = Statistics::find()
+            $commentOwnerStatistics = Statistic::find()
                 ->byUsername($comment->getAuthor())
                 ->one();
             $commentOwnerStatistics
@@ -402,7 +401,7 @@ class PostsController extends AppController
                 ->setAuthorId($user->getId())
                 ->setComment($commentForm->comment)
                 ->save();
-            $userStatistics = Statistics::find()
+            $userStatistics = Statistic::find()
                 ->byUsername($user->getUsername())
                 ->one();
             $userStatistics

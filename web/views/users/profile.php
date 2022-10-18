@@ -2,7 +2,7 @@
 /**
  * @var \app\models\User $user
  * @var \app\models\User $visitor
- * @var \app\models\Statistics $statistics
+ * @var \app\models\Statistic $statistics
  * @var bool $isOwn
  * @var string $tab
  */

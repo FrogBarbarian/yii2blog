@@ -1,6 +1,6 @@
 <?php
 
-const ADMIN_PANEL = '/admin/panel';
+const ADMIN_PANEL = '/admin';
 const POSTS_ON_PAGE = 5;
 const POSTS_ON_PROFILE = 5;
 const IMAGES = '../../assets/images/';
@@ -38,8 +38,8 @@ return [
                 '/login' => 'users/login',
                 '/profile' => 'users/user',
                 '/user' => 'users/user',
-                'admin/panel' => 'admin/index',
-                'admin/panel/<action>' => 'admin/<action>',
+                'admin/' => 'admin/index',
+                'admin/<action>' => 'admin/<action>',
                 '/<action>' => 'posts/<action>',
                 'tag/<action>' => 'posts/tag',
                 '<controller>/<action>' => '<controller>/<action>',

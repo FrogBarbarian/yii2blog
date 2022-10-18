@@ -13,7 +13,7 @@ class m220924_113917_create_posts_tmp_table extends Migration
      */
     public function up()
     {
-        $this->createTable('posts_tmp', [
+        $this->createTable('tmp_posts', [
             'id' => $this->primaryKey(),
             'title' => $this->string(150)->notNull(),
             'body' => $this->text()->notNull(),
@@ -36,6 +36,6 @@ class m220924_113917_create_posts_tmp_table extends Migration
     public function down()
     {
         $this->dropForeignKey('pt_author_fk', 'posts_tmp');
-        $this->dropTable('posts_tmp');
+        $this->dropTable('tmp_posts');
     }
 }

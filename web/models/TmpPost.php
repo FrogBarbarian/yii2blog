@@ -4,24 +4,24 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use app\models\queries\PostTmpQuery;
+use app\models\queries\TmpPostQuery;
 
-class PostTmp extends Post
+class TmpPost extends Post
 {
     /**
      * {@inheritDoc}
      */
     public static function tableName(): string
     {
-        return 'posts_tmp';
+        return 'tmp_posts';
     }
 
     /**
      * {@inheritDoc}
      */
-    public static function find(): PostTmpQuery
+    public static function find(): TmpPostQuery
     {
-        return new PostTmpQuery(self::class);
+        return new TmpPostQuery(self::class);
     }
 
     /**

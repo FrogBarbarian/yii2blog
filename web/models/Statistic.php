@@ -4,10 +4,10 @@ declare(strict_types = 1);
 
 namespace app\models;
 
-use app\models\queries\StatisticsQuery;
+use app\models\queries\StatisticQuery;
 use yii\db\ActiveRecord;
 
-class Statistics extends ActiveRecord
+class Statistic extends ActiveRecord
 {
     /**
      * {@inheritDoc}
@@ -20,9 +20,9 @@ class Statistics extends ActiveRecord
     /**
      * {@inheritDoc}
      */
-    public static function find(): StatisticsQuery
+    public static function find(): StatisticQuery
     {
-        return new StatisticsQuery(self::class);
+        return new StatisticQuery(self::class);
     }
 
     /**
@@ -33,6 +33,24 @@ class Statistics extends ActiveRecord
         $this->setAttribute('owner', $owner);
 
         return $this;
+    }
+
+    /**
+     * ID пользователя, за которым ведется статистика.
+     */
+    public function setOwnerId(int $ownerId): self
+    {
+        $this->setAttribute('owner_id', $ownerId);
+
+        return $this;
+    }
+
+    /**
+     * @return int ID пользователя, за которым ведется статистика.
+     */
+    public function getOwnerId(): int
+    {
+        return $this->getAttribute('owner_id');
     }
 
     /**

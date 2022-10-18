@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\models\Comment;
-use app\models\Statistics;
+use app\models\Statistic;
 use src\helpers\ConstructHtml;
 use Yii;
 use app\models\Post;
@@ -127,7 +127,7 @@ class CommentsUIController extends AppController
         $comment = Comment::find()
             ->byId($commentId)
             ->one();
-        $ownerStatistics = Statistics::find()
+        $ownerStatistics = Statistic::find()
             ->byUsername($comment->getAuthor())
             ->one();
 
@@ -186,7 +186,7 @@ class CommentsUIController extends AppController
         $comment = Comment::find()
             ->byId($commentId)
             ->one();
-        $ownerStatistics = Statistics::find()
+        $ownerStatistics = Statistic::find()
             ->byUsername($comment->getAuthor())
             ->one();
 

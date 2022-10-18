@@ -1,9 +1,15 @@
 <?php
+declare(strict_types = 1);
 /**
  * @var \app\models\Tag[] $tags
  * @var \app\models\Tag[] $unusedTags
  */
+
+use app\components\AdminMenuWidget;
+
+echo AdminMenuWidget::widget();
 ?>
+
 <script src="../../assets/js/admin/tags.js"></script>
 <span class="admin-panel-header">Обзор тегов</span>
 <hr style="color: #14376c">

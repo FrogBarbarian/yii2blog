@@ -7,7 +7,7 @@ namespace app\controllers;
 use app\models\Tag;
 use src\helpers\ConstructHtml;
 use app\models\Post;
-use app\models\Statistics;
+use app\models\Statistic;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -37,7 +37,7 @@ class PostUIController extends AppController
         $post = Post::find()
             ->byId($postId)
             ->one();
-        $ownerStatistics = Statistics::find()
+        $ownerStatistics = Statistic::find()
             ->byUsername($post->getAuthor())
             ->one();
 
@@ -94,7 +94,7 @@ class PostUIController extends AppController
         $post = Post::find()
             ->byId($postId)
             ->one();
-        $ownerStatistics = Statistics::find()
+        $ownerStatistics = Statistic::find()
             ->byUsername($post->getAuthor())
             ->one();
 

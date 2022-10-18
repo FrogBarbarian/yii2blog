@@ -6,7 +6,7 @@ namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 
-class StatisticsQuery extends ActiveQuery
+class StatisticQuery extends ActiveQuery
 {
     /**
      * Поиск по имени пользователя.

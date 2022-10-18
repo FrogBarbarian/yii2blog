@@ -1,5 +1,5 @@
 <?php
-/** @var \app\models\PostTmp $post */
+/** @var \app\models\TmpPost $post */
 /** @var \app\models\PostInteractionsForm $model */
 
 use yii\helpers\Url;

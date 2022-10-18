@@ -7,8 +7,8 @@ namespace app\controllers;
 use app\models\Complaint;
 use app\models\LoginForm;
 use app\models\Post;
-use app\models\PostTmp;
-use app\models\Statistics;
+use app\models\TmpPost;
+use app\models\Statistic;
 use app\models\User;
 use app\models\RegisterForm;
 use yii\base\Exception;
@@ -38,8 +38,9 @@ class UsersController extends AppController
                 ->setEmail($registerForm->email)
                 ->setPassword($registerForm->password)
                 ->save();
-            $statistics = new Statistics();
+            $statistics = new Statistic();
             $statistics
+                ->setOwnerId($user->getId())
                 ->setOwner($registerForm->username)
                 ->save();
 
@@ -105,12 +106,12 @@ class UsersController extends AppController
             $isOwn = true;
 
             if ($user->getIsAdmin()) {
-                $postsTmp = PostTmp::find()
+                $postsTmp = TmpPost::find()
                     ->all();
                 $complaints = Complaint::find()
                     ->all();
             } else {
-                $postsTmp = PostTmp::find()
+                $postsTmp = TmpPost::find()
                     ->byAuthor($user->getUsername())
                     ->all();
                 $complaints = Complaint::find()
@@ -143,7 +144,7 @@ class UsersController extends AppController
             ->byAuthor($user->getUsername())
             ->orderDescById()
             ->all();
-        $statistics = Statistics::find()
+        $statistics = Statistic::find()
             ->byUsername($user->getUsername())
             ->one();
 

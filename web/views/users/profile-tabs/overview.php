@@ -3,9 +3,9 @@
  * @var bool $isOwn
  * @var \app\models\User $user
  * @var \app\models\User $visitor
- * @var \app\models\Statistics $statistics
+ * @var \app\models\Statistic $statistics
  * @var \app\models\Post[] $posts
- * @var \app\models\PostTmp[] $postsTmp
+ * @var \app\models\TmpPost[] $postsTmp
  * @var \app\models\Complaint[] $complaints
  */
 

@@ -54,7 +54,7 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritDoc}
      */
-    public static function findIdentity($id): self
+    public static function findIdentity($id): ?self
     {
         return static::findOne(['id' => $id, 'status' => self::STATUS_ACTIVE]);
     }

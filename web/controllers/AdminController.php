@@ -6,9 +6,8 @@ namespace app\controllers;
 
 use app\models\Post;
 use app\models\PostInteractionsForm;
-use app\models\PostTmp;
-use app\models\Statistics;
-use app\models\User;
+use app\models\TmpPost;
+use app\models\Statistic;
 use src\helpers\Get;
 use Yii;
 use yii\db\StaleObjectException;
@@ -17,6 +16,90 @@ use yii\web\Response;
 
 class AdminController extends AppController
 {
+    /**
+     * TODO: переделать
+     */
+    public function actionIndex(): string
+    {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render('overview');
+    }
+
+    /**
+     * TODO: переделать
+     */
+    public function actionPosts(): string
+    {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
+            throw new NotFoundHttpException();
+        }
+
+        $tmpPosts = Get::data('tmp_posts');
+
+        return $this->render('posts', ['tmpPosts' => $tmpPosts]);
+    }
+
+    /**
+     * TODO: COMMENT
+     */
+    public function actionTags()
+    {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
+            throw new NotFoundHttpException();
+        }
+
+        $tags = Get::data('tags');
+        $unusedTags = [];
+
+        foreach ($tags as $tag) {
+            if ($tag->getAmountOfUses() === 0) {
+                $unusedTags[] = $tag;
+            }
+        }
+
+        return $this->render('tags', ['unusedTags' => $unusedTags]);
+    }
+
+    /**
+     * TODO: переделать
+     * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
+     * @throws NotFoundHttpException
+     */
+    public function actionComplaints(): string
+    {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render('complaints');
+    }
+
+    /**
+     * TODO: переделать
+     * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
+     * @throws NotFoundHttpException
+     */
+    public function actionUsers(): string
+    {
+        $user = Yii::$app->user->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render('users');
+    }
     /**
      * TODO: переделать
      * Отображает пост из временного хранилища по ID из GET (если такой пост найден).
@@ -29,7 +112,7 @@ class AdminController extends AppController
         if (!Yii::$app->session->has('admin') || $id < 1) {
             throw new NotFoundHttpException();
         }
-        $post = PostTmp::find()->byId($id)->one();
+        $post = TmpPost::find()->byId($id)->one();
         if ($post === null) {
             throw new NotFoundHttpException();
         }
@@ -57,7 +140,7 @@ class AdminController extends AppController
     {
         $id = $_POST['PostInteractionsForm']['id'] ?? null;
         if ($id !== null) {
-            $postTmp = PostTmp::find()->byId($id)->one();
+            $postTmp = TmpPost::find()->byId($id)->one();
             if ($postTmp !== null) {
                 if ($postTmp->getIsNew()) {
                     $post = new Post();
@@ -68,7 +151,7 @@ class AdminController extends AppController
                         ->setTags($postTmp->getTags())
                         ->save();
                     $postTmp->delete();
-                    $statistics = Statistics::find()
+                    $statistics = Statistic::find()
                         ->byUsername($post->getAuthor())
                         ->one();
                     $statistics
@@ -93,65 +176,5 @@ class AdminController extends AppController
             }
         }
         throw new NotFoundHttpException();
-    }
-
-    /**
-     * TODO: переделать
-     */
-    public function actionIndex(string $tab = 'overview'): string
-    {
-        $user = Yii::$app->user->getIdentity();
-
-        if ($user === null || !$user->getIsAdmin()) {
-            throw new NotFoundHttpException();
-        }
-
-        $users = Get::data('users');
-
-        $tags = Get::data('tags');
-
-        $unusedTags = [];
-
-        foreach ($tags as $tag) {
-            if ($tag->getAmountOfUses() === 0) {
-                $unusedTags[] = $tag;
-            }
-        }
-
-        return $this->render('panel', [
-            'tab' => $tab,
-            'users' => $users,
-            'tags' => $tags,
-            'unusedTags' => $unusedTags,
-        ]);
-    }
-
-    /**
-     * TODO: переделать
-     * @return string  Вид "панель админа". Внутри переправляет на посты пользователей в хранилище.
-     * @throws NotFoundHttpException
-     */
-    public function actionPosts(): string
-    {
-        if (!Yii::$app->session->has('admin')) {
-            throw new NotFoundHttpException();
-        }
-        $posts = PostTmp::find()->all();
-
-        return $this->render('panel', ['posts' => $posts]);
-    }
-
-    /**
-     * TODO: переделать
-     * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
-     * @throws NotFoundHttpException
-     */
-    public function actionComplaints(): string
-    {
-        if (!Yii::$app->session->has('admin')) {
-            throw new NotFoundHttpException();
-        }
-
-        return $this->render('panel');
     }
 }

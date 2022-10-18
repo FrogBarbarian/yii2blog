@@ -1,26 +1,39 @@
 $(document).ready(function () {
-    getObjects(construct, 'users');
+    getObjects(construct, 'statistics');
 });
+
+table = 'statistics';
 
 /**
  * Отрисовывает пользователей.
  */
-function construct(users) {
+function construct(statistics) {
     const usersDiv = $('#objects');
     usersDiv.html('');
 
-    users.forEach((user) => {
+    statistics.forEach((statistic) => {
         usersDiv.html(usersDiv.html() +
-
             '<div class="user-card">' +
             '<h6>' +
-            user['username'] +
+            statistic['owner'] +
             '</h6>' +
             '<span style="font-size: x-small; display: block">' +
-            (user['is_admin'] ? 'Администратор' : 'Пользователь') +
+            'Постов: ' + statistic['posts'] +
+            '</span>' +
+            '<span style="font-size: x-small; display: block">' +
+            'Комментариев: ' + statistic['comments'] +
+            '</span>' +
+            '<span style="font-size: x-small; display: block">' +
+            'Просмотров: ' + statistic['views'] +
+            '</span>' +
+            '<span style="font-size: x-small; display: block">' +
+            'Рейтинг: ' + statistic['rating'] +
+            '</span>' +
+            '<span style="font-size: x-small; display: block">' +
+            'Лайков/дизлайков: ' + statistic['likes'] + '/' + statistic['dislikes'] +
             '</span>' +
             '<a href="/user?id=' +
-            user['id'] +
+            statistic['id'] +
             '" class="author-link" style="font-size: small">' +
             'Профиль' +
             '</a>' +

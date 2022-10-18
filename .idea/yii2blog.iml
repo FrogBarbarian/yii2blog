@@ -7,9 +7,9 @@
       <sourceFolder url="file://$MODULE_DIR$/web/controllers" isTestSource="false" packagePrefix="app\controllers\" />
       <sourceFolder url="file://$MODULE_DIR$/web/models" isTestSource="false" packagePrefix="app\models\" />
       <sourceFolder url="file://$MODULE_DIR$/src/services" isTestSource="false" packagePrefix="src\services\" />
-      <sourceFolder url="file://$MODULE_DIR$/web/interfaces" isTestSource="false" packagePrefix="app\interfaces\" />
       <sourceFolder url="file://$MODULE_DIR$/web/models/queries" isTestSource="false" packagePrefix="app\models\queries\" />
       <sourceFolder url="file://$MODULE_DIR$/src/helpers" isTestSource="false" packagePrefix="src\helpers\" />
+      <sourceFolder url="file://$MODULE_DIR$/web/components" isTestSource="false" packagePrefix="app\components\" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/psr/http-message" />
