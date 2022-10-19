@@ -204,7 +204,7 @@
     overflow: auto;
     text-align: start !important;
     width: 10rem;
-    height: 10rem;
+    height: 8.5rem;
     margin: 1px;
     display: inline-block;
     padding: 1px 3px 1px 3px;
@@ -217,3 +217,33 @@
     background-color: #c4c4c4;
 }
 
+.posts-grid {
+    justify-content: space-between;
+    padding: 1px;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(170px, 180px));
+}
+
+.grid-post {
+    text-decoration: none;
+    background-color: white;
+    color: black;
+    padding: 1px;
+    margin: 1px;
+    border: 1px solid black;
+    font-size: x-small;
+    cursor: pointer;
+}
+
+.grid-post:hover {
+    color: #0b1f26;
+    background-color: #dcdcdc;
+}
+
+.admin-panel-info {
+    background-color: rgba(217,217,139,0.77);
+    padding: 5px 3px;
+    border: 1px solid black;
+    border-radius: 5px;
+}

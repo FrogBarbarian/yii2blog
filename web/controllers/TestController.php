@@ -21,19 +21,20 @@ class TestController extends AppController
      */
     public function actionAddComplaints(string $amount = '25'): Response
     {
-        $objectType = match (rand(0, 2)) {
-            0 => 'post',
-            1 => 'user',
-            2 => 'comment',
-        };
-        $object = ('app\models\\' . ucfirst($objectType))::find()
+        for ($i = 0; $i < $amount; $i++) {
+            $objectType = match (rand(0, 2)) {
+                0 => 'post',
+                1 => 'user',
+                2 => 'comment',
+            };
+
+            $object = ('app\models\\' . ucfirst($objectType))::find()
                 ->orderBy(new Expression('random()'))
                 ->one();
-        $sender = User::find()
-            ->orderBy(new Expression('random()'))
-            ->one();
+            $sender = User::find()
+                ->orderBy(new Expression('random()'))
+                ->one();
 
-        for ($i = 0; $i < $amount; $i++) {
             if ($sender->getIsAdmin() || $sender === $object) {
                 continue;
             }

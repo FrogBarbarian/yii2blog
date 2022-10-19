@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types = 1);
+
 use app\components\AdminMenuWidget;
 
 echo AdminMenuWidget::widget();
 ?>
-<h5 class="card-title">Обзор</h5>
+<span class="admin-panel-header">Обзор</span>
+<hr style="color: #14376c">

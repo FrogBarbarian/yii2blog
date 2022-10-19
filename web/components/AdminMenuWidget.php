@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\components;
 
@@ -13,7 +13,9 @@ use yii\base\Widget;
  */
 class AdminMenuWidget extends Widget
 {
-    public ?array $tmpPosts = null;
+    public ?int $amountTmpPosts = null;
+    public ?int $amountUnusedTags = null;
+    public ?int $amountComplaints = null;
 
     /**
      * {@inheritDoc}
@@ -22,8 +24,38 @@ class AdminMenuWidget extends Widget
     public function init()
     {
         parent::init();
-        $this->tmpPosts = $this->tmpPosts !== null ? $this->tmpPosts : Get::data('tmp_posts');
+        $this->amountTmpPosts = $this->amountTmpPosts !== null
+            ? $this->amountTmpPosts
+            : count(Get::data(
+                'tmp_posts',
+                'id',
+                SORT_DESC,
+                false,
+            ));
 
+        if ($this->amountUnusedTags === null) {
+            $tags = Get::data(
+                'tags',
+                'id',
+                SORT_ASC,
+                false,
+            );
+
+            foreach ($tags as $tag) {
+                if ($tag->getAmountOfUses() === 0) {
+                    $this->amountUnusedTags++;
+                }
+            }
+        }
+
+        $this->amountComplaints = $this->amountComplaints !== null
+            ? $this->amountComplaints
+            : count(Get::data(
+                'complaints',
+                'id',
+                SORT_ASC,
+                false,
+            ));
     }
 
     /**
@@ -31,6 +63,10 @@ class AdminMenuWidget extends Widget
      */
     public function run(): string
     {
-        return $this->render('admin-menu', ['tmpPosts' => $this->tmpPosts]);
+        return $this->render('admin-menu', [
+            'amountTmpPosts' => $this->amountTmpPosts,
+            'amountUnusedTags' => $this->amountUnusedTags,
+            'amountComplaints' => $this->amountComplaints,
+        ]);
     }
 }

@@ -1,25 +1,13 @@
 let sortParam = 'id';
 let sortAsc = true;
 let table = '';
+let model = '';
 
-/**
- * Получает объекты из БД.
- */
-function getObjects(callback, object = 'tags', param = 'id', type = 4, useCache = true) {
-    $.ajax({
-        url: '/admin-u-i/get-object',
-        cache: false,
-        data: {object: object, param: param, type: type, useCache: useCache},
-        success: function (response) {
-            callback(response);
-        }
-    });
-}
 
 /**
  *  Сортирует объекты.
  */
-function sort(param, customTable = table) {
+function sort(param) {
     let isNewParam = param !== sortParam;
 
     if (isNewParam) {
@@ -36,7 +24,26 @@ function sort(param, customTable = table) {
         sortAsc = !sortAsc;
         $('#arrow_' + param).html(sortAsc ? '&darr;' : '&uarr;');
     }
+    getObjects(construct, model);
+}
 
-    let type = sortAsc ? 4 : 3;
-    getObjects(construct, customTable, sortParam, type, false);
+function getObjects(callback) {
+    let offset = getParams.get("offset") > 0 ? getParams.get("offset") : '-1';
+    let page = getParams.get("page") ?? '1';
+    let sortOrder = sortAsc ? '4' : '3';
+    let data = {
+        model: model,
+        offset: offset,
+        page: page,
+        sortParam: sortParam,
+        sortOrder: sortOrder,
+    };
+    $.ajax({
+        url: '/admin-u-i/get-objects',
+        cache: false,
+        data: data,
+        success: function (response) {
+            callback(response)
+        }
+    });
 }

@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\models\Complaint;
 use app\models\Tag;
 use Psr\SimpleCache\InvalidArgumentException;
 use src\helpers\Get;
 use Yii;
+use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -34,7 +36,7 @@ class AdminUIController extends AppController
     }
 
     /**
-     * Получает теги.
+     * TODO: WHAT
      * @throws NotFoundHttpException
      * @throws InvalidArgumentException
      */
@@ -50,5 +52,42 @@ class AdminUIController extends AppController
         $tags = Get::data($object, $param, $type, $useCache);
 
         return $this->asJson($tags);
+    }
+
+    /**
+     * Удаляет жалобу.
+     * @throws \Throwable
+     * @throws StaleObjectException
+     */
+    public function actionDeleteComplaint(string $id)
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $id = (int)$id;
+        Complaint::find()
+            ->byId($id)
+            ->one()
+            ->delete();
+        //TODO: Пользователь получает оповещение в ЛС
+    }
+
+    public function actionGetObjects(string $model, string $offset, string $page, string $sortParam, string $sortOrder): Response
+    {
+        if (!Yii::$app->request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $page = (int)$page;
+        $offset = (int)$offset;
+        $sortOrder = (int)$sortOrder;
+
+        $users = ("app\models\\$model")::find()
+            ->orderBy([$sortParam => $sortOrder])
+            ->offset($offset * ($page - 1))
+            ->limit($offset)
+            ->all();
+        return $this->asJson($users);
     }
 }

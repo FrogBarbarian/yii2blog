@@ -1,25 +1,29 @@
 <?php
-declare(strict_types = 1);
 /**
- * @var \app\models\Tag[] $tags
  * @var \app\models\Tag[] $unusedTags
+ * @var int $offset
+ * @var int $pages
+ * @var int $curPage
  */
 
+declare(strict_types = 1);
+
+use app\components\AdminFilterOptionsWidget;
 use app\components\AdminMenuWidget;
 
-echo AdminMenuWidget::widget();
+echo AdminMenuWidget::widget(['amountUnusedTags' => count($unusedTags)]);
 ?>
 
 <script src="../../assets/js/admin/tags.js"></script>
 <span class="admin-panel-header">Обзор тегов</span>
 <hr style="color: #14376c">
-<small>
+<h6 >
     Ниже представлен список всех сохраненных тегов, справа указанно количество использований.
     Не использующиеся теги рекомендуется удалять.
-</small>
+</h6>
 <?php if ($unusedTags !== []): ?>
     <hr>
-    <p class="mt-2">
+    <p class="admin-panel-info">
         Не использующиеся теги.
         <span style="font-size: x-small; color: red">
             (Для удаления нажмите на тег)
@@ -44,5 +48,10 @@ echo AdminMenuWidget::widget();
     <span class="sort" onclick="sort('id')">Новизне<span id="arrow_id" style="color: white">&darr;</span></span>
     <span class="sort" onclick="sort('tag')">Алфавиту<span id="arrow_tag">&darr;</span></span>
     <span class="sort" onclick="sort('amount_of_uses')">Количеству использований<span id="arrow_amount_of_uses">&darr;</span></span>
-</div>
+    <?= AdminFilterOptionsWidget::widget([
+        'offset' => $offset,
+        'pages' => $pages,
+        'curPage' => $curPage,
+        'tab' => 'tags',
+    ]) ?>
 <div class="my-3" id="objects"></div>

@@ -3,6 +3,7 @@ $(document).ready(function () {
 });
 
 table = 'tags';
+model = 'Tag';
 
 /**
  * Удаляет тег.

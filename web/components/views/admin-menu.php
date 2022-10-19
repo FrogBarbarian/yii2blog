@@ -1,7 +1,11 @@
 <?php
 /**
- * @var \app\models\TmpPost $tmpPosts
+ * @var int $amountTmpPosts
+ * @var int $amountUnusedTags
+ * @var int $amountComplaints
  */
+
+declare(strict_types=1);
 
 $this->title = 'Панель администратора';
 ?>
@@ -24,18 +28,19 @@ $this->title = 'Панель администратора';
             <li>
                 <a href="<?= ADMIN_PANEL ?>/tags" class="nav-link text-white me-2">
                     Теги
-                    <!--                    --><?php //if ($unusedTags !== []): ?>
-                    <!--                        <span class="badge text-bg-secondary">-->
-                    <!--                            --><?php // count($unusedTags) ?>
-                    <!--                        </span>-->
-                    <!--                    --><?php //endif ?>
+                    <?php if ($amountUnusedTags > 0): ?>
+                        <span class="badge text-bg-secondary">
+                            <?= $amountUnusedTags ?>
+                        </span>
+                    <?php endif ?>
                 </a>
             </li>
             <li>
                 <a href="<?= ADMIN_PANEL ?>/posts" class="nav-link text-white me-2">
-                    Посты<?php if ($tmpPosts !== []): ?>
+                    Посты
+                    <?php if ($amountTmpPosts > 0): ?>
                         <span class="badge text-bg-secondary">
-                            <?= count($tmpPosts) ?>
+                            <?= $amountTmpPosts ?>
                         </span>
                     <?php endif ?>
                 </a>
@@ -43,11 +48,11 @@ $this->title = 'Панель администратора';
             <li>
                 <a href="<?= ADMIN_PANEL ?>/complaints" class="nav-link text-white me-2">
                     Жалобы пользователей
-                    <!--                    --><?php //if (count($complaints) > 0): ?>
-                    <!--                        <span class="badge text-bg-secondary">-->
-                    <!--                            --><?php //= count($complaints) ?>
-                    <!--                        </span>-->
-                    <!--                    --><?php //endif ?>
+                    <?php if ($amountComplaints > 0): ?>
+                        <span class="badge text-bg-secondary">
+                            <?= $amountComplaints ?>
+                        </span>
+                    <?php endif ?>
                 </a>
             </li>
         </ul>

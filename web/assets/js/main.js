@@ -1,3 +1,5 @@
+let getParams = (new URL(document.location)).searchParams;
+
 /**
  * Открывает страницу с рандомным постом.
  */

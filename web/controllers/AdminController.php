@@ -8,8 +8,11 @@ use app\models\Post;
 use app\models\PostInteractionsForm;
 use app\models\TmpPost;
 use app\models\Statistic;
+use app\models\User;
+use Psr\SimpleCache\InvalidArgumentException;
 use src\helpers\Get;
 use Yii;
+use yii\db\Exception;
 use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -31,7 +34,9 @@ class AdminController extends AppController
     }
 
     /**
-     * TODO: переделать
+     * Вкладка с постами пользователей в админ-панели.
+     * @throws \Throwable
+     * @throws InvalidArgumentException
      */
     public function actionPosts(): string
     {
@@ -41,15 +46,22 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $tmpPosts = Get::data('tmp_posts');
+        $tmpPosts = Get::data(
+            'tmp_posts',
+            'id',
+            SORT_ASC,
+            false,
+        );
 
         return $this->render('posts', ['tmpPosts' => $tmpPosts]);
     }
 
     /**
-     * TODO: COMMENT
+     * Вкладка с тегами в админ-панели.
+     * @throws \Throwable
+     * @throws InvalidArgumentException
      */
-    public function actionTags()
+    public function actionTags(string $offset = '0', string $page = '1'): string
     {
         $user = Yii::$app->user->getIdentity();
 
@@ -57,7 +69,12 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $tags = Get::data('tags');
+        $tags = Get::data(
+            'tags',
+            'id',
+            SORT_ASC,
+            false,
+        );
         $unusedTags = [];
 
         foreach ($tags as $tag) {
@@ -66,13 +83,23 @@ class AdminController extends AppController
             }
         }
 
-        return $this->render('tags', ['unusedTags' => $unusedTags]);
+        $curPage = (int)$page;
+        $offset = (int)$offset;
+        $amountTags = count($tags);
+        $pages = $offset < 1 ? 1 : (int)ceil($amountTags / $offset);
+
+        return $this->render('tags', [
+            'unusedTags' => $unusedTags,
+            'offset' => $offset,
+            'curPage' => $curPage,
+            'pages' => $pages,
+        ]);
     }
 
     /**
-     * TODO: переделать
-     * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
-     * @throws NotFoundHttpException
+     * Вкладка с жалобами пользователей в админ-панели
+     * @throws InvalidArgumentException
+     * @throws \Throwable
      */
     public function actionComplaints(): string
     {
@@ -82,7 +109,42 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('complaints');
+        $complaints = Get::data(
+            'complaints',
+            'id',
+            SORT_ASC,
+            false,
+        );
+        $usersComplaints = [];
+        $postsComplaints = [];
+        $commentsComplaints = [];
+
+        foreach ($complaints as $complaint) {
+            $object = $complaint->getObject();
+
+            switch ($object) {
+                case 'user':
+                    $usersComplaints[] = $complaint;
+                    break;
+                case 'post':
+                    $postsComplaints[] = $complaint;
+                    break;
+                case 'comment':
+                    $commentsComplaints[] = $complaint;
+                    break;
+                default:
+                    throw new Exception('Не правильный тип объекта.');
+            }
+        }
+
+        $amountComplaints = count($complaints);
+
+        return $this->render('complaints', [
+            'amountComplaints' => $amountComplaints,
+            'usersComplaints' => $usersComplaints,
+            'postsComplaints' => $postsComplaints,
+            'commentsComplaints' => $commentsComplaints,
+        ]);
     }
 
     /**
@@ -90,7 +152,7 @@ class AdminController extends AppController
      * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
      * @throws NotFoundHttpException
      */
-    public function actionUsers(): string
+    public function actionUsers(string $offset = '0', string $page = '1'): string
     {
         $user = Yii::$app->user->getIdentity();
 
@@ -98,8 +160,18 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('users');
+        $curPage = (int)$page;
+        $offset = (int)$offset;
+        $amountUsers = count(User::find()->all());
+        $pages = $offset < 1 ? 1 : (int)ceil($amountUsers / $offset);
+
+        return $this->render('users', [
+            'offset' => $offset,
+            'curPage' => $curPage,
+            'pages' => $pages,
+        ]);
     }
+
     /**
      * TODO: переделать
      * Отображает пост из временного хранилища по ID из GET (если такой пост найден).
