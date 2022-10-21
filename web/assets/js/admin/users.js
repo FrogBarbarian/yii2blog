@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    getObjects(construct)
+    getObjects(construct);
 });
 
 table = 'users';
@@ -18,6 +18,14 @@ function construct(users) {
             '<h6>' +
             user['username'] +
             '</h6>' +
+            '<p style="font-size: x-small; margin: 1px">' +
+            user['email'] +
+            '</p>' +
+            '<a class="author-link small" href="/user?id=' +
+            user['id'] +
+            '">' +
+            (user['is_admin'] ? 'Администратор' : 'Пользователь') +
+            '</a>' +
             '</div>'
         );
     });

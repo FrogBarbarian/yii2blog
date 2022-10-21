@@ -42,6 +42,7 @@ return [
                 'admin/<action>' => 'admin/<action>',
                 '/<action>' => 'posts/<action>',
                 'tag/<action>' => 'posts/tag',
+                'author/<action>' => 'posts/author',
                 '<controller>/<action>' => '<controller>/<action>',
             ],
         ],

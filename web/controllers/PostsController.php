@@ -48,6 +48,10 @@ class PostsController extends AppController
                 ->asArray()
                 ->all());
             $pages = intval(ceil($postAmount / POSTS_ON_PAGE));
+            $message = $posts
+                ? "Результат поиска по фразе '$search'"
+                : "К сожалению, по запросу '$search' ничего не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>";
+            Yii::$app->session->setFlash('messageForIndex', $message);
         } else {
             $posts = Post::find()
                 ->orderDescById()
@@ -447,24 +451,67 @@ class PostsController extends AppController
      */
     public function actionTag(string $page = '1'): string
     {
-        $tag = Yii::$app->request->getPathInfo();
+        $path = Yii::$app->request->getPathInfo();
 
-        if ($tag === 'tag') {
+        if ($path === 'tag') {
             throw new NotFoundHttpException();
         }
 
-        $tag = ltrim(strrchr($tag, '/'), '/');
+        $tag = ltrim(strrchr($path, '/'), '/');
         $posts = Post::find()
             ->byTag($tag)
             ->all();
-
-        if ($posts === []) {
-            throw new NotFoundHttpException();
-        }
+        $message = $posts === []
+            ? "Постов с тегом '$tag' не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>"
+            : "Посты по тегу '$tag'";
+        Yii::$app->session->setFlash('messageForIndex', $message);
+        Yii::$app->session->setFlash('messageForIndex', $message);
 
         $pages = intval(ceil(count($posts) / POSTS_ON_PAGE));
         $curPage = (int)$page;
-        $posts = Post::find()->byTag($tag)
+        $posts = Post::find()
+            ->byTag($tag)
+            ->orderDescById()
+            ->offset(($page - 1) * POSTS_ON_PAGE)
+            ->limit(POSTS_ON_PAGE)->all();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        return $this->render('index', [
+            'user' => $user,
+            'posts' => $posts,
+            'pages' => $pages,
+            'curPage' => $curPage,
+            'search' => null,
+        ]);
+    }
+
+    /**
+     * Выгружает статьи определенного автора.
+     * @throws \Throwable
+     */
+    public function actionAuthor(string $page = '1'): string
+    {
+        $path = Yii::$app->request->getPathInfo();
+
+        if ($path === 'author') {
+            throw new NotFoundHttpException();
+        }
+
+        $author = ltrim(strrchr($path, '/'), '/');
+        $posts = Post::find()
+            ->byAuthor($author)
+            ->all();
+        $message = $posts === []
+            ? "Постов от автора '$author' не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>"
+            : "Посты автора '$author'";
+        Yii::$app->session->setFlash('messageForIndex', $message);
+
+        $pages = intval(ceil(count($posts) / POSTS_ON_PAGE));
+        $curPage = (int)$page;
+        $posts = Post::find()
+            ->byAuthor($author)
             ->orderDescById()
             ->offset(($page - 1) * POSTS_ON_PAGE)
             ->limit(POSTS_ON_PAGE)->all();

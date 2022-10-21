@@ -364,7 +364,7 @@ class Post extends ActiveRecord
     {
         $usersIds = explode(' ', $this->getDislikedByUsers());
         $usersIds = array_diff($usersIds, [$id]);
-        $this->setAttribute('user_disliked', implode(' ', $usersIds));
+        $this->setAttribute('users_disliked', implode(' ', $usersIds));
 
         return $this;
     }

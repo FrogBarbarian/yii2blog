@@ -20,15 +20,6 @@ $session = Yii::$app->session;
         <?= $session->getFlash('messageForIndex') ?>
     </div>
 <?php endif ?>
-<?php if ($search !== null): ?>
-    <div class="alert alert-warning rounded-5 small mt-1 mx-1" role="alert">
-        <?php if ($posts): ?>
-            Результат поиска по фразе '<?= $search ?>'.
-        <?php else: ?>
-            К сожалению, по запросу '<?= $search ?>' ничего не найдено.
-        <?php endif ?>
-    </div>
-<?php endif ?>
 <?php if ($posts): ?>
     <div style="margin-left: 10%;margin-right: 10%;">
         <?php if ($pages > 1): ?>
@@ -105,7 +96,7 @@ $session = Yii::$app->session;
                     </h5>
                     <p class="card-text">
                         <a class="nav-link" href="/post?id=<?= $post->getId() ?>">
-                            <?= $post->getPreview($post->getBody()) ?>
+                            <?= $post->getPreview($post->getBody(), 250, '') ?>
                         </a>
                     </p>
                 </div>

@@ -1,36 +1,36 @@
-let sortParam = 'id';
-let sortAsc = true;
+let offset = getParams.get("offset") > 0 ? getParams.get("offset") : '-1';
+let page = getParams.get("page") ?? '1';
+let sortParam = getParams.get("sortParam") ?? 'id';
+let sortOrder = getParams.get("sortOrder") ?? '4';
 let table = '';
 let model = '';
 
+$(document).ready(function () {
+    drawArrows();
+});
 
 /**
- *  Сортирует объекты.
+ *  Задает параметры для сортировки объектов.
  */
 function sort(param) {
-    let isNewParam = param !== sortParam;
-
-    if (isNewParam) {
-        $('#arrow_' + sortParam).css('color', '');
-        $('#arrow_' + param).css('color', 'white');
-        sortParam = param;
-        sortAsc = true;
-        let filters = document.querySelectorAll('[id^="arrow_"]');
-
-        filters.forEach((element) => {
-            element.innerHTML = '&darr;';
-        })
-    } else {
-        sortAsc = !sortAsc;
-        $('#arrow_' + param).html(sortAsc ? '&darr;' : '&uarr;');
+    if (offset !== '-1') {
+        getParams.set('offset', offset);
     }
-    getObjects(construct, model);
+
+    if (page !== '1') {
+        getParams.set('page', page);
+    }
+
+    getParams.set('sortParam', param);
+    sortOrder = sortOrder === '4' ? '3' : '4';
+    getParams.set('sortOrder', sortOrder);
+    location.href = url.toString();
 }
 
-function getObjects(callback) {
-    let offset = getParams.get("offset") > 0 ? getParams.get("offset") : '-1';
-    let page = getParams.get("page") ?? '1';
-    let sortOrder = sortAsc ? '4' : '3';
+/**
+ * Получает объекты для вывода.
+ */
+function getObjects() {
     let data = {
         model: model,
         offset: offset,
@@ -43,7 +43,23 @@ function getObjects(callback) {
         cache: false,
         data: data,
         success: function (response) {
-            callback(response)
+            construct(response)
         }
     });
+}
+
+/**
+ * Рисует стрелки сортировки.
+ */
+function drawArrows() {
+    let activeArrow = $('#arrow_' + sortParam);
+    activeArrow.css('color', 'white');
+    activeArrow.html(sortOrder === '4' ? '&darr;' : '&uarr;');
+}
+
+/**
+ * Заполняет поле ввода количества отображаемых элементов.
+ */
+function setOffsetInput(offset) {
+    $('#setOffset').val(offset);
 }

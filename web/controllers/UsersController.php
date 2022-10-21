@@ -119,7 +119,7 @@ class UsersController extends AppController
                     ->all();
             }
         } else {
-            if ($id === $user->getId()) {
+            if ($user !== null && $id === $user->getId()) {
                 return $this->redirect('/profile');
             }
 

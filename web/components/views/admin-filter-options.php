@@ -4,6 +4,8 @@
  * @var int $pages
  * @var int $curPage
  * @var string $tab
+ * @var string $sortParam
+ * @var int $sortOrder
  */
 
 declare(strict_types=1);
@@ -14,10 +16,15 @@ use src\helpers\PaginationHelper;
     <label for="setOffset">Выводить по: </label>
     <input id="setOffset" type="text" name="offset" placeholder="<?= $offset !== 0 ? $offset : '' ?>"
            style="width: 50px; height: 20px">
+    <input type="hidden" name="sortParam" value="<?= $sortParam ?>">
+    <input type="hidden" name="sortOrder" value="<?= $sortOrder ?>">
     <button type="submit"
             style="width: 20px;height: 20px;display: inline-flex;justify-content: center;align-items: center;">
         &#8626;
     </button>
+    <span onclick="setOffsetInput(10)" class="complaint-link" style="font-size: small">10</span>
+    <span onclick="setOffsetInput(25)" class="complaint-link" style="font-size: small">25</span>
+    <span onclick="setOffsetInput(50)" class="complaint-link" style="font-size: small">50</span>
 </form>
 </div>
 <?php if ($pages > 1): ?>
@@ -31,9 +38,13 @@ use src\helpers\PaginationHelper;
                     </li>
                     <?php continue; endif; ?>
                 <li class="page-item">
-                    <form></form>
-                    <a class="page-link" style="background-color: rgba(0,0,0,0);color: #000000;font-size: small"
-                       href="?offset=<?= $offset ?>&page=<?= $page ?>"><?= $page ?></a>
+                    <form>
+                        <input type="hidden" name="page" value="<?= $page ?>">
+                        <input type="hidden" name="offset" value="<?= $offset ?>">
+                        <input type="hidden" name="sortParam" value="<?= $sortParam ?>">
+                        <input type="hidden" name="sortOrder" value="<?= $sortOrder ?>">
+                        <button class="page-link" style="background-color: rgba(0,0,0,0);color: #000000;font-size: small" type="submit"><?= $page ?></button>
+                    </form>
                 </li>
             <?php endforeach ?>
             <form class="d-flex">
@@ -41,6 +52,8 @@ use src\helpers\PaginationHelper;
                        style="max-width: 50px;background-color: rgba(0,0,0,0);color: #000000;font-size: small;border-color: #dee2e6"
                        required>
                 <input type="hidden" name="offset" value="<?= $offset ?>">
+                <input type="hidden" name="sortParam" value="<?= $sortParam ?>">
+                <input type="hidden" name="sortOrder" value="<?= $sortOrder ?>">
                 <button class="page-link" type="submit"
                         style="background-color: rgba(0,0,0,0);color: #000000;font-size: small">
                     &rarr;

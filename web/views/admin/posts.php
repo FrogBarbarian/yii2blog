@@ -18,7 +18,7 @@ echo AdminMenuWidget::widget(['amountTmpPosts' => count($tmpPosts)]);
     <p class="admin-panel-info">
         Посты представлены от старых к новым слева направо.
     </p>
-    <div class="posts-grid justify-content-around">
+    <div class="posts-grid">
         <?php foreach ($tmpPosts as $post): ?>
             <a class="grid-post" href="<?= ADMIN_PANEL ?>/user-post?id=<?= $post->getId() ?>" data-toggle="tooltip"
                data-placement="top"

@@ -95,15 +95,13 @@ class UIController extends AppController
      * Предлагает статьи для открытия.
      * @throws NotFoundHttpException
      */
-    public function actionSearchSuggest(): Response
+    public function actionSearchSuggest(string $input): Response
     {
         $request = Yii::$app->getRequest();
 
         if (!$request->getIsAjax()) {
             throw new NotFoundHttpException();
         }
-
-        $input = $request->get('input');
 
         $post = Post::find()
             ->postHasWords($input)

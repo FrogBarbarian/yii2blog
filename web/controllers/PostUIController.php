@@ -184,15 +184,13 @@ class PostUIController extends AppController
      * Поиск по тегам.
      * @throws NotFoundHttpException
      */
-    public function actionSearchTags(): Response
+    public function actionSearchTags(string $input): Response
     {
         $request = Yii::$app->getRequest();
 
         if (!$request->getIsAjax()) {
             throw new NotFoundHttpException();
         }
-
-        $input = $request->get('input');
 
         $tags = Tag::find()
             ->byChars($input)

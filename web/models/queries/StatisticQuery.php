@@ -15,4 +15,22 @@ class StatisticQuery extends ActiveQuery
     {
         return $this->where(['owner' => $username]);
     }
+
+    /**
+     * Фильтр по количеству лайков.
+     * @param string $type Может принимать значения: <, >, <=, >=, =.
+     */
+    public function byLikes(int $amount = 0, string $type = '>'): self
+    {
+        return $this->where([$type, 'likes', $amount]);
+    }
+
+    /**
+     * Фильтр по количеству дизлайков.
+     * @param string $type Может принимать значения: <, >, <=, >=, =.
+     */
+    public function byDislikes(int $amount = 0, string $type = '>'): self
+    {
+        return $this->where([$type, 'dislikes', $amount]);
+    }
 }

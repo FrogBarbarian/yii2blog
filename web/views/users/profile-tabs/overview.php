@@ -11,7 +11,6 @@
 
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
-
 ?>
 
 <?php if ($isOwn): ?>
@@ -49,7 +48,11 @@ use src\helpers\NormalizeData;
     </ul>
     <hr>
     <?php if ($posts): ?>
-        <h4 class="text-center">Опубликованные посты</h4>
+        <h4 class="text-center">
+            <a class="post-link" href="/author/<?= $user->getUsername() ?>" target="_blank">
+                Опубликованные посты
+            </a>
+        </h4>
         <!--TODO: Добавить пагинацию-->
     <div class="list-group">
         <?php foreach ($posts as $post): ?>
@@ -59,7 +62,7 @@ use src\helpers\NormalizeData;
                     <h5 class="mb-1"><?= $post->getPreview($post->getTitle(), 50, '') ?></h5>
 
                 </div>
-                <p class="mb-1"><?= $post->getPreview($post->getBody(), 150) ?></p>
+                <p class="mb-1"><?= $post->getPreview($post->getBody(), 150, '') ?></p>
                 <small class="hstack">
                         <span style="font-style: italic">
                         <?= NormalizeData::passedTime($post->getDatetime()) ?>

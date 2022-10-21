@@ -20,7 +20,9 @@ use yii\web\Response;
 class AdminController extends AppController
 {
     /**
-     * TODO: переделать
+     * Вкладка со статистикой сайта в админ-панели.
+     * @throws \Throwable
+     * @throws InvalidArgumentException
      */
     public function actionIndex(): string
     {
@@ -30,7 +32,96 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        return $this->render('overview');
+        $posts = Get::data(
+            'posts',
+            'rating',
+            SORT_ASC,
+            false,
+        );
+        $amountViews = 0;
+
+        foreach ($posts as $post) {
+            $amountViews += $post->getViews();
+        }
+
+        $postsAmount = count($posts);
+        $highestRatingPost = end($posts);
+        $lowestRatingPost = $posts[0];
+        $mostViewedPost = Get::data(
+            'posts',
+            'viewed',
+            SORT_DESC,
+            false,
+        )[0];
+        $mostCommentablePost = Get::data(
+            'posts',
+            'comments_amount',
+            SORT_DESC,
+            false,
+        )[0];
+        $users = Get::data(
+            'statistics',
+            'rating',
+            SORT_ASC,
+            false);
+        $usersAmount = count($users);
+        $highestRatingUser = end($users);
+        $lowestRatingUser = $users[0];
+        $mostPostUser = Get::data(
+            'statistics',
+            'posts',
+            SORT_DESC,
+            false)[0];
+        $mostCommentUser = Get::data(
+            'statistics',
+            'comments',
+            SORT_DESC,
+            false)[0];
+        $statsWithLike = Statistic::find()
+            ->byLikes()
+            ->all();
+        $amountLikes = 0;
+
+        foreach ($statsWithLike as $item) {
+            $amountLikes += $item->getLikes();
+        }
+
+        $statsWithDislike = Statistic::find()
+            ->byDislikes()
+            ->all();
+        $amountDislikes = 0;
+
+        foreach ($statsWithDislike as $item) {
+            $amountDislikes += $item->getDislikes();
+        }
+
+        $comments = Get::data(
+            'comments',
+            'rating',
+            SORT_ASC,
+            false);
+        $commentsAmount = count($comments);
+        $highestRatingComment = end($comments);
+        $lowestRatingComment = $comments[0];
+
+        return $this->render('overview', [
+            'postsAmount' => $postsAmount,
+            'mostViewedPost' => $mostViewedPost,
+            'highestRatingPost' => $highestRatingPost,
+            'lowestRatingPost' => $lowestRatingPost,
+            'mostCommentablePost' => $mostCommentablePost,
+            'usersAmount' => $usersAmount,
+            'mostPostUser' => $mostPostUser,
+            'mostCommentUser' => $mostCommentUser,
+            'highestRatingUser' => $highestRatingUser,
+            'lowestRatingUser' => $lowestRatingUser,
+            'commentsAmount' => $commentsAmount,
+            'highestRatingComment' => $highestRatingComment,
+            'lowestRatingComment' => $lowestRatingComment,
+            'amountLikes' => $amountLikes,
+            'amountDislikes' => $amountDislikes,
+            'amountViews' => $amountViews,
+        ]);
     }
 
     /**
@@ -61,7 +152,7 @@ class AdminController extends AppController
      * @throws \Throwable
      * @throws InvalidArgumentException
      */
-    public function actionTags(string $offset = '0', string $page = '1'): string
+    public function actionTags(string $offset = '0', string $page = '1', string $sortParam = 'id', string $sortOrder = '4'): string
     {
         $user = Yii::$app->user->getIdentity();
 
@@ -85,6 +176,7 @@ class AdminController extends AppController
 
         $curPage = (int)$page;
         $offset = (int)$offset;
+        $sortOrder = (int)$sortOrder;
         $amountTags = count($tags);
         $pages = $offset < 1 ? 1 : (int)ceil($amountTags / $offset);
 
@@ -93,11 +185,13 @@ class AdminController extends AppController
             'offset' => $offset,
             'curPage' => $curPage,
             'pages' => $pages,
+            'sortParam' => $sortParam,
+            'sortOrder' => $sortOrder,
         ]);
     }
 
     /**
-     * Вкладка с жалобами пользователей в админ-панели
+     * Вкладка с жалобами пользователей в админ-панели.
      * @throws InvalidArgumentException
      * @throws \Throwable
      */
@@ -148,11 +242,10 @@ class AdminController extends AppController
     }
 
     /**
-     * TODO: переделать
-     * @return string Вид "панель админа". Внутри переправляет на жалобы пользователей в хранилище.
-     * @throws NotFoundHttpException
+     * Вклада с пользователями в админ-панели.
+     * @throws \Throwable
      */
-    public function actionUsers(string $offset = '0', string $page = '1'): string
+    public function actionUsers(string $offset = '0', string $page = '1', string $sortParam = 'id', string $sortOrder = '4'): string
     {
         $user = Yii::$app->user->getIdentity();
 
@@ -162,6 +255,7 @@ class AdminController extends AppController
 
         $curPage = (int)$page;
         $offset = (int)$offset;
+        $sortOrder = (int)$sortOrder;
         $amountUsers = count(User::find()->all());
         $pages = $offset < 1 ? 1 : (int)ceil($amountUsers / $offset);
 
@@ -169,6 +263,8 @@ class AdminController extends AppController
             'offset' => $offset,
             'curPage' => $curPage,
             'pages' => $pages,
+            'sortParam' => $sortParam,
+            'sortOrder' => $sortOrder,
         ]);
     }
 

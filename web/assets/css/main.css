@@ -78,6 +78,7 @@
 }
 
 .complaint-link {
+    cursor: pointer !important;
     font-style: italic;
     font-size: small;
     color: rgba(100, 100, 100, 0.5);
@@ -203,8 +204,7 @@
 .user-card {
     overflow: auto;
     text-align: start !important;
-    width: 10rem;
-    height: 8.5rem;
+    width: 11.5rem;
     margin: 1px;
     display: inline-block;
     padding: 1px 3px 1px 3px;
@@ -218,7 +218,7 @@
 }
 
 .posts-grid {
-    justify-content: space-between;
+    justify-content: space-around;
     padding: 1px;
     margin-bottom: 1rem;
     display: grid;
@@ -246,4 +246,41 @@
     padding: 5px 3px;
     border: 1px solid black;
     border-radius: 5px;
+}
+
+.stat-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 10rem;
+    height: 5rem;
+    border: black 1px solid;
+    margin: 1px;
+}
+
+.stat-card h6 {
+    font-size: small;
+    margin: 1px;
+}
+
+.post-link {
+    text-decoration: none;
+    color: black;
+}
+
+.post-link:hover {
+    color: #777f8d;
+}
+
+.post-body-input {
+    resize: none;
+    width: 100%;
+    min-height: 5rem;
+    overflow: hidden;
+}
+
+.post-body-input {
+    outline: none;
+    border: 2px inset #0b5ed7;
 }

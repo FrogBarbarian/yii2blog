@@ -14,6 +14,7 @@ class Get
 {
     /**
      * Данные из БД.
+     * @param string $object Тип объекта (posts, comments, users, etc.).
      * @param string $param Параметр для сортировки.
      * @param int $sort Тип сортировки.
      * @throws InvalidArgumentException

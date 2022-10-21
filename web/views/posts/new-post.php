@@ -51,7 +51,7 @@ $options = [
                 'id' => 'bodyInput',
                 'value' => $body,
                 'placeholder' => 'Содержание',
-                'style' => 'background-color: #f7f7f7;min-height: 50vh;',
+                'style' => 'background-color: #f7f7f7;min-height: 5vh;',
             ])->label(false) ?>
         <?= $activeForm->field($postInteractionsForm, 'tags', ['errorOptions' => ['class' => 'text-danger small']])
             ->hiddenInput([
@@ -61,7 +61,7 @@ $options = [
     <hr>
     <div class="input-group px-3">
         <span class="input-group-text">теги</span>
-        <input oninput="fillTagField(this)" type="text" class="form-control" id="tagField">
+        <input oninput="fillTagField(this)" type="text" autocomplete="off" class="form-control" id="tagField">
         <button onclick="addTag()" class="btn btn-outline-secondary" type="button">+</button>
     </div>
     <ul class="list-group px-3" id="suggestedTags"></ul>
@@ -72,4 +72,13 @@ $options = [
         </div>
     </div>
     <?php ActiveForm::end() ?>
+    <div style="border: 2px orange solid; min-height: 8rem;padding: 5px;">
+        <button>B</button>
+        <button>U</button>
+        <button>I</button>
+        <hr>
+        <div id="inputBody">
+            <span onclick="showInput(this)" style="border: 1px solid;cursor: pointer;display: block;min-height: 5rem"><?= $body ?></span>
+        </div>
+    </div>
 </div>

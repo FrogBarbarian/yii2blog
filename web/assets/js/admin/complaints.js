@@ -1,3 +1,6 @@
+/**
+ * Удаляет жалобу.
+ */
 function closeComplaint(id) {
     $.ajax({
         url: '/admin-u-i/delete-complaint',

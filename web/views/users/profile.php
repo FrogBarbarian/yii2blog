@@ -34,7 +34,7 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                         <h5 style="text-align: left">
                             <?= $user->getUsername() ?>
                             <span style="font-size: x-small"><?= !$isOwn ? ($user->getIsAdmin() ? '(администратор)' : '(пользователь)') : '' ?></span>
-                            <?= (!$isOwn && $visitor->getIsAdmin() && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : '' ?>
+                            <?= (!$isOwn && $visitor !== null && $visitor->getIsAdmin() && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : '' ?>
                         </h5>
                         <?= ConstructHtml::rating($statistics->getRating()) ?>
                     </div>
@@ -57,7 +57,7 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
         </div>
     </div>
 </div>
-<?php if (!$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()): ?>
+<?php if ($visitor !== null && !$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()): ?>
     <script src="../../assets/js/profile-admin.js"></script>
     <input type="hidden" id="userId" value="<?= $user->getId() ?>">
     <div class="admin-user-control">

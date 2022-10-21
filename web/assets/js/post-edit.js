@@ -90,3 +90,25 @@ function fillTagField(field) {
         }
     });
 }
+
+function edit(textarea) {
+    $('#textarea').css('height', textarea.scrollHeight + 'px');
+}
+
+function showInput(span) {
+    $('#inputBody').html(
+        '<textarea class="post-body-input" onfocus="edit(this)" onblur="hideInput(this)" oninput="edit(this)" name="" id="textarea">' +
+        span.innerHTML +
+        '</textarea>'
+    );
+    $('#textarea').focus();
+
+}
+
+function hideInput(textarea) {
+    $('#inputBody').html(
+        '<span onclick="showInput(this)" style="border: 1px solid;cursor: pointer;display: block;min-height: 5rem">' +
+        textarea.value +
+        '</span>'
+    );
+}

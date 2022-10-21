@@ -39,6 +39,7 @@ class PostInteractionsForm extends ActiveRecord
             [['title', 'body'], 'trim'],
             ['title', 'required', 'message' => 'Придумайте название поста'],
             ['tags', 'required', 'message' => 'Выберете как минимум 1 тег'],
+            ['title', 'unique', 'message' => 'Пост с таким именем уже существует'],
             [
                 'title',
                 'string',

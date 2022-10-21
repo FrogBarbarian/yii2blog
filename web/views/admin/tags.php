@@ -4,6 +4,8 @@
  * @var int $offset
  * @var int $pages
  * @var int $curPage
+ * @var string $sortParam
+ * @var int $sortOrder
  */
 
 declare(strict_types = 1);
@@ -18,7 +20,7 @@ echo AdminMenuWidget::widget(['amountUnusedTags' => count($unusedTags)]);
 <span class="admin-panel-header">Обзор тегов</span>
 <hr style="color: #14376c">
 <h6 >
-    Ниже представлен список всех сохраненных тегов, справа указанно количество использований.
+    На этой странице представлен список всех сохраненных тегов, справа указанно количество использований.
     Не использующиеся теги рекомендуется удалять.
 </h6>
 <?php if ($unusedTags !== []): ?>
@@ -45,13 +47,30 @@ echo AdminMenuWidget::widget(['amountUnusedTags' => count($unusedTags)]);
 <?php endif ?>
 <div class="sort-panel">
     <span style="padding-right: 10px">Сортировать по:</span>
-    <span class="sort" onclick="sort('id')">Новизне<span id="arrow_id" style="color: white">&darr;</span></span>
-    <span class="sort" onclick="sort('tag')">Алфавиту<span id="arrow_tag">&darr;</span></span>
-    <span class="sort" onclick="sort('amount_of_uses')">Количеству использований<span id="arrow_amount_of_uses">&darr;</span></span>
+    <span class="sort" onclick="sort('id')">
+        Новизне
+        <span id="arrow_id">
+            &darr;
+        </span>
+    </span>
+    <span class="sort" onclick="sort('tag')">
+        Алфавиту
+        <span id="arrow_tag">
+            &darr;
+        </span>
+    </span>
+    <span class="sort" onclick="sort('amount_of_uses')">
+        Количеству использований
+        <span id="arrow_amount_of_uses">
+            &darr;
+        </span>
+    </span>
     <?= AdminFilterOptionsWidget::widget([
         'offset' => $offset,
         'pages' => $pages,
         'curPage' => $curPage,
+        'sortParam' => $sortParam,
+        'sortOrder' => $sortOrder,
         'tab' => 'tags',
     ]) ?>
 <div class="my-3" id="objects"></div>
