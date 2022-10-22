@@ -273,14 +273,58 @@
     color: #777f8d;
 }
 
-.post-body-input {
-    resize: none;
-    width: 100%;
-    min-height: 5rem;
-    overflow: hidden;
+.post-body-input-group {
+    border: 2px #b4b4b4 solid;
+    border-radius: .5rem;
+    padding: 5px;
+}
+
+.toolbar button {
+    width: 30px;
+    height: 30px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.toolbar select {
+    height: 30px;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.toolbar select:hover {
+    background-color: grey;
+}
+
+.post-body-input-group button:hover {
+    background-color: grey;
+    transform: translateY(-1px);
+}
+
+.post-body-input-group button:active {
+    transform: translateY(2px);
 }
 
 .post-body-input {
-    outline: none;
-    border: 2px inset #0b5ed7;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 0.375rem;
+    width: 100%;
+    min-height: 50vh;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.post-body-input:focus {
+    cursor: text;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.post-body-quote {
+    border: solid 1px black;
+    margin: 10px;
+    min-height: 34px;
+    padding: 5px 10px;
+    color: #191919;
+}
+

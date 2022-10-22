@@ -93,7 +93,7 @@ use app\components\SearchWidget;
     </nav>
 </header>
 <div style="max-width: 960px;margin: auto">
-    <div class="py-1" style="padding-right:5%;padding-left:5%;background-color:rgba(0,0,0,0);">
+    <div class="py-1" style="background-color:rgba(0,0,0,0);">
         <?= $content ?? '' ?>
     </div>
     <div id="complaintZone"></div>

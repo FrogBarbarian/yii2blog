@@ -36,7 +36,9 @@ class StringService
             $position = mb_strlen($this->string);
             $ending = '';
         }
-        return mb_strimwidth($this->string, 0, $position) . $ending;
+        $this->string = mb_strimwidth($this->string, 0, $position) . $ending;
+
+        return HtmlPurifier::process($this->string);
     }
 
     /**
@@ -64,6 +66,8 @@ class StringService
      */
     public function prepareToSave(): string
     {
-        return HtmlPurifier::process(preg_replace('/\r\n/', '<br>', $this->string));
+        $this->string = preg_replace('/\r\n/', '<br>', $this->string);
+
+        return HtmlPurifier::process($this->string);
     }
 }

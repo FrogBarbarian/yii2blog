@@ -21,7 +21,7 @@ $session = Yii::$app->session;
     </div>
 <?php endif ?>
 <?php if ($posts): ?>
-    <div style="margin-left: 10%;margin-right: 10%;">
+    <div style="margin-left: 5%;margin-right: 5%;">
         <?php if ($pages > 1): ?>
             <nav>
                 <ul class="pagination">
@@ -94,11 +94,11 @@ $session = Yii::$app->session;
                             <?= $post->getTitle() ?>
                         </a>
                     </h5>
-                    <p class="card-text">
+                    <div class="card-text">
                         <a class="nav-link" href="/post?id=<?= $post->getId() ?>">
-                            <?= $post->getPreview($post->getBody(), 250, '') ?>
+                            <?= $post->getPreview($post->getBody(), 1000, '') ?>
                         </a>
-                    </p>
+                    </div>
                 </div>
                 <div class="hstack card-footer" style="font-size: small">
                     <?php if ($user !== null && !$user->getIsAdmin()): ?>
