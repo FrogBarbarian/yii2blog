@@ -96,7 +96,7 @@ use app\components\SearchWidget;
     <div class="py-1" style="background-color:rgba(0,0,0,0);">
         <?= $content ?? '' ?>
     </div>
-    <div id="complaintZone"></div>
+    <div id="modalDiv"></div>
 </div>
 <button onclick="goTop()" id="arrowTop" hidden>
     &#8593;

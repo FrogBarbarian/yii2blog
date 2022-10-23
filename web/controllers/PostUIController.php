@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\models\Tag;
+use app\models\UploadForm;
 use src\helpers\ConstructHtml;
 use app\models\Post;
 use app\models\Statistic;
+use yii\http\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -203,5 +205,42 @@ class PostUIController extends AppController
         }
 
         return $this->asJson($tags);
+    }
+
+    /**
+     * TODO: COMMENT
+     */
+    public function actionImageModal(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $uploadForm = new UploadForm();
+
+        return $this->renderAjax('@app/views/u-i/image-modal', ['uploadForm' => $uploadForm]);
+    }
+
+    /**
+     * TODO: do it
+     */
+    public function actionUploadImage(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $uploadForm = new UploadForm();
+//        $uploadForm->imageFile = UploadedFile::$size;
+
+        if ($uploadForm->upload()) {
+            return $this->goHome();
+        }
+
+        return $this->asJson([$uploadForm->imageFile, $uploadForm->upload(), $uploadForm->errors, $_FILES]);
     }
 }

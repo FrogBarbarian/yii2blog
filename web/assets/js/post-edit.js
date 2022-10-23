@@ -14,6 +14,15 @@ $(document).ready(function () {
 });
 
 /**
+ * Выделенный текст.
+ */
+let selection = null;
+/**
+ * Адрес выделения.
+ */
+let range = null;
+
+/**
  * Удаляет выбранный тег.
  */
 function removeTag(tag) {
@@ -98,6 +107,9 @@ function edit(textarea) {
     $('#bodyInput').val(textarea.innerHTML)
 }
 
+/**
+ * Вставляет форматированный текст.
+ */
 function formatting(type, showUI = false, value = null) {
     document.execCommand(type, showUI, value);
     $('#inputBody').focus();
@@ -157,6 +169,194 @@ $(window).keydown(function (event) {
     }
 })
 
+/**
+ * Создает блок цитат.
+ */
 function quote() {
     formatting('insertHTML', false, '<p class="post-body-quote"></p>');
+}
+
+/**
+ *  Жирный текст.
+ */
+function bold() {
+    formatting('bold');
+}
+
+/**
+ * Текст курсив.
+ */
+function italic() {
+    formatting('italic');
+}
+
+/**
+ * Подчеркнутый текст.
+ */
+function underline() {
+    formatting('underline');
+}
+
+/**
+ * Зачеркнутый текст.
+ */
+function strikethrough() {
+    formatting('strikethrough');
+}
+
+/**
+ * Текст в верхнем индексе.
+ */
+function superscript() {
+    formatting('superscript');
+}
+
+/**
+ * Текст в нижнем индексе.
+ */
+function subscript() {
+    formatting('subscript');
+}
+
+/**
+ * Маркированный список.
+ */
+function ul() {
+    formatting('insertUnorderedList');
+}
+
+/**
+ * Нумерованный список.
+ */
+function ol() {
+    formatting('insertOrderedList');
+}
+
+/**
+ * Горизонтальная линия.
+ */
+function hr() {
+    formatting('insertHorizontalRule');
+}
+
+/**
+ * Заголовок.
+ */
+function h5() {
+    formatting('formatBlock', false, 'h5');
+}
+
+/**
+ * Очищает форматирование.
+ */
+function clearFormat() {
+    formatting('removeFormat');
+}
+
+/**
+ * Создает ссылку.
+ */
+function createUrl() {
+    let text = document.getElementById('textUrlInput').value.trim();
+
+    if (text === '') {
+        alert('Текст ссылки не может быть пустым')
+
+        return false;
+    }
+
+    let url = document.getElementById('urlInput').value.trim();
+
+    if (url === '') {
+        alert('Ссылка не может быть пустой')
+
+        return false;
+    }
+
+    let html = '<a class="post-body-link" href="' +
+        url +
+        '">' +
+        text +
+        '</a>';
+    selection.addRange(range)
+    formatting('insertHtml', false, html);
+    selection = null;
+    range = null;
+    closeModalDiv();
+}
+
+/**
+ * Удаляет ссылку.
+ */
+function removeLink() {
+    let text = window.getSelection().toString();
+    formatting('unlink', false, text);
+    clearFormat();
+}
+
+/**
+ * Создает окно для вставки ссылки.
+ */
+function linkModal() {
+    selection = window.getSelection();
+    range = selection.getRangeAt(0)
+
+    $('#modalDiv').html(
+        '<div id="modalWindow" class="modal-window-back" tabindex="-1">' +
+        '<div class="modal-window">' +
+        '<div class="modal-window-header">' +
+        'Добавить ссылку' +
+        '<button type="button" class="btn-close" onclick="closeModalDiv()">' +
+        '</button>' +
+        '</div>' +
+        '<input id="textUrlInput" class="form-control mb-1" placeholder="Текст ссылки" value="' +
+        selection.toString() +
+        '">' +
+        '<input id="urlInput" class="form-control" placeholder="Вставьте ссылку">' +
+        '<div class="modal-window-footer">' +
+        '<button type="button" class="toolbar-button me-1" onclick="closeModalDiv()" style="width: auto; font-weight: lighter">' +
+        'Отмена' +
+        '</button>' +
+        '<button type="button" onclick="createUrl()" class="toolbar-button" style="width: auto; font-weight: lighter">' +
+        'Добавить ссылку' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    );
+}
+
+/**
+ * Создает окно для загрузки изображения.
+ */
+function imageModal() {
+    $.ajax({
+        url: '/post-u-i/image-modal',
+        cache: false,
+        type: 'post',
+        data: {_csrf: $('meta[name=csrf-token]').attr("content")},
+        success: function (response) {
+            $('#modalDiv').html(response);
+        }
+    });
+}
+
+//TODO: DO IT
+function uploadImage() {
+    let form = $('#uploadFileForm').serialize();
+    let data = {
+        _csrf: $('meta[name=csrf-token]').attr("content"),
+        ajax: {
+            formData: form,
+        }
+    }
+    $.ajax({
+        url: '/post-u-i/upload-image',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            console.log(response);
+        }
+    });
 }

@@ -28,7 +28,7 @@ window.addEventListener('scroll', function () {
 })
 
 /**
- * Создает окно жалобы.
+ * Создает модальное окно жалобы.
  * @param objectType Тип объекта.
  * @param objectId ID объекта.
  */
@@ -46,24 +46,24 @@ function createComplaint(objectType, objectId) {
         type: 'post',
         data: data,
         success: function (response) {
-            $('#complaintZone').html(response);
+            $('#modalDiv').html(response);
         }
     });
 }
 
 /**
- * Закрывает окно жалобы.
+ * Закрывает модальное окно.
  */
-function closeComplaintWindow() {
-    $('#complaintZone').html('');
+function closeModalDiv() {
+    $('#modalDiv').html('');
 }
 
 /**
- * Ловит нажатие кнопки Esc при открытом окне жалобы.
+ * Ловит нажатие кнопки Esc при открытом модальном окне.
  */
 window.onkeyup = function (e) {
-    const elementExists = document.getElementById("complaintWindow");
-    if (elementExists !== null && e.keyCode === 27) closeComplaintWindow();
+    const elementExists = document.getElementById("modalWindow");
+    if (elementExists !== null && e.keyCode === 27) closeModalDiv();
 }
 
 /**
