@@ -3,13 +3,15 @@
 declare(strict_types=1);
 
 namespace app\models;
-//TODO: DO IT
+
 use yii\base\Model;
-use yii\http\UploadedFile;
+use yii\web\UploadedFile;
 
 class UploadForm extends Model
 {
-    public $imageFile;
+    public ?UploadedFile $image = null;
+    public string $signature = '';
+    public string $imageName = '';
 
     /**
      * {@inheritDoc}
@@ -17,19 +19,21 @@ class UploadForm extends Model
     public function rules(): array
     {
         return [
-            ['imageFile', 'required'],
+            ['image', 'required', 'message' => 'Загрузите изображение'],
+            ['signature', 'required', 'message' =>  'Добавьте подпись'],
             [
-                'imageFile',
+                'image',
                 'image',
                 'extensions' => 'png, jpg',
-                ],
+            ],
         ];
     }
 
     public function upload(): bool
     {
         if ($this->validate()) {
-            $this->imageFile->saveAs('uploads/' . $this->imageFile->baseName . '.' . $this->imageFile->extension);
+            $this->imageName = time() . '.' . $this->image->extension;
+            $this->image->saveAs('uploads/' . $this->imageName);
 
             return true;
         } else {

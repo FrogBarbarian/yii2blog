@@ -343,20 +343,37 @@ function imageModal() {
 
 //TODO: DO IT
 function uploadImage() {
-    let form = $('#uploadFileForm').serialize();
-    let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
-        ajax: {
-            formData: form,
-        }
-    }
+    let form = $('#uploadImageForm');
+    let formData = new FormData(form[0]);
+    selection = window.getSelection();
+    range = selection.getRangeAt(0)
     $.ajax({
-        url: '/post-u-i/upload-image',
+        url: form.attr('action'),
+        type: form.attr('method'),
         cache: false,
-        type: 'post',
-        data: data,
+        processData: false,
+        contentType: false,
+        data: formData,
         success: function (response) {
-            console.log(response);
+            $('#imageErrorLabel').html('');
+            $('#signatureErrorLabel').html('');
+
+            if (Array.isArray(response)) {
+                closeModalDiv();
+                let html = '<img class="post-image" src="uploads/' +
+                    response[0] +
+                    '" alt="">' +
+                    response[1];
+                formatting('insertHtml', false, 'html');
+                selection = null;
+                range = null;
+            } else {
+                let errors = Object.entries(response);
+
+                errors.forEach((object) => {
+                    $('#' + object[0] + 'ErrorLabel').html(object[1]);
+                });
+            }
         }
     });
 }

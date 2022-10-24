@@ -15,6 +15,9 @@ return [
     'bootstrap' => [
         'log',
     ],
+    'aliases' => [
+        '@bower' => '@vendor/yidas/yii2-bower-asset/bower'
+    ],
     'vendorPath' => dirname(__DIR__, 2) . '/vendor',
     'components' => [
         'user' => [

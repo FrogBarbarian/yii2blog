@@ -85,7 +85,7 @@ echo AdminMenuWidget::widget();
     <div class="stat-card">
         <a href="/user?id=<?= $mostPostUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
-                ID: <?= $mostPostUser->getOwnerId() ?>
+                <?= $mostPostUser->getOwner() ?>
             </h6>
             Опубликовал больше всех постов (<?= $mostPostUser->getPosts() ?>)
         </a>
@@ -93,7 +93,7 @@ echo AdminMenuWidget::widget();
     <div class="stat-card">
         <a href="/user?id=<?= $mostCommentUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
-                ID: <?= $mostCommentUser->getOwnerId() ?>
+                <?= $mostCommentUser->getOwner() ?>
             </h6>
             Написал больше всех комментариев (<?= $mostCommentUser->getComments() ?>)
         </a>
@@ -101,7 +101,7 @@ echo AdminMenuWidget::widget();
     <div class="stat-card">
         <a href="/user?id=<?= $highestRatingUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
-                ID: <?= $highestRatingUser->getOwnerId() ?>
+                <?= $highestRatingUser->getOwner() ?>
             </h6>
             Высший рейтинг:  <?= ConstructHtml::rating($highestRatingUser->getRating()) ?>
         </a>
@@ -109,7 +109,7 @@ echo AdminMenuWidget::widget();
     <div class="stat-card">
         <a href="/user?id=<?= $lowestRatingUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
-                ID: <?= $lowestRatingUser->getOwnerId() ?>
+                <?= $lowestRatingUser->getOwner() ?>
             </h6>
             Низший рейтинг:  <?= ConstructHtml::rating($lowestRatingUser->getRating()) ?>
         </a>

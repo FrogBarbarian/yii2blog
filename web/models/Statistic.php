@@ -26,13 +26,21 @@ class Statistic extends ActiveRecord
     }
 
     /**
-     * Имя пользователя, за которым ведется статистика.
+     * Имя пользователя.
      */
     public function setOwner(string $owner): self
     {
         $this->setAttribute('owner', $owner);
 
         return $this;
+    }
+
+    /**
+     * @return string Имя пользователя.
+     */
+    public function getOwner(): string
+    {
+        return $this->getAttribute('owner');
     }
 
     /**

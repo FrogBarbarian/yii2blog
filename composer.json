@@ -24,8 +24,10 @@
     "ext-pdo": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
-    "yiisoft/yii2": "*",
-    "ezyang/htmlpurifier": "*"
+    "yidas/yii2-bower-asset": "~2.0.5",
+    "yiisoft/yii2": "2.0.13.1",
+    "yiisoft/yii2-bootstrap": "~2.0.0",
+    "kartik-v/yii2-widget-fileinput": "*"
   },
   "config": {
     "allow-plugins": true

@@ -15,7 +15,7 @@ class m220928_112607_add_columns_to_posts extends Migration
     public function up()
     {
         $posts = 'posts';
-        $postsTmp = 'posts_tmp';
+        $postsTmp = 'tmp_posts';
         $this->addColumn($posts, 'tags', $this->text()->notNull());
         $this->addColumn($posts, 'main_image', $this->string()->defaultValue(null));
         $this->addColumn($posts, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
@@ -30,7 +30,7 @@ class m220928_112607_add_columns_to_posts extends Migration
     public function down()
     {
         $posts = 'posts';
-        $postsTmp = 'posts_tmp';
+        $postsTmp = 'tmp_posts';
         $this->dropColumn($posts, 'tags');
         $this->dropColumn($posts, 'main_image');
         $this->dropColumn($posts, 'datetime');

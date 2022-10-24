@@ -8,6 +8,7 @@ use app\models\Comment;
 use app\models\CommentForm;
 use app\models\PostInteractionsForm;
 use app\models\Post;
+use app\models\Test;
 use app\models\TmpPost;
 use app\models\Statistic;
 use app\models\Tag;
@@ -16,6 +17,7 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\db\Exception;
 use Yii;
+use yii\web\UploadedFile;
 
 class PostsController extends AppController
 {

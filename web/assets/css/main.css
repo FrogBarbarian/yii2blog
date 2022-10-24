@@ -362,3 +362,13 @@
 .post-body-link:hover {
     color: grey;
 }
+
+.post-image {
+    display: block;
+    margin: auto;
+    max-width: 100%;
+}
+
+.post-image:hover {
+    max-width: calc(100% + 10px);
+}

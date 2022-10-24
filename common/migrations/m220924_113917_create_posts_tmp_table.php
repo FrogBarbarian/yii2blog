@@ -23,7 +23,7 @@ class m220924_113917_create_posts_tmp_table extends Migration
         ]);
         $this->addForeignKey(
             'pt_author_fk',
-            'posts_tmp',
+            'tmp_posts',
             'author',
             'users',
             'username',
@@ -35,7 +35,7 @@ class m220924_113917_create_posts_tmp_table extends Migration
      */
     public function down()
     {
-        $this->dropForeignKey('pt_author_fk', 'posts_tmp');
+        $this->dropForeignKey('pt_author_fk', 'tmp_posts');
         $this->dropTable('tmp_posts');
     }
 }

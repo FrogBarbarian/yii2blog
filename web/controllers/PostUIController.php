@@ -9,7 +9,7 @@ use app\models\UploadForm;
 use src\helpers\ConstructHtml;
 use app\models\Post;
 use app\models\Statistic;
-use yii\http\UploadedFile;
+use yii\web\UploadedFile;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -235,12 +235,15 @@ class PostUIController extends AppController
         }
 
         $uploadForm = new UploadForm();
-//        $uploadForm->imageFile = UploadedFile::$size;
+        $uploadForm->image = UploadedFile::getInstance($uploadForm, 'image');
+        $uploadForm->signature = $request->post('UploadForm')['signature'];
 
         if ($uploadForm->upload()) {
-            return $this->goHome();
+            // Изображение загружено
+
+            return $this->asJson([$uploadForm->imageName, $uploadForm->signature]);
         }
 
-        return $this->asJson([$uploadForm->imageFile, $uploadForm->upload(), $uploadForm->errors, $_FILES]);
+        return $this->asJson($uploadForm->errors);
     }
 }

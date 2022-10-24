@@ -7,7 +7,6 @@ namespace app\controllers;
 use app\models\Complaint;
 use app\models\ComplaintForm;
 use app\models\Post;
-use yii\helpers\VarDumper;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -58,6 +57,7 @@ class UIController extends AppController
     /**
      * Отправка жалобы.
      * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionSendComplaint(): Response
     {
