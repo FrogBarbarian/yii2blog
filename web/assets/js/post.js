@@ -14,7 +14,7 @@ $(document).ready(function () {
      */
     $('#commentsButton').click(function () {
         $.ajax({
-            url: '/comments-u-i/comment-rule',
+            url: '/post/comment-rule',
             cache: false,
             type: 'post',
             data: data,
@@ -101,7 +101,7 @@ function updatePostRating(data) {
 function updateCommentsAmount(data) {
     data['ajax']['curCommentsAmount'] = parseInt(document.getElementById('commentsAmount').textContent);
     $.ajax({
-        url: '/comments-u-i/update-comments-amount',
+        url: '/posts/update-comments-amount',
         cache: false,
         type: 'post',
         data: data,

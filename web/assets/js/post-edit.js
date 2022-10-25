@@ -1,6 +1,6 @@
 $(document).ready(function () {
     const tagsArea = $('#tagsArea');
-    const tagsString = $('#postinteractionsform-tags').val();
+    const tagsString = $('#posteditorform-tags').val();
     const tagsArray = tagsString.split('#');
     tagsArray.shift();
 
@@ -11,7 +11,51 @@ $(document).ready(function () {
             '</span>'
         );
     });
+
+    const options = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1,
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                buttonsPanel.removeAttribute('class');
+                buttonsPanel.style.removeProperty('left');
+                buttonsPanel.lastChild.remove();
+            } else {
+                buttonsPanel.className = 'absolute-buttons-panel';
+                let hideToolbarButton = document.createElement('button');
+                hideToolbarButton.className = 'toolbar-button';
+                hideToolbarButton.type = 'button';
+                hideToolbarButton.innerHTML = '&#10005;';
+                hideToolbarButton.title = 'Скрыть панель';
+                hideToolbarButton.onclick = () => {
+                    if (buttonsPanel.style.left !== '-20px') {
+                        hideToolbarButton.title = 'Показать панель';
+                        buttonsPanel.style.left = '-20px';
+                    } else {
+                        hideToolbarButton.title = 'Скрыть панель';
+                        buttonsPanel.style.left = '0px';
+                    }
+                }
+                buttonsPanel.appendChild(hideToolbarButton);
+            }
+
+        });
+    }, options);
+
+    const target = document.querySelector('#toolbar');
+    const buttonsPanel = document.querySelector('#buttons');
+    observer.observe(target);
+
+    let img = document.getElementById('inputBody').querySelectorAll('img');
+    img.forEach(img => {
+        startImages.push(img.src);
+    });
 });
+
 
 /**
  * Выделенный текст.
@@ -21,6 +65,10 @@ let selection = null;
  * Адрес выделения.
  */
 let range = null;
+/**
+ *  Изображения в посте, на момент открытия редактора.
+ */
+let startImages = [];
 
 /**
  * Удаляет выбранный тег.
@@ -48,7 +96,7 @@ function addTag(tag = '') {
     }
 
     const tagsArea = $('#tagsArea');
-    const tags = $('#postinteractionsform-tags');
+    const tags = $('#posteditorform-tags');
     tags.val(tags.val() + '#' + tag);
     tagsArea.html(
         tagsArea.html() +
@@ -112,9 +160,7 @@ function edit(textarea) {
  */
 function formatting(type, showUI = false, value = null) {
     document.execCommand(type, showUI, value);
-    $('#inputBody').focus();
-
-    return false;
+    document.getElementById('inputBody').focus();
 }
 
 /**
@@ -275,7 +321,7 @@ function createUrl() {
 
     let html = '<a class="post-body-link" href="' +
         url +
-        '">' +
+        '" target="_blank">' +
         text +
         '</a>';
     selection.addRange(range)
@@ -298,9 +344,7 @@ function removeLink() {
  * Создает окно для вставки ссылки.
  */
 function linkModal() {
-    selection = window.getSelection();
-    range = selection.getRangeAt(0)
-
+    setRange();
     $('#modalDiv').html(
         '<div id="modalWindow" class="modal-window-back" tabindex="-1">' +
         '<div class="modal-window">' +
@@ -327,9 +371,43 @@ function linkModal() {
 }
 
 /**
+ * Проверяет родительский элемент на соответствие.
+ */
+function checkParent(element) {
+    if (element.tagName === 'HTML') {
+        return false;
+    }
+
+    if (element.id === 'inputBody') {
+        return true;
+    }
+
+    return checkParent(element.parentElement);
+}
+
+/**
+ * Устанавливает диапазон выделения.
+ */
+function setRange() {
+    const inputBody = document.getElementById('inputBody');
+    selection = window.getSelection();
+    let anchor = selection.anchorNode;
+
+    if (checkParent(anchor) !== true) {
+        range = new Range();
+        range.setStart(inputBody, 0);
+        range.setEnd(inputBody, 0);
+    }
+
+    range = selection.getRangeAt(0);
+}
+
+
+/**
  * Создает окно для загрузки изображения.
  */
 function imageModal() {
+    setRange();
     $.ajax({
         url: '/post-u-i/image-modal',
         cache: false,
@@ -341,12 +419,12 @@ function imageModal() {
     });
 }
 
-//TODO: DO IT
+/**
+ * Добавляет изображение и подпись.
+ */
 function uploadImage() {
     let form = $('#uploadImageForm');
     let formData = new FormData(form[0]);
-    selection = window.getSelection();
-    range = selection.getRangeAt(0)
     $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),
@@ -360,11 +438,17 @@ function uploadImage() {
 
             if (Array.isArray(response)) {
                 closeModalDiv();
-                let html = '<img class="post-image" src="uploads/' +
+                let html = '<div class="post-image">' +
+                    '<img src="uploads/' +
                     response[0] +
                     '" alt="">' +
-                    response[1];
-                formatting('insertHtml', false, 'html');
+                    '<span>' +
+                    response[1] +
+                    '</span>' +
+                    '</div>' +
+                    '<br>';
+                selection.addRange(range);
+                formatting('insertHtml', false, html);
                 selection = null;
                 range = null;
             } else {
@@ -374,6 +458,51 @@ function uploadImage() {
                     $('#' + object[0] + 'ErrorLabel').html(object[1]);
                 });
             }
+        }
+    });
+}
+
+/**
+ * Отправляет пост на проверку.
+ */
+function submitPost() {
+    let img = document.getElementById('inputBody').querySelectorAll('img');
+    let endImages = [];
+    img.forEach(img => {
+        endImages.push(img.src);
+    });
+    const form = $('#postEditorForm');
+    const formData = new FormData(form[0]);
+    formData.append('startImages', startImages.toString());
+    formData.append('endImages', endImages.toString());
+    $.ajax({
+        url: form.attr('action'),
+        type: form.attr('method'),
+        cache: false,
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+            if (Array.isArray(response) === true) {
+                let id = response[1];
+                let url = id === null
+                    ? '/'
+                    : '/post?id=' + id;
+
+                return location.href = url;
+            }
+
+            document.querySelectorAll('[id$=ErrorLabel]').forEach(object => {
+                object.innerHTML = '';
+            });
+
+            let errors = Object.entries(response);
+
+            errors.forEach((object) => {
+                $('#' + object[0] + 'ErrorLabel').html(object[1]);
+            });
+
+            return false;
         }
     });
 }

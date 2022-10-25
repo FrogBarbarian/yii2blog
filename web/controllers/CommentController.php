@@ -5,225 +5,70 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\models\Comment;
+use app\models\CommentForm;
+use app\models\Post;
 use app\models\Statistic;
 use src\helpers\ConstructHtml;
-use Yii;
-use app\models\Post;
 use src\helpers\NormalizeData;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use Yii;
 
-/**
- * Отвечает за UI/UX при работе с комментариями.
- */
-class CommentsUIController extends AppController
+class CommentController extends AppController
 {
     /**
-     * Обновляет отображаемое количество комментариев.
-     * @throws NotFoundHttpException
+     * Добавляет комментарий к посту.
+     * @throws \Throwable
      */
-    public function actionUpdateCommentsAmount(): Response
+    public
+    function actionAddComment(): Response
     {
         $request = Yii::$app->getRequest();
 
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+        if (!$request->getIsAjax()) {
             throw new NotFoundHttpException();
         }
 
-        $postId = (int)$request->post('ajax')['postId'];
-        $curCommentsAmount = (int)$request->post('ajax')['curCommentsAmount'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-        $postCommentsAmount = $post->getCommentsAmount();
+        $commentForm = new CommentForm();
 
-        if ($postCommentsAmount == $curCommentsAmount) {
+        if ($commentForm->load($request->post()) && $commentForm->validate()) {
+            $postId = (int)$request->post('CommentForm')['postId'];
+            $post = Post::find()
+                ->byId($postId)
+                ->one();
+            $user = Yii::$app
+                ->user
+                ->getIdentity();
+
+            if (!$user->getCanComment() || !$post->getIsCommentable()) {
+                $commentForm->addError(
+                    'comment',
+                    'Что-то пошло не так, попробуйте обновить страницу'
+                );
+                return $this->asJson($commentForm->errors);
+            }
+
+            $comment = new Comment();
+            $comment
+                ->setPostId($post->getId())
+                ->setAuthor($user->getUsername())
+                ->setAuthorId($user->getId())
+                ->setComment($commentForm->comment)
+                ->save();
+            $userStatistics = Statistic::find()
+                ->byUsername($user->getUsername())
+                ->one();
+            $userStatistics
+                ->increaseComments()
+                ->save();
+            $post
+                ->increaseCommentsAmount()
+                ->save();
+
             return $this->asJson(false);
         }
 
-        $wordForm = NormalizeData::wordForm(
-            $postCommentsAmount, 'комментариев',
-            'комментарий',
-            'комментария',
-        );
-
-        return $this->asJson("$postCommentsAmount $wordForm");
-    }
-
-    /**
-     * Конструирует комментарии, еще не отрисованные на странице.
-     * @throws NotFoundHttpException
-     */
-    public function actionAppendComments(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $postId = (int)$request->post('ajax')['postId'];
-        $curCommentsAmount = (int)$request->post('ajax')['curCommentsAmount'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-        $postCommentsAmount = $post->getCommentsAmount();
-
-        if ($postCommentsAmount == $curCommentsAmount) {
-            return $this->asJson(false);
-        }
-
-        $diff = $postCommentsAmount - $curCommentsAmount;
-        $comments = Comment::find()
-            ->byPostId($postId)
-            ->orderDescById()
-            ->limit($diff)
-            ->all();
-
-        return $this->asJson(ConstructHtml::comments($comments));
-    }
-
-
-    /**
-     * Запрещает/разрешает комментирование поста.
-     * @throws NotFoundHttpException
-     */
-    public function actionCommentRule(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $postId = (int)$request->post('ajax')['postId'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-        $post
-            ->setIsCommentable(!$post->getisCommentable())
-            ->save();
-        $isCommentable = $post->getIsCommentable();
-
-        return $this->asJson($isCommentable);
-    }
-
-    /**
-     * Добавляет комментарию лайк.
-     * @throws NotFoundHttpException
-     */
-    public function actionLikeComment(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $commentId = (int)$request->post('ajax')['commentId'];
-        $userId = Yii::$app
-            ->user
-            ->getId();
-        $comment = Comment::find()
-            ->byId($commentId)
-            ->one();
-        $ownerStatistics = Statistic::find()
-            ->byUsername($comment->getAuthor())
-            ->one();
-
-        if ($comment->isUserAlreadyDislikedComment($userId)) {
-            $comment
-                ->decreaseDislikes()
-                ->removeDislikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->decreaseDislikes()
-                ->save();
-        }
-
-        if ($comment->isUserAlreadyLikedComment($userId)) {
-            $comment
-                ->decreaseLikes()
-                ->removeLikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->decreaseLikes()
-                ->save();
-        } else {
-            $comment
-                ->increaseLikes()
-                ->addLikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->increaseLikes()
-                ->save();
-        }
-
-        $ownerStatistics
-            ->updateRating();
-        $comment
-            ->updateRating();
-
-        return $this->asJson(ConstructHtml::rating($comment->getRating()));
-    }
-
-    /**
-     * Добавляет комментарию лайк.
-     * @throws NotFoundHttpException
-     */
-    public function actionDislikeComment(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $commentId = (int)$request->post('ajax')['commentId'];
-        $userId = Yii::$app
-            ->user
-            ->getId();
-        $comment = Comment::find()
-            ->byId($commentId)
-            ->one();
-        $ownerStatistics = Statistic::find()
-            ->byUsername($comment->getAuthor())
-            ->one();
-
-        if ($comment->isUserAlreadyLikedComment($userId)) {
-            $comment
-                ->decreaseLikes()
-                ->removeLikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->decreaseLikes()
-                ->save();
-        }
-
-        if ($comment->isUserAlreadyDislikedComment($userId)) {
-            $comment
-                ->decreaseDislikes()
-                ->removeDislikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->decreaseDislikes()
-                ->save();
-        } else {
-            $comment
-                ->increaseDislikes()
-                ->addDislikedByUserId($userId)
-                ->save();
-            $ownerStatistics
-                ->increaseDislikes()
-                ->save();
-        }
-
-        $ownerStatistics
-            ->updateRating();
-        $comment
-            ->updateRating();
-
-        return $this->asJson(ConstructHtml::rating($comment->getRating()));
+        return $this->asJson($commentForm->errors);
     }
 
     /**
@@ -292,5 +137,156 @@ class CommentsUIController extends AppController
         }
 
         return $this->asJson(false);
+    }
+
+    /**
+     * Добавляет комментарию лайк.
+     * @throws NotFoundHttpException
+     */
+    public function actionLikeComment(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentId = (int)$request->post('ajax')['commentId'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $ownerStatistics = Statistic::find()
+            ->byUsername($comment->getAuthor())
+            ->one();
+
+        if ($comment->isUserAlreadyDislikedComment($userId)) {
+            $comment
+                ->decreaseDislikes()
+                ->removeDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseDislikes()
+                ->save();
+        }
+
+        if ($comment->isUserAlreadyLikedComment($userId)) {
+            $comment
+                ->decreaseLikes()
+                ->removeLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseLikes()
+                ->save();
+        } else {
+            $comment
+                ->increaseLikes()
+                ->addLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->increaseLikes()
+                ->save();
+        }
+
+        $ownerStatistics
+            ->updateRating();
+        $comment
+            ->updateRating();
+
+        return $this->asJson(ConstructHtml::rating($comment->getRating()));
+    }
+
+    /**
+     * Добавляет комментарию дизлайк.
+     * @throws NotFoundHttpException
+     */
+    public function actionDislikeComment(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentId = (int)$request->post('ajax')['commentId'];
+        $userId = Yii::$app
+            ->user
+            ->getId();
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $ownerStatistics = Statistic::find()
+            ->byUsername($comment->getAuthor())
+            ->one();
+
+        if ($comment->isUserAlreadyLikedComment($userId)) {
+            $comment
+                ->decreaseLikes()
+                ->removeLikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseLikes()
+                ->save();
+        }
+
+        if ($comment->isUserAlreadyDislikedComment($userId)) {
+            $comment
+                ->decreaseDislikes()
+                ->removeDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->decreaseDislikes()
+                ->save();
+        } else {
+            $comment
+                ->increaseDislikes()
+                ->addDislikedByUserId($userId)
+                ->save();
+            $ownerStatistics
+                ->increaseDislikes()
+                ->save();
+        }
+
+        $ownerStatistics
+            ->updateRating();
+        $comment
+            ->updateRating();
+
+        return $this->asJson(ConstructHtml::rating($comment->getRating()));
+    }
+
+    /**
+     * Конструирует комментарии, еще не отрисованные на странице.
+     * @throws NotFoundHttpException
+     */
+    public function actionAppendComments(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $postId = (int)$request->post('ajax')['postId'];
+        $curCommentsAmount = (int)$request->post('ajax')['curCommentsAmount'];
+        $post = Post::find()
+            ->byId($postId)
+            ->one();
+        $postCommentsAmount = $post->getCommentsAmount();
+
+        if ($postCommentsAmount == $curCommentsAmount) {
+            return $this->asJson(false);
+        }
+
+        $diff = $postCommentsAmount - $curCommentsAmount;
+        $comments = Comment::find()
+            ->byPostId($postId)
+            ->orderDescById()
+            ->limit($diff)
+            ->all();
+
+        return $this->asJson(ConstructHtml::comments($comments));
     }
 }

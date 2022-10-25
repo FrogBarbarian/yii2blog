@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\models\Post;
-use app\models\PostInteractionsForm;
+use app\models\PostEditorForm;
 use app\models\TmpPost;
 use app\models\Statistic;
 use app\models\User;
@@ -288,7 +288,7 @@ class AdminController extends AppController
         if (!$post->getIsNew()) {
             $originalPost = Post::find()->byId($post->getUpdateId())->one();
         }
-        $model = new PostInteractionsForm();
+        $model = new PostEditorForm();
 
         return $this->render('user-post', [
             'post' => $post,
@@ -307,7 +307,7 @@ class AdminController extends AppController
      */
     public function actionConfirm(): Response
     {
-        $id = $_POST['PostInteractionsForm']['id'] ?? null;
+        $id = $_POST['PostEditorForm']['id'] ?? null;
         if ($id !== null) {
             $postTmp = TmpPost::find()->byId($id)->one();
             if ($postTmp !== null) {

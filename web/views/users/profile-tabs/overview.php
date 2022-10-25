@@ -149,7 +149,6 @@ use src\helpers\NormalizeData;
         <?= $postsTmp ? 'Посты для проверки' : 'Постов для проверки нет' ?>
         <span class="badge bg-primary rounded-pill"><?= $postsTmp ? count($postsTmp) : '' ?></span>
     </li>
-    <!--TODO: Добавить функционал жалоб-->
     <li class="list-group-item d-flex justify-content-between align-items-center">
         <?= $complaints ? 'Жалобы пользователей' : 'Жалоб пользователей нет' ?>
         <span class="badge bg-primary rounded-pill"><?= $complaints ? count($complaints) : '' ?></span>

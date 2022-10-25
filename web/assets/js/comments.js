@@ -15,7 +15,7 @@ $(document).ready(function () {
         let form = $('#comment-form');
         let formData = form.serialize();
         $.ajax({
-            url: '/posts/add-comment',
+            url: form.attr('action'),
             cache: false,
             type: 'post',
             data: formData,
@@ -57,7 +57,7 @@ function likeComment(id) {
         },
     };
     $.ajax({
-        url: '/comments-u-i/like-comment',
+        url: '/comments/like-comment',
         cache: false,
         type: 'post',
         data: data,
@@ -80,7 +80,7 @@ function dislikeComment(id) {
         },
     };
     $.ajax({
-        url: '/comments-u-i/dislike-comment',
+        url: '/comments/dislike-comment',
         cache: false,
         type: 'post',
         data: data,
@@ -98,7 +98,7 @@ function updateComments(data) {
     let comments = document.getElementById('comments');
     data['ajax']['curCommentsAmount'] = comments.getElementsByTagName('li').length;
     $.ajax({
-        url: '/comments-u-i/append-comments',
+        url: '/comment/append-comments',
         cache: false,
         type: 'post',
         data: data,
@@ -118,13 +118,13 @@ function updateComments(data) {
  */
 function updateCommentRatingButtons(data, id) {
     $.ajax({
-        url: '/comments-u-i/update-comment-rating-buttons',
+        url: '/comment/update-comment-rating-buttons',
         cache: false,
         type: 'post',
         data: data,
         success: function (response) {
-            likeImg = document.getElementById('commentLike' + id);
-            dislikeImg = document.getElementById('commentDislike' + id);
+            let likeImg = document.getElementById('commentLike' + id);
+            let dislikeImg = document.getElementById('commentDislike' + id);
 
             if (response[0] === true) {
                 likeImg.src = '/assets/images/liked.svg';
@@ -151,9 +151,9 @@ function updateCommentRating(token) {
     }
     let commentBlock = document.getElementById('comments');
     let commentsRatingElements = commentBlock.querySelectorAll('div.comment-rating');
-    var comments = [];
+    let comments = [];
 
-    for (i = 0; i < commentsRatingElements.length; i++) {
+    for (let i = 0; i < commentsRatingElements.length; i++) {
         comments.push({
             id: parseInt(commentsRatingElements[i].id.match(/\d+/)),
             rating: commentsRatingElements[i].textContent,
@@ -162,7 +162,7 @@ function updateCommentRating(token) {
 
     data['ajax'].comments = comments;
     $.ajax({
-        url: '/comments-u-i/comments-update-rating',
+        url: '/comment/comments-update-rating',
         cache: false,
         type: 'post',
         data: data,

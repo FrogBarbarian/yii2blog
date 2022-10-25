@@ -1,6 +1,6 @@
 <?php
 /** @var \app\models\TmpPost $post */
-/** @var \app\models\PostInteractionsForm $model */
+/** @var \app\models\PostEditorForm $model */
 
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;

@@ -7,7 +7,7 @@ namespace app\models;
 use src\services\StringService;
 use yii\db\ActiveRecord;
 
-class PostInteractionsForm extends ActiveRecord
+class PostEditorForm extends ActiveRecord
 {
     /**
      * @var string Название.
@@ -21,6 +21,10 @@ class PostInteractionsForm extends ActiveRecord
      * @var string Теги.
      */
     public string $tags = '';
+    /**
+     * @var bool
+     */
+    public bool $isNew = true;
 
     /**
      * {@inheritDoc}
@@ -39,7 +43,7 @@ class PostInteractionsForm extends ActiveRecord
             [['title', 'body'], 'trim'],
             ['title', 'required', 'message' => 'Придумайте название поста'],
             ['tags', 'required', 'message' => 'Выберете как минимум 1 тег'],
-            ['title', 'unique', 'message' => 'Пост с таким именем уже существует'],
+            ['title', 'checkNameIfPostIsNew'],
             [
                 'title',
                 'string',
@@ -65,9 +69,23 @@ class PostInteractionsForm extends ActiveRecord
      */
     private function fieldLength(string $field): int
     {
-        $attribute = $_POST['PostInteractionsForm'][$field] ?? '';
+        $attribute = $_POST['PostEditorForm'][$field] ?? '';
 
         return (new StringService($attribute))
         ->getLength();
+    }
+
+    /**
+     * Проверка на уникальность имени, если пост новый.
+     */
+    public function checkNameIfPostIsNew()
+    {
+        if ($this->isNew) {
+            $post = self::find()->where(['ILIKE', 'title', $this->title])->one();
+
+            if ($post !== null) {
+                $this->addError('title', 'Пост с таким именем уже существует');
+            }
+        }
     }
 }

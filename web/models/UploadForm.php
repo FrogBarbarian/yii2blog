@@ -17,7 +17,7 @@ class UploadForm extends Model
      * {@inheritDoc}
      */
     public function rules(): array
-    {
+    {//TODO: Параметры загружаемых изображений
         return [
             ['image', 'required', 'message' => 'Загрузите изображение'],
             ['signature', 'required', 'message' =>  'Добавьте подпись'],

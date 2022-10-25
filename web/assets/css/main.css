@@ -363,12 +363,23 @@
     color: grey;
 }
 
-.post-image {
-    display: block;
+.post-image img {
+    width: 100%;
     margin: auto;
-    max-width: 100%;
+    display: block;
 }
 
-.post-image:hover {
-    max-width: calc(100% + 10px);
+.post-image span {
+    color: grey;
+    font-size: smaller;
+}
+
+.absolute-buttons-panel {
+    position: fixed;
+    top: 10%;
+    left: 0;
+    width: 40px;
+    z-index: 10000;
+    background-color: rgba(128, 128, 128, 0.5);
+    padding: 5px;
 }

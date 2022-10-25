@@ -1,19 +1,25 @@
 <?php
-/** @var \app\models\PostInteractionsForm $postInteractionsForm */
+/**
+ * @var \app\models\PostEditorForm $postEditorForm
+ * @var \app\models\Post $post
+ */
 
-/** @var \app\models\Post $post */
+declare(strict_types=1);
 
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
+$id = null;
 $isEdit = isset($post);
-if (isset($_POST['PostInteractionsForm'])) {
-    $title = $_POST['PostInteractionsForm']['title'];
-    $body = $_POST['PostInteractionsForm']['body'];
-    $tags = $_POST['PostInteractionsForm']['tags'];
+if (isset($_POST['PostEditorForm'])) {
+    $title = $_POST['PostEditorForm']['title'];
+    $body = $_POST['PostEditorForm']['body'];
+    $tags = $_POST['PostEditorForm']['tags'];
 } elseif ($isEdit) {
     $title = $post->getTitle();
     $body = $post->getBody();
     $tags = $post->getTags();
+    $id = $post->getId();
 } else {
     $title = '';
     $body = '';
@@ -22,7 +28,7 @@ if (isset($_POST['PostInteractionsForm'])) {
 $this->title = $isEdit ? 'Редактирование' : 'Новый пост';
 $options = [
     'options' => ['class' => 'form-floating mb-2'],
-    'errorOptions' => ['class' => 'text-danger small'],
+    'errorOptions' => ['class' => 'text-danger small', 'id' => 'titleErrorLabel'],
     'template' => "{input}\n{label}\n{error}",
 ];
 ?>
@@ -34,11 +40,12 @@ $options = [
         Рекомендуется использовать не более 5 тегов и не менее 2. <br>
         Остальные правила - бла бла бла бла.
     </div>
-    <?php $activeForm = ActiveForm::begin([
-        'id' => 'new-post-form',
+    <?php $form = ActiveForm::begin([
+        'id' => 'postEditorForm',
+        'action' => Url::to(['/post-editor/save', 'id' => $id]),
     ]) ?>
     <div class="card-body">
-        <?= $activeForm->field($postInteractionsForm, 'title', $options)
+        <?= $form->field($postEditorForm, 'title', $options)
             ->input('text', [
                 'class' => 'form-control',
                 'id' => 'titleInput',
@@ -46,7 +53,8 @@ $options = [
                 'placeholder' => 'title',
             ])->label('Название', ['class' => false]) ?>
         <div class="post-body-input-group">
-            <div>
+            <div id="toolbar">
+                <div id="buttons">
                 <button class="toolbar-button" type="button" onclick="bold()" title="Жирный (ctrl+b)">
                     <img src="<?= IMAGES ?>/post-toolbar/button-bold.svg" alt="bold">
                 </button>
@@ -92,11 +100,7 @@ $options = [
                 <button class="toolbar-button" type="button" onclick="imageModal()" title="Добавить изображение">
                     <img src="<?= IMAGES ?>/post-toolbar/button-image.svg" alt="add image">
                 </button>
-                <!--
-                TODO: Изображение
-                var url = prompt('Введите адрес изображения', 'https://snipp.ru/demo/526/image.jpg');
-                document.execCommand('insertImage', false, url);
-                -->
+                </div>
             </div>
             <hr>
             <div class="form-floating">
@@ -107,11 +111,11 @@ $options = [
             </div>
 
         </div>
-        <?= $activeForm->field($postInteractionsForm, 'body', ['errorOptions' => ['class' => 'text-danger small']])
+        <?= $form->field($postEditorForm, 'body', ['errorOptions' => ['class' => 'text-danger small', 'id' => 'bodyErrorLabel']])
             ->hiddenInput([
                 'id' => 'bodyInput',
                 'value' => $body,
-            ]) ?>
+            ])->label(false) ?>
         <hr>
         <div class="input-group">
             <span class="input-group-text">теги</span>
@@ -120,14 +124,14 @@ $options = [
         </div>
         <ul class="list-group" id="suggestedTags"></ul>
         <div class="my-3" id="tagsArea"></div>
-        <?= $activeForm->field($postInteractionsForm, 'tags', ['errorOptions' => ['class' => 'text-danger small']])
+        <?= $form->field($postEditorForm, 'tags', ['errorOptions' => ['class' => 'text-danger small', 'id' => 'tagsErrorLabel']])
             ->hiddenInput([
                 'value' => $tags,
-            ]) ?>
+            ])->label(false) ?>
     </div>
     <div class="card-footer">
         <div>
-            <input type="submit" class="btn btn-outline-dark" value="Опубликовать">
+            <input type="button" onclick="submitPost()" class="btn btn-outline-dark" value="Опубликовать">
         </div>
     </div>
     <?php ActiveForm::end() ?>

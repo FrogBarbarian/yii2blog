@@ -9,7 +9,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 ?>
-<!--TODO: DO IT-->
+<!--TODO: Предпросмотр фото, дизайн окна-->
 <div id="modalWindow" class="modal-window-back" tabindex="-1">
     <div class="modal-window">
         <div class="modal-window-header">

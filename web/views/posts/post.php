@@ -30,9 +30,9 @@ if ($visitorIsLogin) {
 <script src="../../assets/js/comments.js"></script>
 <input type="hidden" id="postId" value="<?= $post->getId() ?>">
 <div class="mx-3 py-2">
-    <?php if (Yii::$app->session->hasFlash('postAlreadyUpdated')): ?>
+    <?php if (Yii::$app->session->hasFlash('postFlash')): ?>
         <div class="alert alert-warning rounded-4" role="alert">
-            <?= Yii::$app->session->getFlash('postAlreadyUpdated') ?>
+            <?= Yii::$app->session->getFlash('postFlash') ?>
         </div>
     <?php endif ?>
     <div class="card mx-auto rounded-0">
@@ -195,8 +195,7 @@ if ($visitorIsLogin) {
                 ],
                 'enableAjaxValidation' => true,
                 'validateOnType' => true,
-                'action' => Url::to('/posts/add-comment'),
-                'validationUrl' => Url::to('/posts/add-comment'),
+                'action' => Url::to('/comment/add-comment'),
             ]) ?>
             <?= $activeForm
                 ->field($commentForm, 'comment', $options)
