@@ -49,11 +49,6 @@ $(document).ready(function () {
     const target = document.querySelector('#toolbar');
     const buttonsPanel = document.querySelector('#buttons');
     observer.observe(target);
-
-    let img = document.getElementById('inputBody').querySelectorAll('img');
-    img.forEach(img => {
-        startImages.push(img.src);
-    });
 });
 
 
@@ -397,9 +392,13 @@ function setRange() {
         range = new Range();
         range.setStart(inputBody, 0);
         range.setEnd(inputBody, 0);
+
+        return false;
     }
 
     range = selection.getRangeAt(0);
+
+    return true;
 }
 
 

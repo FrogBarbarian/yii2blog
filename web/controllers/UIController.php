@@ -47,7 +47,7 @@ class UIController extends AppController
         $objectId = $request->post('ajax')['objectId'];
 
 
-        return $this->renderAjax('complaint-window', [
+        return $this->renderAjax('complaint-modal', [
             'complaintForm' => $complaintForm,
             'objectType' => $objectType,
             'objectId' => $objectId,

@@ -26,7 +26,7 @@ use src\helpers\NormalizeData;
 
 echo AdminMenuWidget::widget();
 ?>
-<span class="admin-panel-header">Обзор</span>
+<span class="admin-panel-header">Статистика</span>
 <hr style="color: #14376c">
 <h5>Статистика постов</h5>
 <div class="mb-3" style="justify-content: space-around;display: grid;grid-template-columns: repeat(auto-fill, 10rem);">

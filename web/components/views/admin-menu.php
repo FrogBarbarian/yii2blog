@@ -17,7 +17,7 @@ $this->title = 'Панель администратора';
         <ul class="nav nav-pills flex-column mb-auto">
             <li>
                 <a href="<?= ADMIN_PANEL ?>" class="nav-link text-white me-2">
-                    Обзор
+                    Статистика
                 </a>
             </li>
             <li>

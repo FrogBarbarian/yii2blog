@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace app\components;
 
-use Psr\SimpleCache\InvalidArgumentException;
 use src\helpers\Get;
 use yii\base\Widget;
 
@@ -19,7 +18,6 @@ class AdminMenuWidget extends Widget
 
     /**
      * {@inheritDoc}
-     * @throws InvalidArgumentException
      */
     public function init()
     {

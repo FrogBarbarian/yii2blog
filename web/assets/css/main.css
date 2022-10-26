@@ -346,13 +346,13 @@
 .modal-window-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
 }
 
 .modal-window-footer {
     display: flex;
     justify-content: end;
-    margin-top: 1rem;
+    margin-top: .5rem;
 }
 
 .post-body-link {
@@ -382,4 +382,17 @@
     z-index: 10000;
     background-color: rgba(128, 128, 128, 0.5);
     padding: 5px;
+}
+
+.div-input {
+    word-break: break-all;
+    border: black 1px solid;
+    max-width: 100%;
+    min-height: 72px;
+    margin: .5rem 0;
+    padding: 0 5px;
+}
+
+.div-input:focus {
+    outline: rgba(128, 128, 128, 0.5) 2px solid;
 }
