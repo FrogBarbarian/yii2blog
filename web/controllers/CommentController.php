@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\components\CommentWidget;
 use app\models\Comment;
 use app\models\CommentForm;
 use app\models\Post;
 use app\models\Statistic;
 use src\helpers\ConstructHtml;
-use src\helpers\NormalizeData;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -281,12 +281,18 @@ class CommentController extends AppController
         }
 
         $diff = $postCommentsAmount - $curCommentsAmount;
+        $user = Yii::$app->user->getIdentity();
         $comments = Comment::find()
             ->byPostId($postId)
             ->orderDescById()
             ->limit($diff)
             ->all();
+        $html = '';
 
-        return $this->asJson(ConstructHtml::comments($comments));
+        foreach ($comments as $comment) {
+            $html .= CommentWidget::widget(['user' => $user, 'comment' => $comment]);
+        }
+
+        return $this->asJson($html);
     }
 }

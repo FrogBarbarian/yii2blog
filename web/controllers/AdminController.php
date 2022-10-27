@@ -9,7 +9,6 @@ use app\models\PostEditorForm;
 use app\models\TmpPost;
 use app\models\Statistic;
 use app\models\User;
-use Psr\SimpleCache\InvalidArgumentException;
 use src\helpers\Get;
 use Yii;
 use yii\db\Exception;
@@ -22,7 +21,6 @@ class AdminController extends AppController
     /**
      * Вкладка со статистикой сайта в админ-панели.
      * @throws \Throwable
-     * @throws InvalidArgumentException
      */
     public function actionIndex(): string
     {
@@ -127,7 +125,6 @@ class AdminController extends AppController
     /**
      * Вкладка с постами пользователей в админ-панели.
      * @throws \Throwable
-     * @throws InvalidArgumentException
      */
     public function actionPosts(): string
     {
@@ -150,7 +147,6 @@ class AdminController extends AppController
     /**
      * Вкладка с тегами в админ-панели.
      * @throws \Throwable
-     * @throws InvalidArgumentException
      */
     public function actionTags(string $offset = '0', string $page = '1', string $sortParam = 'id', string $sortOrder = '4'): string
     {
@@ -193,7 +189,6 @@ class AdminController extends AppController
 
     /**
      * Вкладка с жалобами пользователей в админ-панели.
-     * @throws InvalidArgumentException
      * @throws \Throwable
      */
     public function actionComplaints(): string

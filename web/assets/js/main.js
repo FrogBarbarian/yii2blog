@@ -1,5 +1,6 @@
 let url = (new URL(document.location));
 let getParams = url.searchParams;
+const token = $('meta[name=csrf-token]').attr("content");
 
 /**
  * Открывает страницу с рандомным постом.
@@ -34,7 +35,7 @@ window.addEventListener('scroll', function () {
  */
 function createComplaint(objectType, objectId) {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
+        _csrf: token,
         ajax: {
             objectType: objectType,
             objectId: objectId,

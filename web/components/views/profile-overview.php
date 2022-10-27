@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var bool $isOwn
  * @var \app\models\User $user
  * @var \app\models\User $visitor
  * @var \app\models\Statistic $statistics
  * @var \app\models\Post[] $posts
- * @var \app\models\TmpPost[] $postsTmp
+ * @var \app\models\TmpPost[] $tmpPosts
  * @var \app\models\Complaint[] $complaints
  */
 
@@ -88,11 +91,11 @@ use src\helpers\NormalizeData;
 <?php endif ?>
 
 <?php if ($isOwn): ?>
-    <?php if ($postsTmp && !$user->getIsAdmin()): ?>
+    <?php if ($tmpPosts && !$user->getIsAdmin()): ?>
 <hr>
     <h5 class="text-center">Посты, ожидающие проверки администрацией.</h5>
 <div class="list-group">
-    <?php foreach ($postsTmp as $postTmp): ?>
+    <?php foreach ($tmpPosts as $postTmp): ?>
     <!--TODO: Ссылка на tmp пост-->
     <a href="#" class="list-group-item list-group-item-action">
         <?= $postTmp->getTitle() ?>
@@ -146,8 +149,8 @@ use src\helpers\NormalizeData;
     <h5 class="text-center">Админский функционал</h5>
 <ul class="list-group mb-1">
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        <?= $postsTmp ? 'Посты для проверки' : 'Постов для проверки нет' ?>
-        <span class="badge bg-primary rounded-pill"><?= $postsTmp ? count($postsTmp) : '' ?></span>
+        <?= $tmpPosts ? 'Посты для проверки' : 'Постов для проверки нет' ?>
+        <span class="badge bg-primary rounded-pill"><?= $tmpPosts ? count($tmpPosts) : '' ?></span>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         <?= $complaints ? 'Жалобы пользователей' : 'Жалоб пользователей нет' ?>

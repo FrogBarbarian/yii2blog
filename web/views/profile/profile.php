@@ -5,8 +5,15 @@
  * @var \app\models\Statistic $statistics
  * @var bool $isOwn
  * @var string $tab
+ * @var \app\models\Post[] $posts
+ * @var \app\models\TmpPost[] $tmpPosts
+ * @var \app\models\Complaint[] $complaints
+ * @var \app\models\Message[] $messages
  */
 
+use app\components\ProfileMailboxWidget;
+use app\components\ProfileOverviewWidget;
+use app\components\ProfileSettingsWidget;
 use src\helpers\ConstructHtml;
 
 $this->title = $isOwn ? 'Профиль' : $user->getUsername();
@@ -18,10 +25,10 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
         <?php if ($isOwn): ?>
             <div class="col-2">
                 <div class="list-group list-group-horizontal mb-1">
-                    <a class="list-group-item list-group-item-action <?= ($tab !== 'pm' && $tab !== 'settings') ? 'active' : '' ?>"
-                       id="list-home-list" href="?tab=overview">Профиль</a>
-                    <a class="list-group-item list-group-item-action <?= $tab === 'pm' ? 'active' : '' ?>"
-                       id="list-messages-list" href="?tab=pm">Сообщения</a>
+                    <a class="list-group-item list-group-item-action <?= ($tab !== 'mailbox' && $tab !== 'settings') ? 'active' : '' ?>"
+                       id="list-home-list" href="/profile">Профиль</a>
+                    <a class="list-group-item list-group-item-action <?= $tab === 'mailbox' ? 'active' : '' ?>"
+                       id="list-messages-list" href="?tab=mailbox">Сообщения</a>
                     <a class="list-group-item list-group-item-action <?= $tab === 'settings' ? 'active' : '' ?>"
                        id="list-settings-list" href="?tab=settings">Настройки</a>
                 </div>
@@ -47,10 +54,24 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                     <?php endif ?>
                 </div>
                 <?php
-                try {
-                    require "profile-tabs/$tab.php";
-                } catch (Exception) {
-                    require "profile-tabs/overview.php";
+                switch ($tab) {
+                    case 'mailbox':
+                        echo ProfileMailboxWidget::widget(['messages' => $messages]);
+                        break;
+                    case 'settings':
+                        echo ProfileSettingsWidget::widget(['user' => $user]);
+                        break;
+                    default:
+                        echo ProfileOverviewWidget::widget([
+                            'user' => $user,
+                            'visitor' => $visitor,
+                            'statistics' => $statistics,
+                            'posts' => $posts,
+                            'tmpPosts' => $tmpPosts,
+                            'complaints' => $complaints,
+                            'isOwn' => $isOwn,
+                        ]);
+                        break;
                 }
                 ?>
             </div>

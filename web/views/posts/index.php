@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\Post[] $posts
  * @var int $pages
@@ -83,7 +86,7 @@ $session = Yii::$app->session;
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </div>
                     <div class="col" style="font-size:small;text-align:end;">
-                        <a class="author-link" href="/user?id=<?= $post->getAuthorId() ?>">
+                        <a class="author-link" href="/users/<?= $post->getAuthor() ?>">
                             <?= $post->getAuthor() ?>
                         </a>
                     </div>

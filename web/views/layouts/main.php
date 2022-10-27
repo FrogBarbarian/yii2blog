@@ -68,7 +68,7 @@ use app\components\SearchWidget;
                             </a>
                         </div>
                         <div class="nav-item mx-1 my-auto">
-                            <a class="nav-button" href="/users/logout">
+                            <a class="nav-button" href="/user/logout">
                                 Выйти
                             </a>
                         </div>
@@ -78,12 +78,12 @@ use app\components\SearchWidget;
                         echo SearchWidget::widget();
                         ?>
                         <div class="nav-item mx-1 my-auto">
-                            <a class="nav-button" href="/login">
+                            <a class="nav-button" href="<?= USER_LOGIN ?>">
                                 Вход
                             </a>
                         </div>
                         <div class="nav-item mx-1 my-auto">
-                            <a class="nav-button" href="/register">
+                            <a class="nav-button" href="<?= USER_REGISTER ?>">
                                 Зарегистрироваться
                             </a>
                         </div>

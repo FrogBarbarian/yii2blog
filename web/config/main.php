@@ -6,6 +6,8 @@ const POSTS_ON_PROFILE = 5;
 const IMAGES = '../../assets/images/';
 const BASE_CACHE_TIME = 3600;
 const PUBLIC_IMAGES = '../../public/images/';
+const USER_LOGIN = 'user/login';
+const USER_REGISTER = 'user/register';
 //TODO: Организовать хранение констант
 
 return [
@@ -36,19 +38,7 @@ return [
             'enableStrictParsing' => true,
             'enablePrettyUrl' => true,
             'showScriptName' => false,
-            'rules' => [
-                '/' => 'posts/index',
-                '/register' => 'users/register',
-                '/login' => 'users/login',
-                '/profile' => 'users/user',
-                '/user' => 'users/user',
-                'admin/' => 'admin/index',
-                'admin/<action>' => 'admin/<action>',
-                '/<action>' => 'posts/<action>',
-                'tag/<action>' => 'posts/tag',
-                'author/<action>' => 'posts/author',
-                '<controller>/<action>' => '<controller>/<action>',
-            ],
+            'rules' => require 'routes.php',
         ],
         'log' => [
             'class' => 'yii\log\FileTarget',

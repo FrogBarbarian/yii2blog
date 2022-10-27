@@ -57,7 +57,7 @@ function likeComment(id) {
         },
     };
     $.ajax({
-        url: '/comments/like-comment',
+        url: '/comment/like-comment',
         cache: false,
         type: 'post',
         data: data,
@@ -72,15 +72,14 @@ function likeComment(id) {
  * Дизлайкает комментарий.
  */
 function dislikeComment(id) {
-    var token = $('meta[name=csrf-token]').attr('content');
     let data = {
-        _csrf: token,
+        _csrf: $('meta[name=csrf-token]').attr('content'),
         ajax: {
             commentId: id,
         },
     };
     $.ajax({
-        url: '/comments/dislike-comment',
+        url: '/comment/dislike-comment',
         cache: false,
         type: 'post',
         data: data,
@@ -155,7 +154,7 @@ function updateCommentRating(token) {
 
     for (let i = 0; i < commentsRatingElements.length; i++) {
         comments.push({
-            id: parseInt(commentsRatingElements[i].id.match(/\d+/)),
+            id: parseInt(commentsRatingElements[i].id.match(/\d+/).toString()),
             rating: commentsRatingElements[i].textContent,
         });
     }

@@ -10,9 +10,6 @@
       <path value="$PROJECT_DIR$/vendor/ezyang/htmlpurifier" />
       <path value="$PROJECT_DIR$/vendor/yidas/yii2-bower-asset" />
       <path value="$PROJECT_DIR$/vendor/yiisoft/yii2-bootstrap" />
-      <path value="$PROJECT_DIR$/vendor/kartik-v/yii2-krajee-base" />
-      <path value="$PROJECT_DIR$/vendor/kartik-v/bootstrap-fileinput" />
-      <path value="$PROJECT_DIR$/vendor/kartik-v/yii2-widget-fileinput" />
     </include_path>
   </component>
   <component name="PhpInterpreters">

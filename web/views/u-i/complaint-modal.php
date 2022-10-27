@@ -8,9 +8,18 @@
 declare(strict_types=1);
 
 use yii\helpers\Url;
+use yii\web\View;
 use yii\widgets\ActiveForm;
 
-$this->registerJsFile('@web/assets/js/complaint-modal.js',['position' => \yii\web\View::POS_HEAD], 'complaint');
+$this->registerJsFile(
+    '@web/assets/js/complaint-modal.js',
+    ['position' => View::POS_HEAD],
+    'complaint',
+);
+$this->registerJS(<<<JS
+    rewriteData();
+JS
+);
 ?>
 
 <div class='modal-window-back' id='modalWindow' tabindex='-1' aria-modal='true' style='display: block;z-index: 10001'>

@@ -1,6 +1,8 @@
 <?php
-/** @var \app\models\User $user */
 
+declare(strict_types=1);
+
+/** @var \app\models\User $user */
 ?>
 
 <ul class="list-group">

@@ -14,7 +14,7 @@ $(document).ready(function () {
      */
     $('#commentsButton').click(function () {
         $.ajax({
-            url: '/post/comment-rule',
+            url: '/posts/comment-rule',
             cache: false,
             type: 'post',
             data: data,

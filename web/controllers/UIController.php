@@ -6,6 +6,7 @@ namespace app\controllers;
 
 use app\models\Complaint;
 use app\models\ComplaintForm;
+use app\models\MessageForm;
 use app\models\Post;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
@@ -113,5 +114,29 @@ class UIController extends AppController
         }
 
         return $this->asJson($post);
+    }
+
+    /**
+     * TODO: COMMENT
+     */
+    public function actionMessageModal(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $messageForm = new MessageForm();
+
+        return $this->renderAjax('@app/views/u-i/message-modal', ['messageForm' => $messageForm]);
+    }
+
+    public function actionSendMessage()
+    {
+        $f = new MessageForm();
+        $f->load(Yii::$app->getRequest()->post());
+        $f->validate();
+        return $this->asJson($f->errors);
     }
 }

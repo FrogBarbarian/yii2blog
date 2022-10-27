@@ -8,6 +8,7 @@
  * @var bool $visitorIsLogin
  */
 
+use app\components\CommentWidget;
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
 use yii\helpers\Url;
@@ -57,7 +58,7 @@ if ($visitorIsLogin) {
                 <div class="col text-end" style="font-size: small">
                     <?= NormalizeData::passedTime($post->getDatetime()) ?>
                     &nbsp;
-                    <a class="author-link" href="/user?id=<?= $owner->getId() ?>">
+                    <a class="author-link" href="/users/<?= $owner->getUsername() ?>">
                         <?= $post->getAuthor() ?>
                     </a>
                 </div>
@@ -215,7 +216,10 @@ if ($visitorIsLogin) {
     <?php endif ?>
     <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
         <?php if ($comments): ?>
-        <?= ConstructHtml::comments($comments) ?>
+        <?php foreach ($comments as $comment) {
+            echo CommentWidget::widget(['user' => $user, 'comment' => $comment]);
+            }
+            ?>
         <?php endif ?>
     </ul>
     <?php if ($comments): ?>
