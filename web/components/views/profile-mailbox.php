@@ -7,6 +7,7 @@ declare(strict_types=1);
  */
 
 ?>
+<link rel="stylesheet" type="text/css" href="../../assets/css/pages-indexation.css"/>
 <div style="display: flex; border: black 1px solid;padding: .5rem">
     <div style="border: grey 1px solid;padding: 3px;margin: 3px;display: flex; flex-direction: column">
         <button name="inboxMails" type="button" class="toolbar-button" title="Входящие">
@@ -14,9 +15,6 @@ declare(strict_types=1);
         </button>
         <button name="sentMails" type="button" class="toolbar-button" title="Отправленные">
             <img src="<?= IMAGES ?>/button-sent.svg" alt="sent">
-        </button>
-        <button name="draftMails" type="button" class="toolbar-button" title="Черновики">
-            <img src="<?= IMAGES ?>/button-draft.svg" alt="draft">
         </button>
         <button name="newMessage" type="button" class="toolbar-button" title="Новое сообщение" style="margin-top: 1rem">
             <img src="<?= IMAGES ?>/button-new-message.svg" alt="new">
@@ -46,23 +44,21 @@ declare(strict_types=1);
         tab = 'sent';
         renderMails();
     });
-    document.querySelector('[name="draftMails"]').addEventListener('click', () => {
-        tab = 'draft';
-        renderMails();
-    });
     document.querySelector('[name="newMessage"]').addEventListener('click', () => {
         createMessageModal();
     });
     document.querySelector('[name="refreshMessages"]').addEventListener('click', () => {
         renderMails();
+
     });
 
 
-    function renderMails() {
+    function renderMails(page = 1) {
         let data = {
             _csrf: token,
             ajax: {
                 event: tab,
+                page: page,
             },
         };
         $.ajax({
@@ -72,6 +68,7 @@ declare(strict_types=1);
             data: data,
             success: function (response) {
                 mails.innerHTML = response;
+                setPageButtons();
             },
             error: function () {
                 console.log('Error');
@@ -89,6 +86,17 @@ declare(strict_types=1);
                 $('#modalDiv').html(response);
             }
         });
+    }
+
+    function setPageButtons() {
+        let pageButtons = document.querySelectorAll('[class=btn-page]');
+        if (pageButtons.length > 0) {
+            for (let pageButton of pageButtons) {
+                pageButton.addEventListener('click', () => {
+                    renderMails(pageButton.value)
+                })
+            }
+        }
     }
 
 </script>

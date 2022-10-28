@@ -6,6 +6,7 @@ declare(strict_types=1);
  * @var string $head
  * @var string $subject
  * @var string $timestamp
+ * @var int $pages
  */
 
 use src\helpers\NormalizeData;

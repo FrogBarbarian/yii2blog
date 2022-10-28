@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var \app\models\Message[] $messages
+ * @var int $pages
  */
 
 use app\components\MessageWidget;

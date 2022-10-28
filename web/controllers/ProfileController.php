@@ -102,6 +102,7 @@ class ProfileController extends AppController
         }
 
         $event = $request->post('ajax')['event'];
+        $page = (int)$request->post('ajax')['page'];
         $user = Yii::$app
             ->user
             ->getIdentity();
@@ -124,16 +125,18 @@ class ProfileController extends AppController
                 break;
         }
 
+        $limit = 20;
+        $offset = $limit * ($page - 1);
         $messages = Message::find()
             ->byStatus($status ?? null)
             ->sentFrom($sender ?? null)
             ->sentFor($recipient ?? null)
             ->orderById()
             ->all();
+        $pages = (int)ceil(count($messages) / $limit);
+        $messages = array_slice($messages, $offset, $limit);
 
 
-
-
-        return $this->renderAjax($event, ['messages' => $messages]);
+        return $this->renderAjax($event, ['messages' => $messages, 'pages' => $pages, 'page' => $page]);
     }
 }

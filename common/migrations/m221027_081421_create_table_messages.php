@@ -13,7 +13,7 @@ class m221027_081421_create_table_messages extends Migration
      */
     public function up()
     {
-        $this->execute("CREATE TYPE message_status AS ENUM ('draft', 'sent', 'delete')");
+        $this->execute("CREATE TYPE message_status AS ENUM ('sent', 'delete')");
         $this->createTable('messages', [
             'id' => $this->primaryKey(),
             'sender_username' => $this->string(30)->notNull(),
