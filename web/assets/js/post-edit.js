@@ -342,21 +342,21 @@ function linkModal() {
     setRange();
     $('#modalDiv').html(
         '<div id="modalWindow" class="modal-window-back" tabindex="-1">' +
-        '<div class="modal-window">' +
+        '<div class="modal-window" style="max-width: 350px">' +
         '<div class="modal-window-header">' +
         'Добавить ссылку' +
         '<button type="button" class="btn-close" onclick="closeModalDiv()">' +
         '</button>' +
         '</div>' +
-        '<input id="textUrlInput" class="form-control mb-1" placeholder="Текст ссылки" value="' +
+        '<input id="textUrlInput" class="txt-input-basic" placeholder="Текст ссылки" value="' +
         selection.toString() +
         '">' +
-        '<input id="urlInput" class="form-control" placeholder="Вставьте ссылку">' +
+        '<input id="urlInput" class="txt-input-basic" placeholder="Вставьте ссылку">' +
         '<div class="modal-window-footer">' +
-        '<button type="button" class="toolbar-button me-1" onclick="closeModalDiv()" style="width: auto; font-weight: lighter">' +
+        '<button type="button" class="btn-basic" onclick="closeModalDiv()">' +
         'Отмена' +
         '</button>' +
-        '<button type="button" onclick="createUrl()" class="toolbar-button" style="width: auto; font-weight: lighter">' +
+        '<button type="button" onclick="createUrl()" class="btn-basic">' +
         'Добавить ссылку' +
         '</button>' +
         '</div>' +
@@ -438,7 +438,7 @@ function uploadImage() {
             if (Array.isArray(response)) {
                 closeModalDiv();
                 let html = '<div class="post-image">' +
-                    '<img src="uploads/' +
+                    '<img src="/uploads/' +
                     response[0] +
                     '" alt="">' +
                     '<span>' +

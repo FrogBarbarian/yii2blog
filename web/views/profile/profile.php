@@ -25,12 +25,13 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
         <?php if ($isOwn): ?>
             <div class="col-2">
                 <div class="list-group list-group-horizontal mb-1">
-                    <a class="list-group-item list-group-item-action <?= ($tab !== 'mailbox' && $tab !== 'settings') ? 'active' : '' ?>"
-                       id="list-home-list" href="/profile">Профиль</a>
-                    <a class="list-group-item list-group-item-action <?= $tab === 'mailbox' ? 'active' : '' ?>"
-                       id="list-messages-list" href="?tab=mailbox">Сообщения</a>
-                    <a class="list-group-item list-group-item-action <?= $tab === 'settings' ? 'active' : '' ?>"
-                       id="list-settings-list" href="?tab=settings">Настройки</a>
+                    <a class="btn-basic a-btn <?= ($tab !== 'mailbox' && $tab !== 'settings') ? 'a-btn-active' : '' ?>" href="/profile">
+                        Профиль
+                    </a>
+                    <a class="btn-basic a-btn <?= $tab === 'mailbox' ? 'a-btn-active' : '' ?>"
+                       href="?tab=mailbox">Сообщения</a>
+                    <a class="btn-basic a-btn <?= $tab === 'settings' ? 'a-btn-active' : '' ?>"
+                       href="?tab=settings">Настройки</a>
                 </div>
             </div>
         <?php endif ?>

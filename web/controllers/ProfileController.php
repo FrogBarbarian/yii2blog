@@ -74,6 +74,7 @@ class ProfileController extends AppController
         $posts = Post::find()
             ->byAuthor($user->getUsername())
             ->orderDescById()
+            ->limit(5)
             ->all();
         $statistics = Statistic::find()
             ->byUsername($user->getUsername())
@@ -101,9 +102,38 @@ class ProfileController extends AppController
         }
 
         $event = $request->post('ajax')['event'];
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        switch ($event) {
+            case 'sent':
+                $status = 'sent';
+                $sender = $user->getUsername();
+                $recipient = null;
+                break;
+            case 'inbox':
+                $status = 'sent';
+                $sender = null;
+                $recipient = $user->getUsername();
+                break;
+            case 'draft':
+                $status = 'draft';
+                $sender = $user->getUsername();
+                $recipient = null;
+                break;
+        }
+
+        $messages = Message::find()
+            ->byStatus($status ?? null)
+            ->sentFrom($sender ?? null)
+            ->sentFor($recipient ?? null)
+            ->orderById()
+            ->all();
 
 
 
-        return $this->renderAjax($event, ['messages' => []]);
+
+        return $this->renderAjax($event, ['messages' => $messages]);
     }
 }

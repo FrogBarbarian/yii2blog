@@ -1,5 +1,6 @@
 <?php
 
+use yii\db\Expression;
 use yii\db\Migration;
 
 /**
@@ -12,16 +13,16 @@ class m221027_081421_create_table_messages extends Migration
      */
     public function up()
     {
-        $this->execute("CREATE TYPE message_status AS ENUM ('draft', 'sent', 'received', 'read', 'delete')");
+        $this->execute("CREATE TYPE message_status AS ENUM ('draft', 'sent', 'delete')");
         $this->createTable('messages', [
             'id' => $this->primaryKey(),
             'sender_username' => $this->string(30)->notNull(),
-            'sender_id' => $this->integer()->notNull(),
             'recipient_username' => $this->string(30)->notNull(),
-            'recipient_id' => $this->integer()->notNull(),
             'subject' => $this->string(100)->notNull(),
             'content' => $this->text()->notNull(),
-            'status' => 'message_status NOT NULL',
+            'status' => "message_status NOT NULL DEFAULT 'sent'",
+            'timestamp' => $this->timestamp()->defaultValue(new Expression("NOW()")),
+            'is_read' => $this->boolean()->defaultValue(false)->notNull(),
         ]);
         $this->addForeignKey(
             'sender_username_fk',
@@ -37,20 +38,6 @@ class m221027_081421_create_table_messages extends Migration
             'users',
             'username',
         );
-        $this->addForeignKey(
-            'sender_id_id_fk',
-            'messages',
-            'sender_id',
-            'users',
-            'id',
-        );
-        $this->addForeignKey(
-            'recipient_id_fk',
-            'messages',
-            'recipient_id',
-            'users',
-            'id',
-        );
     }
 
     /**
@@ -58,8 +45,8 @@ class m221027_081421_create_table_messages extends Migration
      */
     public function down()
     {
-        $this->dropForeignKey('user_id_fk', 'messages');
-        $this->dropForeignKey('username_fk', 'messages');
+        $this->dropForeignKey('recipient_username_fk', 'messages');
+        $this->dropForeignKey('sender_username_fk', 'messages');
         $this->dropTable('messages');
         $this->execute('DROP TYPE message_status');
     }

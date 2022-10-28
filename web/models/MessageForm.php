@@ -51,7 +51,7 @@ class MessageForm extends ActiveRecord
     public function checkUserExist(string $attribute)
     {
         $user = User::find()
-            ->byUsername($this->recipientUsername)
+            ->where(['LIKE', 'username', "%$this->recipientUsername", false])
             ->one();
 
         if ($user === null) {

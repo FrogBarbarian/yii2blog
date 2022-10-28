@@ -6,8 +6,10 @@ namespace app\controllers;
 
 use app\models\Complaint;
 use app\models\ComplaintForm;
+use app\models\Message;
 use app\models\MessageForm;
 use app\models\Post;
+use app\models\User;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use Yii;
@@ -132,11 +134,58 @@ class UIController extends AppController
         return $this->renderAjax('@app/views/u-i/message-modal', ['messageForm' => $messageForm]);
     }
 
+    /**
+     * @return Response TODO: COMM
+     */
     public function actionSendMessage()
     {
-        $f = new MessageForm();
-        $f->load(Yii::$app->getRequest()->post());
-        $f->validate();
-        return $this->asJson($f->errors);
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $messageForm = new MessageForm();
+
+        if ($messageForm->load($request->post()) && $messageForm->validate()) {
+            $message = new Message();
+            $user = Yii::$app
+                ->user
+                ->getIdentity();
+            $message
+                ->setSenderUsername($user->getUsername())
+                ->setRecipientUsername($messageForm->recipientUsername)
+                ->setSubject($messageForm->subject)
+                ->setContent($messageForm->content)
+                ->save();
+
+            return $this->asJson(true);
+        }
+
+        return $this->asJson($messageForm->errors);
+    }
+
+    /**
+     * @return Response TODO: COMM
+     */
+    public function actionGetUsers(string $data)
+    {
+        $request = Yii::$app->request;
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $users = User::find()
+            ->byChars($data)
+            ->limit(5)
+            ->asArray()
+            ->all();
+
+        if ($users === []) {
+            return $this->asJson(false);
+        }
+
+        return $this->asJson($users);
     }
 }

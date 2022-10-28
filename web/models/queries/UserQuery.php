@@ -21,7 +21,15 @@ class UserQuery extends ActiveQuery
      */
     public function byUsername(string $username): self
     {
-        return $this->where(['ILIKE', 'username', $username]);
+        return $this->where(['ILIKE', 'username', "%$username", false]);
+    }
+
+    /**
+     * Поиск по символам в имени.
+     */
+    public function byChars(string $chars): self
+    {
+        return $this->where(['ILIKE', 'username', $chars]);
     }
 
     /**

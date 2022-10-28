@@ -1,6 +1,6 @@
 let url = (new URL(document.location));
 let getParams = url.searchParams;
-const token = $('meta[name=csrf-token]').attr("content");
+let token = $('meta[name=csrf-token]').attr("content");
 
 /**
  * Открывает страницу с рандомным постом.

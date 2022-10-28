@@ -1,4 +1,3 @@
-const token = $('meta[name=csrf-token]').attr("content");
 const postId = (new URL(document.location)).searchParams.get('id');
 let data = {
     _csrf: token,

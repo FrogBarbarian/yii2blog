@@ -1,0 +1,51 @@
+:root {
+    --border-basic: 1px solid grey;
+    --focus-bs-basic: 0 0 0 2px rgba(128, 128, 128, 0.5);
+    --transition-for-input-border: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-basic {
+    background-color: white;
+    border: var(--border-basic);
+    margin: 1px;
+    padding: 1px 2px;
+    font-weight: lighter;
+    color: black;
+}
+
+.btn-basic:hover {
+    background-color: #dcdcdc;
+    transform: translateY(-1px);
+}
+
+.btn-basic:active {
+    transform: none;
+}
+
+.a-btn {
+    display: table-cell;
+    text-decoration: none;
+    color: black;
+}
+
+.a-btn-active {
+    font-weight: normal;
+}
+
+.a-btn:hover {
+    color: black;
+}
+
+.txt-input-basic {
+    display: block;
+    width: 100%;
+    border: var(--border-basic);
+    margin: .5rem 0;
+    padding: 2px 4px;
+    transition: var(--transition-for-input-border);
+}
+
+.txt-input-basic:focus {
+    outline: none;
+    box-shadow: var(--focus-bs-basic);
+}

@@ -13,6 +13,7 @@ use app\components\SearchWidget;
     <title><?= $this->title ?? 'Need to setup name' ?></title>
     <link rel="stylesheet" type="text/css" href="../../assets/css/bootstrap.css"/>
     <link rel="stylesheet" type="text/css" href="../../assets/css/main.css"/>
+    <link rel="stylesheet" type="text/css" href="../../assets/css/basic.css"/>
     <script src="../../assets/js/bootstrap.bundle.js"></script>
     <script src="../../assets/js/jquery.js"></script>
     <script src="../../assets/js/main.js"></script>

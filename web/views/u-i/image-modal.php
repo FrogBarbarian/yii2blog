@@ -34,7 +34,7 @@ use yii\widgets\ActiveForm;
         ?>
         <?= $form
             ->field($uploadForm, 'signature')
-            ->input('text')
+            ->input('text', ['class' => 'txt-input-basic'])
             ->label(false)
             ->error([
                 'class' => 'text-danger small',
@@ -42,12 +42,10 @@ use yii\widgets\ActiveForm;
             ])
         ?>
         <div class="modal-window-footer">
-            <button type="button" class="toolbar-button me-1" onclick="closeModalDiv()"
-                    style="width: auto; font-weight: lighter">
+            <button type="button" class="btn-basic" onclick="closeModalDiv()">
                 Отмена
             </button>
-            <button type="button" onclick="uploadImage()" class="toolbar-button"
-                    style="width: auto; font-weight: lighter">
+            <button type="button" onclick="uploadImage()" class="btn-basic">
                 Добавить изображение
             </button>
         </div>
