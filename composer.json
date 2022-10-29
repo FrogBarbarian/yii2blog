@@ -11,12 +11,13 @@
   ],
   "autoload": {
     "psr-4": {
-      "app\\controllers\\": "web/controllers",
-      "app\\models\\": "web/models",
-      "app\\models\\queries\\": "web/models/queries",
+      "app\\controllers\\": "controllers",
+      "app\\models\\": "models",
+      "app\\models\\queries\\": "models/queries",
       "src\\services\\": "src/services",
       "src\\helpers\\": "src/helpers",
-      "app\\components\\": "web/components"
+      "app\\components\\": "components",
+      "app\\assets\\": "web/assets"
     }
   },
   "require": {

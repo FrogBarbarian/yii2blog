@@ -57,15 +57,6 @@
     background-color: rgba(75, 75, 75, 0.1);
 }
 
-.author-link {
-    color: dodgerblue;
-    text-decoration: none;
-}
-
-.author-link:hover {
-    color: #5e5e41;
-}
-
 .nav-button {
     background-color: rgba(0, 0, 0, 0);
     border: none;

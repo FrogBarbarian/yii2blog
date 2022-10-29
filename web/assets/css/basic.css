@@ -3,7 +3,9 @@
     --focus-bs-basic: 0 0 0 2px rgba(128, 128, 128, 0.5);
     --transition-for-input-border: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
-
+/**
+Кнопки
+*/
 .btn-basic {
     background-color: white;
     border: var(--border-basic);
@@ -22,6 +24,9 @@
     transform: none;
 }
 
+/**
+Ссылки
+ */
 .a-btn {
     display: table-cell;
     text-decoration: none;
@@ -36,6 +41,18 @@
     color: black;
 }
 
+.author-link {
+    color: dodgerblue;
+    text-decoration: none;
+}
+
+.author-link:hover {
+    color: #5e5e41;
+}
+
+/**
+Поля ввода
+ */
 .txt-input-basic {
     display: block;
     width: 100%;

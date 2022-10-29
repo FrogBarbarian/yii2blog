@@ -1,4 +1,9 @@
 <?php
+
+declare(strict_types=1);
+
+use yii\console\Application;
+
 error_reporting(E_ALL & ~E_DEPRECATED);
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -8,9 +13,9 @@ require __DIR__ . '/vendor/yiisoft/yii2/Yii.php';
 
 $vendorPath = __DIR__;
 
-$config = require __DIR__ . '/common/config/console.php';
+$config = require __DIR__ . '/console/config/main.php';
 
-$application = new \yii\console\Application($config);
+$application = new Application($config);
 
 if ($vendorPath !== null) {
     $application->setVendorPath($vendorPath);
