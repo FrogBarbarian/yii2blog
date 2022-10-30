@@ -1,14 +1,14 @@
 <?php
 
 return [
-    '/' => 'posts/index',
+    '' => 'posts',
+    'tag/<action>' => 'posts/tag',
+    'author/<action>' => 'posts/author',
     '/profile' => 'profile/profile',
     'users/<action>' => 'profile/profile',
     'profile/message/<action:\d+>' => 'profile/message',
-    'admin/' => 'admin/index',
-    'admin/<action>' => 'admin/<action>',
+    'admin' => 'admin',
     '/<action>' => 'posts/<action>',
-    'tag/<action>' => 'posts/tag',
-    'author/<action>' => 'posts/author',
+    'admin/<action>' => 'admin/<action>',
     '<controller>/<action>' => '<controller>/<action>',
 ];

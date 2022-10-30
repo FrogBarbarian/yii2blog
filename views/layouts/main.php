@@ -5,6 +5,7 @@ use app\components\SearchWidget;
 \app\assets\TestAsset::register($this);
 
 ?>
+<?php $this->beginPage() ?>
 <!doctype html>
 <html lang="ru">
 <head>
@@ -20,9 +21,10 @@ use app\components\SearchWidget;
     <script src="assets/js/bootstrap.bundle.js"></script>
     <script src="assets/js/jquery.js"></script>
     <script src="assets/js/main.js"></script>
+    <?php $this->head() ?>
 </head>
 <body style="background-image: url('../../web/assets/images/background.webp');height: 100%">
-
+<?php $this->beginBody() ?>
 <header class="sticky-top">
     <?php
     $user = Yii::$app->user->getIdentity();
@@ -109,6 +111,7 @@ use app\components\SearchWidget;
 <!--<footer class="fixed-bottom mt-auto py-3 bg-light">-->
 <!--    <span class="text-muted">Place sticky footer content here.</span>-->
 <!--</footer>-->
+<?php $this->endBody() ?>
 </body>
 </html>
-
+<?php $this->endPage() ?>

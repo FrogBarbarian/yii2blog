@@ -8,9 +8,9 @@ use yii\web\AssetBundle;
 
 class TestAsset extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
-    public $js = [
-        'assets/js/message.js',
-    ];
+//    public $basePath = '@webroot';
+//    public $baseUrl = '@web';
+//    public $js = [
+//        'assets/js/message.js',
+//    ];
 }

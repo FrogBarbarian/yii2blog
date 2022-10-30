@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 $this->title = "Сообщение #{$message->getId()}";
 \app\assets\TestAsset::register($this);
+$this->registerJsFile('@web/assets/js/message.js');
 
 ?>
 <!--<script src="../../assets/js/message.js"></script>-->
