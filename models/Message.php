@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\models;
 
 use app\models\queries\MessageQuery;
+use src\services\StringService;
 use yii\db\ActiveRecord;
 
 class Message extends ActiveRecord
@@ -74,7 +75,7 @@ class Message extends ActiveRecord
      */
     public function setSubject(string $subject): self
     {
-        $this->setAttribute('subject', $subject);
+        $this->setAttribute('subject', (new StringService($subject))->prepareToSave());
 
         return $this;
     }
@@ -92,7 +93,7 @@ class Message extends ActiveRecord
      */
     public function setContent(string $content): self
     {
-        $this->setAttribute('content', $content);
+        $this->setAttribute('content', (new StringService($content))->prepareToSave());
 
         return $this;
     }
@@ -116,11 +117,11 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return string Статус получателя.
+     * @return string Статус отправителя.
      */
-    public function getRecipientStatus(): string
+    public function getSenderStatus(): string
     {
-        return $this->getAttribute('recipient_status');
+        return $this->getAttribute('sender_status');
     }
 
     /**
@@ -134,11 +135,11 @@ class Message extends ActiveRecord
     }
 
     /**
-     * @return string Статус отправителя.
+     * @return string Статус получателя.
      */
-    public function getSenderStatus(): string
+    public function getRecipientStatus(): string
     {
-        return $this->getAttribute('sender_status');
+        return $this->getAttribute('recipient_status');
     }
 
     /**

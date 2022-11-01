@@ -15,7 +15,7 @@ $factor = (($page - 1) * 20);
     -
     <?= ($page !== $pages ? 20 : $objectsOnPage) + $factor ?>
 </span>
-<button class="btn-page" value="<?= $page - 1 ?>"
+<button class="mailbox-page-switcher" value="<?= $page - 1 ?>"
     <?php if ($page === 1): ?>
         disabled
         style="color: grey"
@@ -23,7 +23,7 @@ $factor = (($page - 1) * 20);
 >
     &larr;
 </button>
-<button class="btn-page" value="<?= $page + 1 ?>"
+<button class="mailbox-page-switcher" value="<?= $page + 1 ?>"
     <?php if ($page === $pages): ?>
         disabled
         style="color: grey"

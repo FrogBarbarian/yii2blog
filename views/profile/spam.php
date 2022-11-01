@@ -12,7 +12,7 @@ use app\components\MessageWidget;
 use app\components\PageSwitcherWidget;
 
 ?>
-<h5 style="text-align: center">Входящие сообщения</h5>
+<h5 style="text-align: center;display: block">Спам</h5>
 <hr>
 <?php if ($messages !== []): ?>
     <?php
@@ -27,9 +27,9 @@ use app\components\PageSwitcherWidget;
 
     ?>
     <?php foreach ($messages as $message): ?>
-        <div class="mailbox-message" <?php if (!$message->getIsRead()): ?>style="font-weight: bold" <?php endif ?>>
+        <div class="mailbox-message">
             <?= MessageWidget::widget([
-                'head' => $message->getSenderUsername(),
+                'head' => $message->getRecipientUsername(),
                 'subject' => $message->getSubject(),
                 'timestamp' => $message->getTimestamp(),
                 'id' => $message->getId(),
@@ -37,6 +37,8 @@ use app\components\PageSwitcherWidget;
         </div>
     <?php endforeach ?>
 <?php else: ?>
-    <p style="text-align: center;color: grey">У вас пока нет сообщений</p>
+    <p style="text-align: center;color: grey">
+        Вы еще не отметили ни одно сообщение как спам.
+    </p>
     <img src="<?= IMAGES ?>empty-box.webp" alt="no messages" style="max-width: 100%">
 <?php endif ?>

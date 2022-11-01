@@ -8,6 +8,7 @@
  * @var bool $visitorIsLogin
  */
 
+use app\assets\PostAsset;
 use app\components\CommentWidget;
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
@@ -27,9 +28,8 @@ if ($visitorIsLogin) {
     $userIsAuthor = false;
 }
 
+PostAsset::register($this);
 ?>
-<script src="../../web/assets/js/post.js"></script>
-<script src="../../web/assets/js/comments.js"></script>
 <input type="hidden" id="postId" value="<?= $post->getId() ?>">
 <div class="mx-3 py-2">
     <?php if (Yii::$app->session->hasFlash('postFlash')): ?>

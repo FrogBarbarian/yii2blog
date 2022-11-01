@@ -12,14 +12,13 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 
 $this->registerJsFile(
-    '@web/assets/js/complaint-modal.js',
+    '@web/assets/js/complaint-form.js',
     ['position' => View::POS_HEAD],
     'complaint',
 );
 $this->registerJS(<<<JS
-    rewriteData();
-JS
-);
+    setComplaintFormData();
+JS);
 
 ?>
 
@@ -47,7 +46,7 @@ JS
             Изложите суть жалобы. Избегайте размытых выражений и конкретизируйте.
             Уложитесь в 250 символов.
         </span>
-        <div id="complaintInputField" class="div-input" contenteditable="true"></div>
+        <div id="complaintInputField" class="div-input-basic" contenteditable="true"></div>
         <?= $activeForm
             ->field($complaintForm, 'complaint', $options)
             ->hiddenInput(['id' => 'complaintHiddenInput'])

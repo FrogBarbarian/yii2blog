@@ -2,10 +2,10 @@
 
 const ADMIN_PANEL = '/admin';
 const POSTS_ON_PAGE = 5;
-const IMAGES = '../web/assets/images/';
+const IMAGES = '/assets/images/';
 const BASE_CACHE_TIME = 3600;
-const USER_LOGIN = 'user/login';
-const USER_REGISTER = 'user/register';
+const USER_LOGIN = '/user/login';
+const USER_REGISTER = '/user/register';
 //TODO: Организовать хранение констант
 
 return [

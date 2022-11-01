@@ -1,0 +1,43 @@
+.mailbox-main {
+    display: flex;
+    border: black 1px solid;
+    padding: .5rem;
+}
+
+.mailbox-buttonbar {
+    border: grey 1px solid;
+    padding: 3px;
+    margin: 3px;
+    display: flex;
+    flex-direction: column;
+}
+
+.mailbox-mails-container {
+    border: grey 1px solid;
+    padding: 3px;
+    margin: 3px;
+    width: 100%;
+}
+
+.mailbox-page-switcher {
+    background-color: white;
+    color: black;
+    border: none;
+}
+
+.mailbox-page-switcher:hover {
+    color: #c8c8c8;
+}
+
+.mailbox-message {
+    margin: 1px 0;
+    padding: 1px 5px;
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+    border: 1px grey solid;
+}
+
+.mailbox-message:hover {
+    background-color: #b4b4b4;
+}

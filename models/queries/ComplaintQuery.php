@@ -23,4 +23,16 @@ class ComplaintQuery extends ActiveQuery
     {
         return $this->where(['id' => $id]);
     }
+
+    /**
+     * Поиск по совпадению в колонках:
+     * имя пользователя отправителя, тип объекта, id объекта.
+     */
+    public function same($senderUsername, $object, $objectId): self
+    {
+        return $this
+            ->where(['sender_username' => $senderUsername])
+            ->andWhere(['object' => $object])
+            ->andWhere(['object_id' => $objectId]);
+    }
 }

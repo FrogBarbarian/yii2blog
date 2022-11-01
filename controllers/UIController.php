@@ -65,20 +65,29 @@ class UIController extends AppController
     public function actionSendComplaint(): Response
     {
         $request = Yii::$app->getRequest();
+        $complaintForm = new ComplaintForm();
 
-        if (!$request->isAjax) {
+        if (!$request->isAjax && $complaintForm->load($request->post())) {
             throw new NotFoundHttpException();
         }
 
-        $complaintForm = new ComplaintForm();
+        $sender = Yii::$app
+            ->user
+            ->getIdentity();
+        $content = $request->post('ComplaintForm')['complaint'];
+        $objectType = $request->post('ComplaintForm')['objectType'];
+        $objectId = (int)$request->post('ComplaintForm')['objectId'];
+        $complaint = Complaint::find()
+            ->same($sender->getUsername(), $objectType, $objectId)
+            ->one();
 
-        if ($complaintForm->load($request->post()) && $complaintForm->validate()) {
-            $sender = Yii::$app
-                ->user
-                ->getIdentity();
-            $content = $request->post('ComplaintForm')['complaint'];
-            $objectType = $request->post('ComplaintForm')['objectType'];
-            $objectId = (int)$request->post('ComplaintForm')['objectId'];
+        if ($complaint !== null) {
+            $complaintForm->addError('complaint', 'Вы уже отправляли подобную жалобу');
+
+            return $this->asJson($complaintForm->errors);
+        }
+
+        if ($complaintForm->validate()) {
             $complaint = new Complaint();
             $complaint
                 ->setObject($objectType)

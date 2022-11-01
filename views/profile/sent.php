@@ -27,7 +27,7 @@ use app\components\PageSwitcherWidget;
 
     ?>
     <?php foreach ($messages as $message): ?>
-        <div class="message">
+        <div class="mailbox-message">
             <?= MessageWidget::widget([
                 'head' => $message->getRecipientUsername(),
                 'subject' => $message->getSubject(),

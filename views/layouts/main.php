@@ -1,9 +1,9 @@
 <?php
 
+use app\assets\AppAsset;
 use app\components\SearchWidget;
 
-\app\assets\TestAsset::register($this);
-
+AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!doctype html>
@@ -15,15 +15,9 @@ use app\components\SearchWidget;
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <?= yii\helpers\Html::csrfMetaTags() ?>
     <title><?= $this->title ?? 'Need to setup name' ?></title>
-    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css"/>
-    <link rel="stylesheet" type="text/css" href="assets/css/main.css"/>
-    <link rel="stylesheet" type="text/css" href="assets/css/basic.css"/>
-    <script src="assets/js/bootstrap.bundle.js"></script>
-    <script src="assets/js/jquery.js"></script>
-    <script src="assets/js/main.js"></script>
     <?php $this->head() ?>
 </head>
-<body style="background-image: url('../../web/assets/images/background.webp');height: 100%">
+<body style="background-image: url(<?= IMAGES ?>bg.jpg);height: 100%">
 <?php $this->beginBody() ?>
 <header class="sticky-top">
     <?php
@@ -38,7 +32,7 @@ use app\components\SearchWidget;
     <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104);">
         <div class="container-fluid">
             <a class="nav-button d-flex justify-content-between mx-1 my-auto" href="/">
-                <img src="../../web/assets/images/logo.svg" alt="logo" width="30"
+                <img src="<?= IMAGES ?>logo.svg" alt="logo" width="30"
                      class="d-inline-block align-text-top">
                 <span class="m-auto" style="font-size: x-large">Блог</span>
             </a>

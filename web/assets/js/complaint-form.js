@@ -1,16 +1,6 @@
-/**
- * Поле ввода жалобы.
- */
-let complaintInputField = document.getElementById('complaintInputField');
-/**
- * Скрытое поле для текста жалобы.
- */
-let complaintHiddenInput = document.getElementById('complaintHiddenInput');
-complaintInputField.oninput = () => {
-    complaintHiddenInput.value = complaintInputField.innerText;
-}
+let complaintInputField, complaintHiddenInput;
 
-function rewriteData() {
+function setComplaintFormData() {
     complaintInputField = document.getElementById('complaintInputField');
     complaintHiddenInput = document.getElementById('complaintHiddenInput');
     complaintInputField.oninput = () => {

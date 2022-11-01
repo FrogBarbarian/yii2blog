@@ -126,6 +126,11 @@ class ProfileController extends AppController
                 $recipient = $user->getUsername();
                 $isSender = false;
                 break;
+            case 'spam':
+                $status = 'spam';
+                $isSender = false;
+                $recipient = $user->getUsername();
+                break;
         }
 
         $limit = 20;
@@ -172,17 +177,80 @@ class ProfileController extends AppController
             ->one();
         $username = $user->getUsername();
         $userIsSender = $message->getSenderUsername() === $username;
+        $userIsRecipient = $message->getRecipientUsername() === $username;
+        $senderStatus = $message->getSenderStatus();
+        $recipientStatus = $message->getRecipientStatus();
+        $isAccess = ($userIsSender && $senderStatus !== 'deleted') ||
+            ($userIsRecipient && $recipientStatus !== ' deleted');
 
-        if (!$userIsSender && $message->getRecipientUsername() !== $username) {
+        if ($isAccess === false) {
             throw new NotFoundHttpException();
+        }
+
+        if ($userIsRecipient) {
+            $message
+                ->setIsRead(true)
+                ->save();
         }
 
         return $this->render('message', ['message' => $message, 'userIsSender' => $userIsSender]);
     }
 
-    public function actionDeleteMessage()
+    /**
+     * Меняет статус письма на 'удалено'.
+     * @throws NotFoundHttpException
+     */
+    public function actionDeleteMessage(): Response
     {
-        $data = Yii::$app->request->get();
-        return $this->asJson($data);
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $messageId = (int)$request->post('ajax')['id'];
+        $isSender = $request->post('ajax')['isSender'] === 'true';
+        $message = Message::find()
+            ->byId($messageId)
+            ->one();
+
+        if ($isSender) {
+            $message
+                ->setSenderStatus('deleted')
+                ->save();
+        } else {
+            $message
+                ->setRecipientStatus('deleted')
+                ->save();
+        }
+
+        if ($message->getRecipientStatus() === 'deleted' && $message->getSenderStatus() === 'deleted') {
+            $message->delete();
+        }
+
+        return $this->asJson('/profile');
+    }
+
+    /**
+     * Меняет статус письма на 'спам'.
+     * @throws NotFoundHttpException
+     */
+    public function actionSpamMessage(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $messageId = (int)$request->post('ajax')['id'];
+        $message = Message::find()
+            ->byId($messageId)
+            ->one();
+        $message
+            ->setRecipientStatus('spam')
+            ->save();
+
+        return $this->asJson('/profile?tab=mailbox');
     }
 }

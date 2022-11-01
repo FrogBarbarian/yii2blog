@@ -9,6 +9,7 @@ declare(strict_types=1);
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
+//TODO: Перенести объявление переменных в контроллер
 $id = null;
 $isEdit = isset($post);
 if (isset($_POST['PostEditorForm'])) {
@@ -31,8 +32,9 @@ $options = [
     'errorOptions' => ['class' => 'text-danger small', 'id' => 'titleErrorLabel'],
     'template' => "{input}\n{label}\n{error}",
 ];
+
+$this->registerJsFile('@web/assets/js/post-edit.js');
 ?>
-<script src="../../web/assets/js/post-edit.js"></script>
 <div class="card mx-auto rounded-0">
     <div class="card-header alert alert-warning small" role="alert">
         Название должно содержать от 30 до 150 символов.
@@ -56,49 +58,49 @@ $options = [
             <div id="toolbar">
                 <div id="buttons">
                 <button class="toolbar-button" type="button" onclick="bold()" title="Жирный (ctrl+b)">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-bold.svg" alt="bold">
+                    <img src="<?= IMAGES ?>post-toolbar/button-bold.svg" alt="bold">
                 </button>
                 <button class="toolbar-button" type="button" onclick="italic()" title="Курсив (ctrl+i)">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-italic.svg" alt="italic">
+                    <img src="<?= IMAGES ?>post-toolbar/button-italic.svg" alt="italic">
                 </button>
                 <button class="toolbar-button" type="button" onclick="underline()" title="Подчёркнутый (ctrl+u)">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-underline.svg" alt="underline">
+                    <img src="<?= IMAGES ?>post-toolbar/button-underline.svg" alt="underline">
                 </button>
                 <button class="toolbar-button" type="button" onclick="strikethrough()" title="Зачёркнутый (ctrl+s)">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-strikethrough.svg" alt="strikethrough">
+                    <img src="<?= IMAGES ?>post-toolbar/button-strikethrough.svg" alt="strikethrough">
                 </button>
                 <button class="toolbar-button" type="button" onclick="superscript()" title="Верхний индекс">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-superscript.svg" alt="sup">
+                    <img src="<?= IMAGES ?>post-toolbar/button-superscript.svg" alt="sup">
                 </button>
                 <button class="toolbar-button" type="button" onclick="subscript()" title="Нижний индекс">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-subscript.svg" alt="sub">
+                    <img src="<?= IMAGES ?>post-toolbar/button-subscript.svg" alt="sub">
                 </button>
                 <button class="toolbar-button" type="button" onclick="ul()" title="Маркированный список">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-unordered.svg" alt="ul">
+                    <img src="<?= IMAGES ?>post-toolbar/button-unordered.svg" alt="ul">
                 </button>
                 <button class="toolbar-button" type="button" onclick="ol()" title="Нумерованный список">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-ordered.svg" alt="ol">
+                    <img src="<?= IMAGES ?>post-toolbar/button-ordered.svg" alt="ol">
                 </button>
                 <button class="toolbar-button" type="button" onclick="hr()" title="Горизонтальная линия">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-hr.svg" alt="hr">
+                    <img src="<?= IMAGES ?>post-toolbar/button-hr.svg" alt="hr">
                 </button>
                 <button class="toolbar-button" type="button" onclick="quote()" title="Блок цитат">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-quotes.svg" alt="quotes">
+                    <img src="<?= IMAGES ?>post-toolbar/button-quotes.svg" alt="quotes">
                 </button>
                 <button class="toolbar-button" type="button" onclick="h5()" title="Заголовок">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-header.svg" alt="header">
+                    <img src="<?= IMAGES ?>post-toolbar/button-header.svg" alt="header">
                 </button>
                 <button class="toolbar-button" type="button" onclick="clearFormat()" title="Очистить форматирование">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-clear.svg" alt="clear format">
+                    <img src="<?= IMAGES ?>post-toolbar/button-clear.svg" alt="clear format">
                 </button>
                 <button class="toolbar-button" type="button" onclick="linkModal()" title="Добавить ссылку">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-link.svg" alt="link">
+                    <img src="<?= IMAGES ?>post-toolbar/button-link.svg" alt="link">
                 </button>
                 <button class="toolbar-button" type="button" onclick="removeLink()" title="Удалить ссылку">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-rlink.svg" alt="remove link">
+                    <img src="<?= IMAGES ?>post-toolbar/button-rlink.svg" alt="remove link">
                 </button>
                 <button class="toolbar-button" type="button" onclick="imageModal()" title="Добавить изображение">
-                    <img src="<?= IMAGES ?>/post-toolbar/button-image.svg" alt="add image">
+                    <img src="<?= IMAGES ?>post-toolbar/button-image.svg" alt="add image">
                 </button>
                 </div>
             </div>
@@ -119,6 +121,7 @@ $options = [
         <hr>
         <div class="input-group">
             <span class="input-group-text">теги</span>
+            <label for="tagField"></label>
             <input oninput="fillTagField(this)" type="text" autocomplete="off" class="form-control" id="tagField">
             <button onclick="addTag()" class="btn btn-outline-secondary" type="button">+</button>
         </div>

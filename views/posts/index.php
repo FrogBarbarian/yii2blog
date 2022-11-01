@@ -19,7 +19,7 @@ $session = Yii::$app->session;
 
 ?>
 <?php if ($session->hasFlash('messageForIndex')): ?>
-    <div class="alert alert-warning rounded-4" role="alert" style="margin-left: 10%;margin-right: 10%;margin-top: 5%">
+    <div class="alert alert-warning rounded-4" role="alert" style="margin-left: 10%;margin-right: 10%;margin-top: 1%">
         <?= $session->getFlash('messageForIndex') ?>
     </div>
 <?php endif ?>

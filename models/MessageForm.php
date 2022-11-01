@@ -39,9 +39,20 @@ class MessageForm extends ActiveRecord
     public function rules(): array
     {
         return [
+            [['recipientUsername', 'subject', 'content'], 'trim'],
             ['recipientUsername', 'required', 'message' => 'Выберите отправителя'],
             ['subject', 'required', 'message' => 'Заполните тему'],
+            ['subject', function (string $attribute) {
+                if (empty(strip_tags($this->subject))) {
+                    $this->addError($attribute, 'Введен некорректный текст');
+                }
+            }],
             ['content', 'required', 'message' => 'Напишите что-нибудь'],
+            ['content', function (string $attribute) {
+                if (empty(strip_tags($this->content))) {
+                    $this->addError($attribute, 'Введен некорректный текст');
+                }
+            }],
             ['recipientUsername', 'checkUserExist'],
             ['recipientUsername', 'checkYourselfSending'],
         ];

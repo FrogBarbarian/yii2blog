@@ -57,12 +57,27 @@
     display: block;
     width: 100%;
     border: var(--border-basic);
-    margin: .5rem 0;
+    margin: .25rem 0;
     padding: 2px 4px;
     transition: var(--transition-for-input-border);
 }
 
 .txt-input-basic:focus {
+    outline: none;
+    box-shadow: var(--focus-bs-basic);
+}
+
+.div-input-basic {
+    word-break: break-all;
+    border: var(--border-basic);
+    max-width: 100%;
+    min-height: 72px;
+    margin: .5rem 0;
+    padding: 0 5px;
+    transition: var(--transition-for-input-border);
+}
+
+.div-input-basic:focus {
     outline: none;
     box-shadow: var(--focus-bs-basic);
 }
