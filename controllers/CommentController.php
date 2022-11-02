@@ -25,29 +25,30 @@ class CommentController extends AppController
     {
         $request = Yii::$app->getRequest();
 
-        if (!$request->getIsAjax()) {
+        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
             throw new NotFoundHttpException();
         }
 
         $commentForm = new CommentForm();
+        $postId = (int)$request->post('ajax')['postId'];
+        $post = Post::find()
+            ->byId($postId)
+            ->one();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
 
-        if ($commentForm->load($request->post()) && $commentForm->validate()) {
-            $postId = (int)$request->post('CommentForm')['postId'];
-            $post = Post::find()
-                ->byId($postId)
-                ->one();
-            $user = Yii::$app
-                ->user
-                ->getIdentity();
+        if (!$user->getCanComment() || !$post->getIsCommentable()) {
+            $commentForm->addError(
+                'comment',
+                'Что-то пошло не так, попробуйте обновить страницу',
+            );
+            return $this->asJson($commentForm->errors);
+        }
 
-            if (!$user->getCanComment() || !$post->getIsCommentable()) {
-                $commentForm->addError(
-                    'comment',
-                    'Что-то пошло не так, попробуйте обновить страницу'
-                );
-                return $this->asJson($commentForm->errors);
-            }
+        $commentForm->comment = $request->post('ajax')['comment'];
 
+        if ($commentForm->validate()) {
             $comment = new Comment();
             $comment
                 ->setPostId($post->getId())

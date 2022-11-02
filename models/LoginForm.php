@@ -26,6 +26,7 @@ class LoginForm extends ActiveRecord
     {
         return [
             [['email', 'password'], 'trim'],
+            ['email', 'checkUserBan'],
             ['email', 'required', 'message' => 'Заполните поле почта'],
             ['email' , 'email', 'message' => 'Введенный email не корректный'],
             ['password', 'required', 'message' => 'Заполните поле пароль'],
@@ -56,6 +57,20 @@ class LoginForm extends ActiveRecord
 
         if (!$user || !$user->validatePassword($this->password)) {
             $this->addError($attribute, "Почта или пароль введены не верно");
+        }
+    }
+
+    /**
+     * Проверяет на наличие бана у пользователя.
+     */
+    public function checkUserBan(string $attribute): void
+    {
+        $user = User::find()
+            ->byEmail($this->email)
+            ->one();
+
+        if ($user->getIsBanned()) {
+            $this->addError($attribute, "Ваша учетная запись заблокирована");
         }
     }
 }

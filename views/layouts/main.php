@@ -99,7 +99,7 @@ AppAsset::register($this);
     </div>
     <div id="modalDiv"></div>
 </div>
-<button onclick="goTop()" id="arrowTop" hidden>
+<button id="arrowTop" hidden>
     &#8593;
 </button>
 <!--<footer class="fixed-bottom mt-auto py-3 bg-light">-->

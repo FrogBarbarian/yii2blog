@@ -44,6 +44,7 @@ class NormalizeData
     {
         $curDatetime = getdate();
         $compareDateTime = getdate(strtotime($datetime));
+
         $diff = [];
 
         foreach ($curDatetime as $key => $value) {

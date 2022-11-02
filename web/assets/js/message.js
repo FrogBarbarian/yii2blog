@@ -5,32 +5,36 @@ let _messageSender = _messageData.getAttribute('data-sender');
 let _messageRecipient = _messageData.getAttribute('data-recipient');
 let _messageSubject = document.getElementById('messageSubject').innerText;
 let _messageContent = document.getElementById('messageContent').innerHTML;
+const replyButton = document.getElementById('replyButton');
+const forwardButton = document.getElementById('forwardButton');
+const deleteButton = document.getElementById('deleteButton');
+const spamButton = document.getElementById('spamButton');
 
-/**
- * Отрисовывает окно для отправки сообщения с данным для пересылки.
- */
-let forwardButton = document.getElementById('forwardButton');
-forwardButton.addEventListener('click', () => {
-    _messageSubject = 'Fwd: ' + _messageSubject;
-    _messageContent = "<br>" +
-        "Пересланное сообщение от " +
-        _messageSender +
-        " для " +
-        _messageRecipient +
-        ":" +
-        "<br>" +
-        "<br>" +
-        _messageContent;
-    createMessageModal('', _messageSubject, _messageContent);
-    _messageContent = document.getElementById('messageContent').innerText;
-    _messageSubject = document.getElementById('messageSubject').innerHTML;
-});
+if (forwardButton !== null) {
+    /**
+     * Отрисовывает окно для отправки сообщения с данным для пересылки.
+     */
+    forwardButton.addEventListener('click', () => {
+        _messageSubject = 'Fwd: ' + _messageSubject;
+        _messageContent = "<br>" +
+            "Пересланное сообщение от " +
+            _messageSender +
+            " для " +
+            _messageRecipient +
+            ":" +
+            "<br>" +
+            "<br>" +
+            _messageContent;
+        createMessageModal('', _messageSubject, _messageContent);
+        _messageContent = document.getElementById('messageContent').innerText;
+        _messageSubject = document.getElementById('messageSubject').innerHTML;
+    });
+}
 
 /**
  * Отрисовывает модальное окно с подтверждением на удаление.
  * Отправляет запрос на удаление сообщения.
  */
-let deleteButton = document.getElementById('deleteButton');
 deleteButton.addEventListener('click', () => {
     $('#modalDiv').html(
         '<div id="modalWindow" class="modal-window-back" tabindex="-1">' +
@@ -72,10 +76,10 @@ deleteButton.addEventListener('click', () => {
     });
 });
 
-let spamButton = document.getElementById('spamButton');
-
 if (spamButton !== null) {
-    //TODO: dodelat
+    /**
+     * Отправляет сообщение в(из) спам(а).
+     */
     spamButton.addEventListener('click', () => {
         let data = {
             _csrf: token,
@@ -94,8 +98,6 @@ if (spamButton !== null) {
         });
     });
 }
-
-let replyButton = document.getElementById('replyButton');
 
 if (replyButton !== null) {
     /**

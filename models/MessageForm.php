@@ -47,6 +47,7 @@ class MessageForm extends ActiveRecord
                     $this->addError($attribute, 'Введен некорректный текст');
                 }
             }],
+            ['content', 'checkCanUserWrite'],
             ['content', 'required', 'message' => 'Напишите что-нибудь'],
             ['content', function (string $attribute) {
                 if (empty(strip_tags($this->content))) {
@@ -55,6 +56,7 @@ class MessageForm extends ActiveRecord
             }],
             ['recipientUsername', 'checkUserExist'],
             ['recipientUsername', 'checkYourselfSending'],
+            ['recipientUsername', 'checkRecipientIsOpenMessages'],
         ];
     }
 
@@ -86,6 +88,34 @@ class MessageForm extends ActiveRecord
 
         if ($user->getUsername() === $sender->getUsername()) {
             $this->addError($attribute, 'Нельзя отправить сообщение самому себе');
+        }
+    }
+
+    /**
+     * Проверка может ли пользователь писать сообщения.
+     */
+    public function checkCanUserWrite(string $attribute)
+    {
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        if (!$user->getCanWriteMessages()) {
+            $this->addError($attribute, 'Вам запрещено писать сообщения');
+        }
+    }
+
+    public function checkRecipientIsOpenMessages(string $attribute)
+    {
+        $sender = Yii::$app
+            ->user
+            ->getIdentity();
+        $user = User::find()
+            ->byUsername($this->recipientUsername)
+            ->one();
+
+        if (!$user->getIsMessagesOpen() && !$sender->getIsAdmin()) {
+            $this->addError($attribute, 'Пользователь закрыл личные сообщения');
         }
     }
 }

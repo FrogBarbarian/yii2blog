@@ -81,3 +81,29 @@
     outline: none;
     box-shadow: var(--focus-bs-basic);
 }
+
+/**
+Окна
+ */
+.window-basic {
+    padding: 5px;
+    background-color: white;
+    margin: 0 1rem;
+    border-radius: .5rem;
+    border: solid 1px #2c3034;
+}
+
+.window-lite {
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    background-color: white;
+    margin: 2px;
+    border-radius: .5rem;
+    border: solid 2px #5f7583;
+}
+
+.grid-repeat {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(90px, 180px));
+}

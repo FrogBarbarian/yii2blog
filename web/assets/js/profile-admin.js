@@ -1,82 +1,160 @@
 /**
+ * Кнопка изменения прав комментировать пользователю.
+ */
+const changeCommentPermissionsButton = document.getElementById('changeCommentPermissionsButton');
+/**
+ * Поле <span> с информацией о разрешении комментировать пользователю.
+ */
+const commentPermissionsField = document.getElementById('commentPermissions');
+/**
+ * Кнопка изменения прав создавать посты пользователю.
+ */
+const changePostPermissionsButton = document.getElementById('changePostPermissionsButton');
+/**
+ * Поле <span> с информацией о разрешении создавать посты пользователю.
+ */
+const postPermissionsField = document.getElementById('postPermissions');
+/**
+ * Кнопка изменения прав создавать посты пользователю.
+ */
+const changeMessagesPermissionsButton = document.getElementById('changeMessagesPermissionsButton');
+/**
+ * Поле <span> с информацией о разрешении писать сообщения пользователю.
+ */
+const messagePermissionsField = document.getElementById('messagePermissions');
+/**
+ * Кнопка отрисовки модального окна с назначением пользователя администратором.
+ */
+const createAdminModalButton = document.getElementById('createAdminModalButton');
+/**
+ * Кнопка для бана/разбана пользователя.
+ */
+const banUserButton = document.getElementById('banUserButton');
+/**
+ * Имя пользователя профиля.
+ */
+const username = decodeURI(url.pathname.slice(7));
+
+/**
  * Меняет права пользователя на написание комментариев.
  */
-function setCommentsPermissions(button) {
+changeCommentPermissionsButton.addEventListener('click', () => {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
-        id: $('#userId').val(),
-    };
+        _csrf: token,
+        ajax: {
+            username: username,
+        },
+    }
+
     $.ajax({
-        url: '/profile-interface/set-comments-permissions',
-        cache: false,
+        url: '/admin-u-i/set-comments-permissions',
         type: 'post',
+        cache: false,
         data: data,
         success: function (response) {
-            if (response) {
-                $(button).html('Комментарии разрешены');
-            } else {
-                $(button).html('Комментарии запрещены');
-            };
-        },
+            if (response === true) {
+                commentPermissionsField.innerText = '';
+
+                return true;
+            }
+
+            commentPermissionsField.innerText = 'не';
+
+            return false;
+        }
     });
-};
+});
 
 /**
- * Меняет права на создание постов.
+ * Меняет права пользователя на написание постов.
  */
-function setCreatePostsPermissions(button) {
+changePostPermissionsButton.addEventListener('click', () => {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
-        id: $('#userId').val(),
-    };
+        _csrf: token,
+        ajax: {
+            username: username,
+        },
+    }
+
     $.ajax({
-        url: '/profile-interface/set-create-posts-permissions',
-        cache: false,
+        url: '/admin-u-i/set-create-posts-permissions',
         type: 'post',
+        cache: false,
         data: data,
         success: function (response) {
-            if (response) {
-                $(button).html('Писать посты разрешено');
-            } else {
-                $(button).html('Писать посты запрещено');
-            };
-        },
+            if (response === true) {
+                postPermissionsField.innerText = '';
+
+                return true;
+            }
+
+            postPermissionsField.innerText = 'не';
+
+            return false;
+        }
     });
-};
+});
 
 /**
- * Меняет права на использование ЛС.
+ * Меняет права пользователя на написание личных сообщений.
  */
-function setPrivateMessagesPermissions(button) {
+changeMessagesPermissionsButton.addEventListener('click', () => {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
-        id: $('#userId').val(),
+        _csrf: token,
+        ajax: {
+            username: username,
+        },
+    }
+
+    $.ajax({
+        url: '/admin-u-i/set-private-messages-permissions',
+        type: 'post',
+        cache: false,
+        data: data,
+        success: function (response) {
+            if (response === true) {
+                messagePermissionsField.innerText = '';
+
+                return true;
+            }
+
+            messagePermissionsField.innerText = 'не';
+
+            return false;
+        }
+    });
+});
+
+createAdminModalButton.addEventListener('click', () => {
+    let data = {
+        _csrf: token,
+        ajax: {
+            username: username,
+        },
     };
     $.ajax({
-        url: '/profile-interface/set-private-messages-permissions',
+        url: '/admin-u-i/create-user-to-admin-window',
         cache: false,
         type: 'post',
         data: data,
         success: function (response) {
-            if (response) {
-                $(button).html('ЛС разрешены');
-            } else {
-                $(button).html('ЛС запрещены');
-            };
-        },
+            $('#modalDiv').html(response);
+        }
     });
-};
+});
 
 /**
  * Делает пользователя админом.
  */
 function setUserAdmin() {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr("content"),
-        id: $('#userId').val(),
+        _csrf: token,
+        ajax: {
+            username: username,
+        },
     };
     $.ajax({
-        url: '/profile-interface/set-user-admin',
+        url: '/admin-u-i/set-user-admin',
         cache: false,
         type: 'post',
         data: data,
@@ -84,4 +162,22 @@ function setUserAdmin() {
             location.href = window.location;
         },
     });
-};
+}
+
+banUserButton.addEventListener('click', () => {
+    let data = {
+        _csrf: token,
+        ajax: {
+            username: username,
+        },
+    };
+    $.ajax({
+        url: '/admin-u-i/set-user-ban',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function () {
+            location.href = window.location;
+        },
+    });
+});

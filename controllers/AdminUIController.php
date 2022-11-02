@@ -6,7 +6,7 @@ namespace app\controllers;
 
 use app\models\Complaint;
 use app\models\Tag;
-use Psr\SimpleCache\InvalidArgumentException;
+use app\models\User;
 use Yii;
 use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
@@ -17,7 +17,6 @@ class AdminUIController extends AppController
     /**
      * Удаляет тег.
      * @throws \Throwable
-     * @throws InvalidArgumentException
      */
     public function actionDeleteTag(string $id)
     {
@@ -73,5 +72,139 @@ class AdminUIController extends AppController
             ->all();
 
         return $this->asJson($users);
+    }
+
+    /**
+     * Меняет права пользователя на написание комментариев.
+     * @throws NotFoundHttpException
+     */
+    public function actionSetCommentsPermissions(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $username = $request->post('ajax')['username'];
+        $user = User::find()
+            ->byUsername($username)
+            ->one();
+        $user
+            ->setCanComment(!$user->getCanComment())
+            ->save();
+
+        return $this->asJson($user->getCanComment());
+    }
+
+    /**
+     * Меняет права пользователя на создание постов.
+     * @throws NotFoundHttpException
+     */
+    public function actionSetCreatePostsPermissions(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $username = $request->post('ajax')['username'];
+        $user = User::find()
+            ->byUsername($username)
+            ->one();
+        $user
+            ->setCanWritePosts(!$user->getCanWritePosts())
+            ->save();
+
+        return $this->asJson($user->getCanWritePosts());
+    }
+
+    /**
+     * Меняет права пользователя на использование ЛС.
+     * @throws NotFoundHttpException
+     */
+    public function actionSetPrivateMessagesPermissions(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $username = $request->post('ajax')['username'];
+        $user = User::find()
+            ->byUsername($username)
+            ->one();
+        $user
+            ->setCanWriteMessages(!$user->getCanWriteMessages())
+            ->save();
+
+        return $this->asJson($user->getCanWriteMessages());
+    }
+
+    /**
+     * Отрисовывает модальное окно для подтверждения назначения пользователя администратором.
+     * @throws NotFoundHttpException
+     */
+    public function actionCreateUserToAdminWindow(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $username = $request->post('ajax')['username'];
+
+        return $this->renderAjax('//u-i/uta-modal', ['username' => $username]);
+    }
+
+    /**
+     * Делает пользователя администратором.
+     * @throws NotFoundHttpException
+     */
+    public function actionSetUserAdmin()
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $username = $request->post('ajax')['username'];
+        $user = User::find()
+            ->byUsername($username)
+            ->one();
+        $user
+            ->setCanWriteMessages(true)
+            ->setCanWritePosts(true)
+            ->setCanComment(true)
+            ->setIsAdmin(true)
+            ->save();
+    }
+
+    /**
+     * Банит/разбанивает пользователя.
+     * @throws NotFoundHttpException
+     */
+    public function actionSetUserBan()
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
+            throw new NotFoundHttpException();
+        }
+
+        $username = $request->post('ajax')['username'];
+        $user = User::find()
+            ->byUsername($username)
+            ->one();
+        $user
+            ->setCanWriteMessages($user->getIsBanned())
+            ->setCanWritePosts($user->getIsBanned())
+            ->setCanComment($user->getIsBanned())
+            ->setIsBanned(!$user->getIsBanned())
+            ->save();
     }
 }

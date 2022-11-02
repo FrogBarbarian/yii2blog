@@ -12,7 +12,6 @@ use app\assets\PostAsset;
 use app\components\CommentWidget;
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
-use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 $this->title = $post->getTitle();
@@ -30,7 +29,6 @@ if ($visitorIsLogin) {
 
 PostAsset::register($this);
 ?>
-<input type="hidden" id="postId" value="<?= $post->getId() ?>">
 <div class="mx-3 py-2">
     <?php if (Yii::$app->session->hasFlash('postFlash')): ?>
         <div class="alert alert-warning rounded-4" role="alert">
@@ -44,7 +42,6 @@ PostAsset::register($this);
         <div class="card-body">
             <p class="card-text"><?= $post->getBody() ?></p>
             <hr>
-            <!--TODO: по тегу можно перейти в поиск по тегу. Сделать теги-->
             <?php foreach ($post->getTagsArray() as $tag): ?>
                 <a class="tag-card suggested-tag" href="/tag/<?= $tag ?>">
                     <?= $tag ?>
@@ -54,7 +51,7 @@ PostAsset::register($this);
         <div class="card-footer">
             <div class="hstack">
                 <div class="col text-start" style="font-size: small">
-                    <?= $post->getViews() . ' post.php' . NormalizeData::wordForm($post->getViews(), 'просмотров', 'просмотр', 'просмотра') ?>
+                    <?= $post->getViews() . ' ' . NormalizeData::wordForm($post->getViews(), 'просмотров', 'просмотр', 'просмотра') ?>
                 </div>
                 <div class="col text-end" style="font-size: small">
                     <?= NormalizeData::passedTime($post->getDatetime()) ?>
@@ -93,20 +90,20 @@ PostAsset::register($this);
                                    href="/edit-post?id=<?= $post->getId() ?>"
                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Отредактировать"
                                    style="width: auto">
-                                    <img src="../../web/assets/images/post-edit.svg" alt="edit" width="24"
+                                    <img src="<?= IMAGES ?>post-edit.svg" alt="edit" width="24"
                                          class="d-inline-block">
                                 </a>
                             <?php endif ?>
                             <?php if ($userIsAdmin): ?>
                                 <button type="button" id="commentsButton" class="btn btn-light">
-                                    <img src="../../assets/images/<?= $postIsCommentable ? 'comment-enabled' : 'comment-disabled' ?>.svg"
+                                    <img src=".<?= IMAGES ?><?= $postIsCommentable ? 'comment-enabled' : 'comment-disabled' ?>.svg"
                                          alt="comments" width="24">
                                 </button>
                             <?php endif ?>
                             <?php if ($userIsAdmin || $userIsAuthor): ?>
                                 <button class="btn btn-light" type="button" style="width: auto" data-bs-toggle="modal"
                                         data-bs-target="#deletePost">
-                                    <img src="../../web/assets/images/post-delete.svg"
+                                    <img src="<?= IMAGES ?>post-delete.svg"
                                          alt="delete" width="24"
                                          class="d-inline-block">
                                 </button>
@@ -149,7 +146,7 @@ PostAsset::register($this);
                                 <button type="button"
                                         onclick="createComplaint('post', <?= $post->getId() ?>, <?= $user->getId() ?>)"
                                         class="btn btn-light rounded-end">
-                                    <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
+                                    <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
                                 </button>
                             <?php endif ?>
                         </div>
@@ -175,7 +172,7 @@ PostAsset::register($this);
         <?php endif ?>
     </div>
     <h5 class="mt-2" id="commentsAmount" style="padding-left: 5%;color: #000000">
-        <?= count($comments) . ' post.php' . NormalizeData::wordForm(
+        <?= count($comments) . ' ' . NormalizeData::wordForm(
             count($comments),
             'комментариев',
             'комментарий',
@@ -188,30 +185,28 @@ PostAsset::register($this);
             'errorOptions' => ['class' => 'text-danger small', 'id' => 'commentErrorLabel'],
             'template' => "{input}\n{label}\n{error}",
         ]; ?>
-        <div class="rounded-2 border-end"
+        <div class="window-basic"
              style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
             <?php $activeForm = ActiveForm::begin([
                 'id' => 'comment-form',
                 'options' => [
-                    'style' => 'width: 100%;padding: 1%',
+                    'style' => 'padding: 1%',
                 ],
-                'enableAjaxValidation' => true,
-                'validateOnType' => true,
-                'action' => Url::to('/comment/add-comment'),
             ]) ?>
+            <label for="commentInput">Напишите комментарий</label>
+            <div class="div-input-basic" contenteditable="true" id="commentInput"></div>
             <?= $activeForm
                 ->field($commentForm, 'comment', $options)
-                ->textarea([
-                    'placeholder' => 'comment',
-                    'id' => 'commentArea',
-                    'style' => 'min-height: 150px',
+                ->hiddenInput([
+                    'id' => 'commentValue',
                 ])
-                ->label('Комментарий', ['class' => false])
+                ->label(false)
             ?>
-            <?= $activeForm
-                ->field($commentForm, 'postId')
-                ->hiddenInput(['value' => $post->getId()]) ?>
-            <button type="button" id="addComment" class="btn btn-dark mt-1">Отправить</button>
+            <div class="d-flex justify-content-end" >
+                <button type="button" id="addComment" class="btn-basic">
+                    Отправить
+                </button>
+            </div>
             <?php ActiveForm::end() ?>
         </div>
     <?php endif ?>

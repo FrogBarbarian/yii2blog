@@ -9,23 +9,29 @@
  * @var \app\models\TmpPost[] $tmpPosts
  * @var \app\models\Complaint[] $complaints
  * @var \app\models\Message[] $messages
+ * @var \yii\web\View $this
  */
 
 use app\components\ProfileMailboxWidget;
 use app\components\ProfileOverviewWidget;
 use app\components\ProfileSettingsWidget;
 use src\helpers\ConstructHtml;
+use \app\components\UserPermissionsAdminToolWidget;
 
 $this->title = $isOwn ? 'Профиль' : $user->getUsername();
 ?>
 
-
+<?php if ($visitor !== null && !$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()) {
+    echo UserPermissionsAdminToolWidget::widget(['user' => $user]);
+}
+?>
 <div class="mx-3 pt-5 pb-2">
     <div class="col">
         <?php if ($isOwn): ?>
             <div class="col-2">
                 <div class="list-group list-group-horizontal mb-1">
-                    <a class="btn-basic a-btn <?= ($tab !== 'mailbox' && $tab !== 'settings') ? 'a-btn-active' : '' ?>" href="/profile">
+                    <a class="btn-basic a-btn <?= ($tab !== 'mailbox' && $tab !== 'settings') ? 'a-btn-active' : '' ?>"
+                       href="/profile">
                         Профиль
                     </a>
                     <a class="btn-basic a-btn <?= $tab === 'mailbox' ? 'a-btn-active' : '' ?>"
@@ -79,44 +85,5 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
         </div>
     </div>
 </div>
-<?php if ($visitor !== null && !$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()): ?>
-    <script src="../../web/assets/js/profile-admin.js"></script>
-    <input type="hidden" id="userId" value="<?= $user->getId() ?>">
-    <div class="admin-user-control">
-        <p style="text-align: center">Манипуляции с пользователем</p>
-        <button type="button" data-bs-toggle="modal" data-bs-target="#adminApply">
-            Назначить админом
-        </button>
-        <button onclick="setCommentsPermissions(this)">
-            Комментарии <?= $user->getCanComment() ? 'разрешены' : 'запрещены' ?>
-        </button>
-        <button onclick="setCreatePostsPermissions(this)">Писать
-            посты <?= $user->getCanWritePosts() ? 'разрешено' : 'запрещено' ?>
-        </button>
-        <button onclick="setPrivateMessagesPermissions(this)">
-            ЛС <?= $user->getCanWriteMessages() ? 'разрешены' : 'запрещены' ?>
-        </button>
-        <button type="submit" name="settings" value="ban">
-            Забанить
-        </button> <!--TODO: remark-->
-    </div>
-    <div class="modal fade" id="adminApply" tabindex="-1" aria-labelledby="adminApplyLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="adminApplyLabel">Вы уверены?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Это назначит пользователя <b><?= $user->getUsername() ?></b> администратором. Отменить возможно
-                    через прямой доступ к БД.
-                </div>
-                <div class="modal-footer">
-                    <button class="btn" type="button" data-bs-dismiss="modal">Отмена</button>
-                    <button class="btn" onclick="setUserAdmin()">Подтвердить</button>
-                </div>
-            </div>
-        </div>
-    </div>
-<?php endif ?>
+
 

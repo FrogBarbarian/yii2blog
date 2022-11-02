@@ -243,7 +243,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setIsAdmin(bool $isAdmin): self
     {
-        $this->setAttribute('isAdmin', $isAdmin);
+        $this->setAttribute('is_admin', $isAdmin);
 
         return $this;
     }
@@ -288,5 +288,41 @@ class User extends ActiveRecord implements IdentityInterface
         $this->setAttribute('can_write_posts', $canWritePosts);
 
         return $this;
+    }
+
+    /**
+     * Забанен ли пользователь.
+     */
+    public function setIsBanned(bool $isBanned): self
+    {
+        $this->setAttribute('is_banned', $isBanned);
+
+        return $this;
+    }
+
+    /**
+     * @return bool Забнен ли пользователь.
+     */
+    public function getIsBanned(): bool
+    {
+        return $this->getAttribute('is_banned');
+    }
+
+    /**
+     * Открыты ли личные сообщения.
+     */
+    public function setIsMessagesOpen(bool $isOpen): self
+    {
+        $this->setAttribute('is_pm_open', $isOpen);
+
+        return $this;
+    }
+
+    /**
+     * @return bool Открыты ли личные сообщения.
+     */
+    public function getIsMessagesOpen(): bool
+    {
+        return $this->getAttribute('is_pm_open');
     }
 }

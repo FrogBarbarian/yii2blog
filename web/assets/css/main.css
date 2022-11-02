@@ -138,30 +138,6 @@
     background-color: #f0f0f0;
 }
 
-.admin-user-control {
-    padding: 5px;
-    background-color: white;
-    margin: 0 1rem 0 1rem;
-    border-radius: 1rem;
-    border: solid 2px #2c3034;
-}
-
-.admin-user-control button {
-    margin: 1px;
-    background-color: #ffd272;
-    border-radius: inherit;
-    border: inherit;
-}
-
-.admin-user-control button:hover {
-    background-color: #eeba4c;
-}
-
-.admin-user-control button:active {
-    background-color: #f5d099;
-    transform: translateY(1px);
-}
-
 .admin-panel-header {
     display: block;
     text-align: center;

@@ -1,57 +1,81 @@
-$(document).ready(function () {
-    const postId = (new URL(document.location)).searchParams.get('id');
-    const token = $('meta[name=csrf-token]').attr("content");
+/**
+ * Поле содержащее значение поля 'комментарий'.
+ */
+const commentValueHiddenInput = document.getElementById('commentValue');
+/**
+ * Div контейнер для ввода комментария.
+ */
+const commentInput = document.getElementById('commentInput');
+/**
+ * Кнопка скрытия комментариев.
+ */
+const hideCommentsButton = document.getElementById('hideComments');
+/**
+ * Контейнер с комментариями.
+ */
+const comments = $('#comments');
+
+setInterval(updateComments, 2000);
+
+/**
+ * Добавляет комментарий.
+ */
+document.getElementById('addComment').addEventListener('click', () => {
     let data = {
         _csrf: token,
         ajax: {
             postId: postId,
+            comment: commentValueHiddenInput.value,
         },
-    };
-
-    /**
-     * Добавляет комментарий.
-     */
-    $('#addComment').click(function () {
-        let form = $('#comment-form');
-        let formData = form.serialize();
-        $.ajax({
-            url: form.attr('action'),
-            cache: false,
-            type: 'post',
-            data: formData,
-            success: function (response) {
-                if (response === false) {
-                    document.getElementById("commentArea").value = document.getElementById("commentArea").defaultValue;
-                    $('#errorLabel').html('');
-                    updateComments(data);
-                    updateCommentsAmount(data);
-                } else {
-                    $('#commentErrorLabel').html(response['comment'][0]);
-                }
+    }
+    $.ajax({
+        url: '/comment/add-comment',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            if (response === false) {
+                commentInput.innerText = '';
+                commentValueHiddenInput.value = '';
+                $('#commentErrorLabel').html('');
+                updateComments(data);
+                updateCommentsAmount(data);
+            } else {
+                $('#commentErrorLabel').html(response['comment'][0]);
             }
-        });
+        }
     });
+});
 
-    $('#hideComments').click(function () {
-        if ($('#comments').css('display') === 'none') {
-            $('#comments').show();
-            $('#hideComments').html('Скрыть комментарии')
+/**
+ * Заполняет значение скрытого поля 'commentValue' вводом в div 'commentInput'.
+ */
+commentInput.addEventListener('input', (e) => {
+    commentValueHiddenInput.value = e.target.innerText;
+});
+
+/**
+ * Скрывает/отображает комментарии.
+ */
+if (hideCommentsButton !== null) {
+    hideCommentsButton.addEventListener('click', () => {
+        if (comments.css('display') === 'none') {
+            comments.show();
+            hideCommentsButton.innerText = 'Скрыть комментарии';
         } else {
-            $('#comments').hide();
-            $('#hideComments').html('Показать комментарии')
+            comments.hide();
+            hideCommentsButton.innerText = 'Показать комментарии';
         }
 
     });
-
-    setInterval(updateComments, 2000, data);
-});
+}
 
 /**
  * Лайкает комментарий.
  */
 function likeComment(id) {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr('content'),
+        _csrf: token,
         ajax: {
             commentId: id,
         },
@@ -73,7 +97,7 @@ function likeComment(id) {
  */
 function dislikeComment(id) {
     let data = {
-        _csrf: $('meta[name=csrf-token]').attr('content'),
+        _csrf: token,
         ajax: {
             commentId: id,
         },
@@ -84,18 +108,24 @@ function dislikeComment(id) {
         type: 'post',
         data: data,
         success: function (html) {
-            updateCommentRatingButtons(data, id);
+            updateCommentRatingButtons(data);
             $('#commentRating' + id).html(html);
         },
     });
-};
+}
 
 /**
  * Дорисовывает комментарии, если в посте выведены не все.
  */
-function updateComments(data) {
-    let comments = document.getElementById('comments');
-    data['ajax']['curCommentsAmount'] = comments.getElementsByTagName('li').length;
+function updateComments() {
+    let curCommentsAmount = comments.children('li').length;
+    let data = {
+        _csrf: token,
+        ajax: {
+            postId: postId,
+            curCommentsAmount: curCommentsAmount,
+        },
+    }
     $.ajax({
         url: '/comment/append-comments',
         cache: false,
@@ -103,11 +133,11 @@ function updateComments(data) {
         data: data,
         success: function (response) {
             if (response !== false) {
-                const html = comments.innerHTML;
-                $('#comments').html(html + response);
+                const html = comments.html();
+                comments.html(html + response);
             }
 
-            updateCommentRating(data['_csrf']);
+            updateCommentRating();
         }
     });
 }
@@ -115,7 +145,8 @@ function updateComments(data) {
 /**
  * Обновляет цвет кнопок "лайк" и "дизлайк" к комментарию.
  */
-function updateCommentRatingButtons(data, id) {
+function updateCommentRatingButtons(data,) {
+    let id = data['ajax']['commentId'];
     $.ajax({
         url: '/comment/update-comment-rating-buttons',
         cache: false,
@@ -143,7 +174,7 @@ function updateCommentRatingButtons(data, id) {
 /**
  *  Обновляет рейтинг всех комментариев к посту.
  */
-function updateCommentRating(token) {
+function updateCommentRating() {
     let data = {
         _csrf: token,
         ajax: {},

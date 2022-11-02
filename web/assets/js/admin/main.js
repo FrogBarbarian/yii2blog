@@ -1,7 +1,7 @@
-let offset = getParams.get("offset") > 0 ? getParams.get("offset") : '-1';
-let page = getParams.get("page") ?? '1';
-let sortParam = getParams.get("sortParam") ?? 'id';
-let sortOrder = getParams.get("sortOrder") ?? '4';
+let offset = params.get("offset") > 0 ? params.get("offset") : '-1';
+let page = params.get("page") ?? '1';
+let sortParam = params.get("sortParam") ?? 'id';
+let sortOrder = params.get("sortOrder") ?? '4';
 let table = '';
 let model = '';
 
@@ -14,16 +14,16 @@ $(document).ready(function () {
  */
 function sort(param) {
     if (offset !== '-1') {
-        getParams.set('offset', offset);
+        params.set('offset', offset);
     }
 
     if (page !== '1') {
-        getParams.set('page', page);
+        params.set('page', page);
     }
 
-    getParams.set('sortParam', param);
+    params.set('sortParam', param);
     sortOrder = sortOrder === '4' ? '3' : '4';
-    getParams.set('sortOrder', sortOrder);
+    params.set('sortOrder', sortOrder);
     location.href = url.toString();
 }
 

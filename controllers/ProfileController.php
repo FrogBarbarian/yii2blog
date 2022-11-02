@@ -248,7 +248,7 @@ class ProfileController extends AppController
             ->byId($messageId)
             ->one();
         $message
-            ->setRecipientStatus('spam')
+            ->setRecipientStatus($message->getRecipientStatus() === 'spam' ? 'received' : 'spam')
             ->save();
 
         return $this->asJson('/profile?tab=mailbox');

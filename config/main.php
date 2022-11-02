@@ -21,7 +21,7 @@ return [
         '@css' => 'web/assets/css',
         '@images' => 'web/assets/images',
     ],
-    'timeZone' => 'Europe/Moscow',
+//    'timeZone' => 'Europe/Moscow',
     'components' => [
         'user' => [
             'identityClass' => 'app\models\User',

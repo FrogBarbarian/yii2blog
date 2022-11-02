@@ -17,7 +17,7 @@ $this->registerJsFile('@web/assets/js/message-modal.js');
         id="messageData"
         hidden
         data-id="<?= $message->getId() ?>"
-        data-userIsSender ="<?= $userIsSender ?>"
+        data-userIsSender="<?= $userIsSender ?>"
         data-sender="<?= $message->getSenderUsername() ?>"
         data-recipient="<?= $message->getRecipientUsername() ?>"
 ></div>
@@ -39,22 +39,24 @@ $this->registerJsFile('@web/assets/js/message-modal.js');
         </div>
     </div>
     <div>
-        <?php if (!$userIsSender): ?>
-            <button id="replyButton" class="btn-basic">
-                <!--TODO: рендер окна написания сообщения. Заполняем автора. Заполняем тему. Заполняет содержание, фокус на содержание-->
-                Ответить
+        <?php if ($message->getRecipientStatus() !== 'spam'): ?>
+            <?php if (!$userIsSender): ?>
+                <button id="replyButton" class="btn-basic" title="Ответить на сообщение">
+                    Ответить
+                </button>
+                <button id="spamButton" class="btn-basic" title="Переместить сообщение в спам">
+                    Спам
+                </button>
+            <?php endif ?>
+            <button id="forwardButton" class="btn-basic" title="Переслать сообщение">
+                Переслать
             </button>
-            <button id="spamButton" class="btn-basic">
-                <!--TODO: Создаем жалобу. Отправляем сообщение в спам. Перенаправляем страницу-->
-                Спам
+        <?php else: ?>
+            <button id="spamButton" class="btn-basic" title="Убрать отметку о спаме">
+                Перенести
             </button>
         <?php endif ?>
-        <button id="forwardButton" class="btn-basic">
-            <!--TODO: рендер окна написания сообщения. Заполняем тему. Заполняет содержание, фокус на автора-->
-            Переслать
-        </button>
-        <button id="deleteButton" class="btn-basic">
-            <!--TODO: Удаляем сообщение, перенаправляем страницу-->
+        <button id="deleteButton" class="btn-basic" title="Удалить сообщение">
             Удалить
         </button>
     </div>

@@ -1,4 +1,8 @@
-const postId = (new URL(document.location)).searchParams.get('id');
+/**
+ * ID поста.
+ */
+const postId = params.get('id');
+
 let data = {
     _csrf: token,
     ajax: {
@@ -53,7 +57,7 @@ function likePost() {
         data: data,
         success: function () {
             updatePostRating(data);
-            updateRatingButtons(data);
+            updateRatingButtons();
         },
     });
 }
@@ -69,7 +73,7 @@ function dislikePost() {
         data: data,
         success: function () {
             updatePostRating(data);
-            updateRatingButtons(data);
+            updateRatingButtons();
         }
     });
 }
@@ -117,15 +121,15 @@ function updateCommentsAmount(data) {
 /**
  * Обновляет цвет кнопок "лайк" и "дизлайк" к посту.
  */
-function updateRatingButtons(data) {
+function updateRatingButtons() {
     $.ajax({
         url: '/post-u-i/update-post-rating-buttons',
         cache: false,
         type: 'post',
         data: data,
         success: function (response) {
-            likeImg = document.getElementById('likePost');
-            dislikeImg = document.getElementById('dislikePost');
+            let likeImg = document.getElementById('likePost');
+            let dislikeImg = document.getElementById('dislikePost');
 
             if (response[0] === true) {
                 likeImg.src = '/assets/images/liked.svg';

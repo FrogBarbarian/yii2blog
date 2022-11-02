@@ -20,6 +20,8 @@ class AppAsset extends AssetBundle
         'assets/js/bootstrap.bundle.js',
         'assets/js/jquery.js',
         'assets/js/main.js',
+        'assets/js/post-search.js',
+        'assets/js/complaint-modal.js',
     ];
     public $jsOptions = [
         'position' => View::POS_HEAD,
