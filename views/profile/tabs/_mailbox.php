@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 use app\assets\MailboxAsset;
 
+$this->title = 'Сообщения';
 MailboxAsset::register($this);
 ?>
 <div class="mailbox-main">
@@ -29,7 +30,5 @@ MailboxAsset::register($this);
             <img src="<?= IMAGES ?>button-update.svg" alt="refresh">
         </button>
     </div>
-    <div class="mailbox-mails-container" id="mails">
-
-    </div>
+    <div class="mailbox-mails-container" id="mails"></div>
 </div>

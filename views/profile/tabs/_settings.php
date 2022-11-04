@@ -2,9 +2,14 @@
 
 declare(strict_types=1);
 
-/** @var \app\models\User $user */
-?>
+/**
+ * @var \app\models\User $user
+ * @var \yii\web\View $this
+ */
 
+$this->title = 'Настройки';
+$this->registerJsFile('@web/assets/js/settings.js');
+?>
 <ul class="list-group">
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Имя пользователя - <?= $user->getUsername() ?>
@@ -16,25 +21,29 @@ declare(strict_types=1);
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Пароль
-        <button class="badge bg-primary rounded-pill">Изменить</button>
+        <button id="createPasswordModal" class="btn-basic">Изменить</button>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Публичный профиль
         <div>
-            <div class="form-check form-switch">
-                <input onchange="changeVisibility(this)" class="form-check-input" <?= $user->getIsHidden() ? '' : 'checked' ?> type="checkbox"
-                       id="profileVisibility">
-                <label class="form-check-label" for="profileVisibility"></label>
-            </div>
+            <label class="switch">
+                <input
+                    <?= $user->getIsHidden() ? '' : 'checked' ?>
+                        type="checkbox"
+                        id="profileVisibility"
+                ><span class="slider"></span>
+            </label>
         </div>
+
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Личные сообщения
-        <div class="form-check form-switch">
-            <input class="form-check-input" checked type="checkbox" id="allowPM">
-            <label class="form-check-label" for="allowPM"></label>
-        </div>
+        <label class="switch">
+            <input
+                <?= !$user->getIsMessagesOpen() ? '' : 'checked' ?>
+                    type="checkbox"
+                    id="messagesStatus"
+            ><span class="slider"></span>
+        </label>
     </li>
 </ul>
-<div id="settingsModal"></div>
-<script src="../../web/assets/js/settings.js"></script>

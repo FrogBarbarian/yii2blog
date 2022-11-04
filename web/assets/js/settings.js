@@ -1,10 +1,12 @@
-const token = $('meta[name=csrf-token]').attr("content");
-
-function changeVisibility(checkbox) {
+/**
+ * Переключатель видимости профиля.
+ */
+const visibilitySwitcher = document.getElementById('profileVisibility');
+visibilitySwitcher.addEventListener('change', () => {
     let data = {
         _csrf: token,
         ajax: {
-            isVisible: checkbox.checked,
+            isVisible: visibilitySwitcher.checked,
         },
     };
     $.ajax({
@@ -12,8 +14,38 @@ function changeVisibility(checkbox) {
         cache: false,
         type: 'post',
         data: data,
-        success: function () {
-            alert('Настройки изменены');
+    });
+});
+
+/**
+ * Переключатель открытости сообщений.
+ */
+const messagesSwitcher = document.getElementById('messagesStatus');
+messagesSwitcher.addEventListener('change', () => {
+    let data = {
+        _csrf: token,
+        ajax: {
+            isOpen: messagesSwitcher.checked,
+        },
+    };
+    $.ajax({
+        url: '/settings/open-close-messages',
+        cache: false,
+        type: 'post',
+        data: data
+    });
+});
+
+/**
+ * Кнопка отрисовки модального окна для смены пароля.
+ */
+const createPasswordModalButton = document.getElementById('createPasswordModal');
+createPasswordModalButton.addEventListener('click', () => {
+    $.ajax({
+        url: '/settings/create-password-modal',
+        cache: false,
+        success: function (response) {
+            $('#modalDiv').html(response);
         }
     });
-}
+});

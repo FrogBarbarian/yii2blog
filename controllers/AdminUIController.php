@@ -200,11 +200,11 @@ class AdminUIController extends AppController
         $user = User::find()
             ->byUsername($username)
             ->one();
+        $isBanned = !$user->getIsBanned();
+        $status = $isBanned ? USER::STATUS_BANNED : USER::STATUS_ACTIVE;
         $user
-            ->setCanWriteMessages($user->getIsBanned())
-            ->setCanWritePosts($user->getIsBanned())
-            ->setCanComment($user->getIsBanned())
-            ->setIsBanned(!$user->getIsBanned())
+            ->setIsBanned($isBanned)
+            ->setStatus($status)
             ->save();
     }
 }

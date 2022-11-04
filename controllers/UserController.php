@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\models\ChangePasswordForm;
 use app\models\LoginForm;
 use app\models\RegisterForm;
 use app\models\Statistic;
@@ -11,6 +12,7 @@ use app\models\User;
 use Yii;
 use yii\base\Exception;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 class UserController extends AppController
 {
@@ -83,5 +85,16 @@ class UserController extends AppController
         }
 
         return $this->render('login', ['loginForm' => $loginForm]);
+    }
+
+    public function actionChangePassword()
+    {
+        if (Yii::$app->request->isAjax) {
+            $f = new ChangePasswordForm();
+            $f->load(Yii::$app->request->post());
+            $f->validate();
+
+            return $this->asJson($f->errors);
+        }
     }
 }

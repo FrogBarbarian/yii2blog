@@ -179,7 +179,6 @@ class AdminController extends AppController
         return $this->render('tags', [
             'unusedTags' => $unusedTags,
             'offset' => $offset,
-//    "yiisoft/yii2-bootstrap": "*"
             'curPage' => $curPage,
             'pages' => $pages,
             'sortParam' => $sortParam,

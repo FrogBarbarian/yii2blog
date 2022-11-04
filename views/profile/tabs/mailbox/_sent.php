@@ -12,7 +12,7 @@ use app\components\MessageWidget;
 use app\components\PageSwitcherWidget;
 
 ?>
-<h5 style="text-align: center;display: block">Отправленные сообщения</h5>
+<h5 class="text-center d-block">Отправленные сообщения</h5>
 <hr>
 <?php if ($messages !== []): ?>
     <?php
@@ -43,5 +43,5 @@ use app\components\PageSwitcherWidget;
             написать
         </button>
     </p>
-    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages" style="max-width: 100%">
+    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages">
 <?php endif ?>

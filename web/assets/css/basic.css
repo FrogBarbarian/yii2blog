@@ -24,6 +24,38 @@
     transform: none;
 }
 
+.switch {
+    position: relative;
+    width: 58px;
+    height: 24px;
+    background-color: white;
+    border: var(--border-basic);
+}
+
+.switch>input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 34px;
+    bottom: 0;
+    background-color: grey;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: darkslategray;
+    left: 34px;
+    right: 0;
+}
+
 /**
 Ссылки
  */

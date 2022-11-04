@@ -15,6 +15,7 @@ class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
+    const STATUS_BANNED = 20;
 
     /**
      * {@inheritDoc}
@@ -98,7 +99,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED, self::STATUS_BANNED]],
         ];
     }
 
@@ -116,6 +117,24 @@ class User extends ActiveRecord implements IdentityInterface
     public function getId(): int
     {
         return $this->getAttribute('id');
+    }
+
+    /**
+     * Статус пользователя.
+     */
+    public function setStatus(int $status): self
+    {
+        $this->setAttribute('status', $status);
+
+        return $this;
+    }
+
+    /**
+     * @return int Статус.
+     */
+    public function getStatus(): int
+    {
+        return $this->getAttribute('status');
     }
 
     /**
@@ -204,7 +223,11 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function setPassword(string $password): self
     {
-        $this->setAttribute('password_hash', Yii::$app->security->generatePasswordHash($password));
+        $this->setAttribute('password_hash',
+            Yii::$app
+                ->security
+                ->generatePasswordHash($password));
+
 
         return $this;
     }
@@ -222,7 +245,9 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function validatePassword(string $password): bool
     {
-        return Yii::$app->security->validatePassword($password, $this->getPasswordHash());
+        return Yii::$app
+            ->security
+            ->validatePassword($password, $this->getPasswordHash());
     }
 
     /**

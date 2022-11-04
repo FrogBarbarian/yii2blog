@@ -9,6 +9,8 @@ $options = [
     'errorOptions' => ['class' => 'text-danger small'],
     'template' => "{input}\n{label}\n{error}",
 ];
+
+$this->registerJsFile('@web/assets/js/password-visibility.js');
 ?>
 
 <div class="align-items-center vstack justify-content-center" style="height: 90vh">
@@ -49,7 +51,7 @@ $options = [
                     'style' => 'background-color: #899aa2;max-height: 3.5rem',
                     'aria-describedby' => 'togglePassword',
                 ])->label('Пароль', ['class' => false]) ?>
-            <button type="button" id="togglePassword" style="max-height: 3.5rem">
+            <button type="button" id="togglePasswordButton" style="max-height: 3.5rem">
                 <img src="/assets/images/password-hide.svg" alt="show password">
             </button>
         </div>
@@ -65,4 +67,3 @@ $options = [
         <?php ActiveForm::end() ?>
     </div>
 </div>
-<script src="../../web/assets/js/password-visibility.js"></script>

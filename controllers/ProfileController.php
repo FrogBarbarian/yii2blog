@@ -12,6 +12,7 @@ use app\models\TmpPost;
 use app\models\User;
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -144,7 +145,11 @@ class ProfileController extends AppController
         $pages = (int)ceil(count($messages) / $limit);
         $messages = array_slice($messages, $offset, $limit);
 
-        return $this->renderAjax($event, ['messages' => $messages, 'pages' => $pages, 'page' => $page]);
+        return $this->renderAjax("tabs/mailbox/_$event", [
+            'messages' => $messages,
+            'pages' => $pages,
+            'page' => $page,
+            ]);
     }
 
     /**
@@ -199,6 +204,7 @@ class ProfileController extends AppController
     /**
      * Меняет статус письма на 'удалено'.
      * @throws NotFoundHttpException
+     * @throws \Throwable
      */
     public function actionDeleteMessage(): Response
     {
@@ -228,7 +234,7 @@ class ProfileController extends AppController
             $message->delete();
         }
 
-        return $this->asJson('/profile');
+        return $this->asJson('/profile?tab=mailbox');
     }
 
     /**

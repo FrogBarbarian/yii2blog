@@ -32,8 +32,6 @@
 .mailbox-message {
     margin: 1px 0;
     padding: 1px 5px;
-    display: flex;
-    justify-content: space-between;
     cursor: pointer;
     border: 1px grey solid;
 }

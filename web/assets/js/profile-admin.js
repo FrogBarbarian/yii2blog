@@ -164,6 +164,9 @@ function setUserAdmin() {
     });
 }
 
+/**
+ * Отправляет запрос на бан/разбан пользователя.
+ */
 banUserButton.addEventListener('click', () => {
     let data = {
         _csrf: token,

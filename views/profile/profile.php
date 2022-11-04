@@ -12,9 +12,6 @@
  * @var \yii\web\View $this
  */
 
-use app\components\ProfileMailboxWidget;
-use app\components\ProfileOverviewWidget;
-use app\components\ProfileSettingsWidget;
 use src\helpers\ConstructHtml;
 use \app\components\UserPermissionsAdminToolWidget;
 
@@ -60,27 +57,19 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                         </button>
                     <?php endif ?>
                 </div>
-                <?php
-                switch ($tab) {
-                    case 'mailbox':
-                        echo ProfileMailboxWidget::widget(['messages' => $messages]);
-                        break;
-                    case 'settings':
-                        echo ProfileSettingsWidget::widget(['user' => $user]);
-                        break;
-                    default:
-                        echo ProfileOverviewWidget::widget([
-                            'user' => $user,
-                            'visitor' => $visitor,
-                            'statistics' => $statistics,
-                            'posts' => $posts,
-                            'tmpPosts' => $tmpPosts,
-                            'complaints' => $complaints,
-                            'isOwn' => $isOwn,
-                        ]);
-                        break;
-                }
-                ?>
+                <?= match ($tab) {
+                    'mailbox' => $this->render('tabs/_mailbox', ['messages' => $messages]),
+                    'settings' => $this->render('tabs/_settings', ['user' => $user]),
+                    default => $this->render('tabs/_overview', [
+                        'user' => $user,
+                        'visitor' => $visitor,
+                        'statistics' => $statistics,
+                        'posts' => $posts,
+                        'tmpPosts' => $tmpPosts,
+                        'complaints' => $complaints,
+                        'isOwn' => $isOwn,
+                    ]),
+                } ?>
             </div>
         </div>
     </div>
