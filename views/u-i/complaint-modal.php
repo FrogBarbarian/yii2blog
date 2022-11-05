@@ -12,7 +12,7 @@ use yii\web\View;
 use yii\widgets\ActiveForm;
 
 $this->registerJsFile(
-    '@web/assets/js/complaint-form.js',
+    '@js/complaint-form.js',
     ['position' => View::POS_HEAD],
     'complaint',
 );

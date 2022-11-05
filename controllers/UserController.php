@@ -6,11 +6,12 @@ namespace app\controllers;
 
 use app\models\ChangePasswordForm;
 use app\models\LoginForm;
-use app\models\RegisterForm;
+use app\models\UserForm;
 use app\models\Statistic;
 use app\models\User;
 use Yii;
 use yii\base\Exception;
+use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
@@ -27,19 +28,19 @@ class UserController extends AppController
             $this->goHome();
         }
 
-        $registerForm = new RegisterForm();
+        $model = new UserForm();
 
-        if ($registerForm->load(Yii::$app->request->post()) && $registerForm->validate()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = new User();
             $user
-                ->setUsername($registerForm->username)
-                ->setEmail($registerForm->email)
-                ->setPassword($registerForm->password)
+                ->setUsername($model->username)
+                ->setEmail($model->email)
+                ->setPassword($model->password)
                 ->save();
             $statistics = new Statistic();
             $statistics
                 ->setOwnerId($user->getId())
-                ->setOwner($registerForm->username)
+                ->setOwner($model->username)
                 ->save();
 
             Yii::$app
@@ -49,7 +50,7 @@ class UserController extends AppController
             return $this->redirect('/profile');
         }
 
-        return $this->render('register', ['registerForm' => $registerForm]);
+        return $this->render('register', ['model' => $model]);
     }
 
     /**
@@ -87,14 +88,59 @@ class UserController extends AppController
         return $this->render('login', ['loginForm' => $loginForm]);
     }
 
-    public function actionChangePassword()
+    /**
+     * Меняет пароль.
+     * @throws NotFoundHttpException
+     */
+    public function actionChangePassword(): Response|string
     {
-        if (Yii::$app->request->isAjax) {
-            $f = new ChangePasswordForm();
-            $f->load(Yii::$app->request->post());
-            $f->validate();
+        $request = Yii::$app->getRequest();
 
-            return $this->asJson($f->errors);
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
         }
+
+        $model = new ChangePasswordForm();
+
+        if ($model->load($request->post()) && $model->validate()) {
+            $user = Yii::$app
+                ->user
+                ->getIdentity();
+            $user
+                ->setPassword($model->newPassword)
+                ->save();
+
+            return $this->asJson(true);
+        }
+
+        return $this->asJson(ActiveForm::validate($model));
+    }
+
+    /**
+     * Меняет почту.
+     * @throws NotFoundHttpException
+     */
+    public function actionChangeEmail(): Response|string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new UserForm(['scenario' => UserForm::SCENARIO_CHANGE_EMAIL]);
+
+        if ($model->load($request->post()) && $model->validate()) {
+            $user = Yii::$app
+                ->user
+                ->getIdentity();
+            $user
+                ->setEmail($model->email)
+                ->save();
+
+            return $this->asJson(true);
+        }
+
+        return $this->asJson(ActiveForm::validate($model));
     }
 }

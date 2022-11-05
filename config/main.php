@@ -17,9 +17,8 @@ return [
     ],
     'aliases' => [
         '@bower' => '@vendor/yidas/yii2-bower-asset/bower',
-        '@js' => 'web/assets/js',
-        '@css' => 'web/assets/css',
-        '@images' => 'web/assets/images',
+        '@js' => '/assets/js',
+        '@css' => '/assets/css',
     ],
 //    'timeZone' => 'Europe/Moscow',
     'components' => [

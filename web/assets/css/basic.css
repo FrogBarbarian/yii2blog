@@ -2,6 +2,7 @@
     --border-basic: 1px solid grey;
     --focus-bs-basic: 0 0 0 2px rgba(128, 128, 128, 0.5);
     --transition-for-input-border: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    --success-color: #167575;
 }
 /**
 Кнопки
@@ -51,7 +52,7 @@
 }
 
 input:checked + .slider {
-    background-color: darkslategray;
+    background-color: var(--success-color);
     left: 34px;
     right: 0;
 }
@@ -114,6 +115,16 @@ input:checked + .slider {
     box-shadow: var(--focus-bs-basic);
 }
 
+.checkbox-input {
+    width: 18px;
+    height: 18px;
+    border: var(--border-basic);
+}
+
+.checkbox-input:checked {
+    accent-color: var(--success-color);
+}
+
 /**
 Окна
  */
@@ -135,7 +146,40 @@ input:checked + .slider {
     border: solid 2px #5f7583;
 }
 
+.window-login {
+    width: 95vw;
+    max-width: 450px;
+}
+
 .grid-repeat {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(90px, 180px));
+}
+
+.notice-window {
+    padding: 1rem;
+    width: 250px;
+    height: 100px;
+    border: 1px black solid;
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    background-color: white;
+}
+
+.notice-window>h6 {
+    text-align: center;
+    color: var(--success-color);
+}
+
+.notice-window>p {
+    text-align: center;
+}
+
+/**
+Прочее
+ */
+
+.vh-90 {
+    height: 90vh;
 }

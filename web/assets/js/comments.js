@@ -205,3 +205,25 @@ function updateCommentRating() {
         }
     });
 }
+
+/**
+ * Удаляет/восстанавливает комментарий.
+ * @param {String} id ID комментария.
+ */
+function deleteComment(id) {
+    let data = {
+        _csrf: token,
+        ajax: {
+            id: id,
+        }
+    }
+    $.ajax({
+        url: '/comment/delete',
+        type: 'post',
+        cache: false,
+        data:data,
+        success: function () {
+            location.reload();
+        }
+    });
+}

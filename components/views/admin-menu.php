@@ -3,13 +3,15 @@
  * @var int $amountTmpPosts
  * @var int $amountUnusedTags
  * @var int $amountComplaints
+ * @var \yii\web\View $this
  */
 
 declare(strict_types=1);
 
 $this->title = 'Панель администратора';
+$this->registerJsFile('@js/admin/main.js');
+
 ?>
-<script src="../../web/assets/js/admin/main.js"></script>
 <div class="row">
     <div class="col-4 bg-dark text-white">
         <span class="pt-2 fs-4 text-center d-block ">Админ-панель</span>

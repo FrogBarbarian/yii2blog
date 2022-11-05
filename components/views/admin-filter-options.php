@@ -33,7 +33,7 @@ use src\helpers\PaginationHelper;
             <?php foreach ((new PaginationHelper())->getNavPages($curPage, $pages) as $page): ?>
                 <?php if ($page === $curPage): ?>
                     <li class="page-item disabled">
-                        <a class="page-link"
+                        <a class="btn-basic a-btn"
                            style="background-color: rgba(0,0,0,0);color: #888888;font-size: small"><?= $page ?></a>
                     </li>
                     <?php continue; endif; ?>
@@ -43,7 +43,7 @@ use src\helpers\PaginationHelper;
                         <input type="hidden" name="offset" value="<?= $offset ?>">
                         <input type="hidden" name="sortParam" value="<?= $sortParam ?>">
                         <input type="hidden" name="sortOrder" value="<?= $sortOrder ?>">
-                        <button class="page-link" style="background-color: rgba(0,0,0,0);color: #000000;font-size: small" type="submit"><?= $page ?></button>
+                        <button class="btn-basic a-btn" style="background-color: rgba(0,0,0,0);color: #000000;font-size: small" type="submit"><?= $page ?></button>
                     </form>
                 </li>
             <?php endforeach ?>
@@ -54,7 +54,7 @@ use src\helpers\PaginationHelper;
                 <input type="hidden" name="offset" value="<?= $offset ?>">
                 <input type="hidden" name="sortParam" value="<?= $sortParam ?>">
                 <input type="hidden" name="sortOrder" value="<?= $sortOrder ?>">
-                <button class="page-link" type="submit"
+                <button class="btn-basic a-btn" type="submit"
                         style="background-color: rgba(0,0,0,0);color: #000000;font-size: small">
                     &rarr;
                 </button>

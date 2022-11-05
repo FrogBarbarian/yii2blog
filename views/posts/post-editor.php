@@ -33,7 +33,7 @@ $options = [
     'template' => "{input}\n{label}\n{error}",
 ];
 
-$this->registerJsFile('@web/assets/js/post-edit.js');
+$this->registerJsFile('@js/post-edit.js');
 ?>
 <div class="card mx-auto rounded-0">
     <div class="card-header alert alert-warning small" role="alert">

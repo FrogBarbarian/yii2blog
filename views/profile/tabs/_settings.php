@@ -8,20 +8,16 @@ declare(strict_types=1);
  */
 
 $this->title = 'Настройки';
-$this->registerJsFile('@web/assets/js/settings.js');
+$this->registerJsFile('@js/settings.js');
 ?>
 <ul class="list-group">
     <li class="list-group-item d-flex justify-content-between align-items-center">
-        Имя пользователя - <?= $user->getUsername() ?>
-        <button class="badge bg-primary rounded-pill">Изменить</button>
-    </li>
-    <li class="list-group-item d-flex justify-content-between align-items-center">
         Email - <?= $user->getEmail() ?>
-        <button class="badge bg-primary rounded-pill">Изменить</button>
+        <button id="createEmailModalButton" class="btn-basic">Изменить</button>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Пароль
-        <button id="createPasswordModal" class="btn-basic">Изменить</button>
+        <button id="createPasswordModalButton" class="btn-basic">Изменить</button>
     </li>
     <li class="list-group-item d-flex justify-content-between align-items-center">
         Публичный профиль
@@ -47,3 +43,4 @@ $this->registerJsFile('@web/assets/js/settings.js');
         </label>
     </li>
 </ul>
+

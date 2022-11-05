@@ -48,3 +48,14 @@ window.onkeyup = function (e) {
     const elementExists = document.getElementById("modalWindow");
     if (elementExists !== null && e.keyCode === 27) closeModalDiv();
 }
+
+/**
+ * Отыгрывает анимацию потряхивания модального окна.
+ */
+function shakeModal() {
+    const window = $('.modal-window');
+    window.animate({left: '-=1rem'}, 50);
+    window.animate({left: '+=2rem'}, 100);
+    window.animate({left: '-=1rem'}, 50);
+}
+

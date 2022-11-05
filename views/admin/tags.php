@@ -6,17 +6,19 @@
  * @var int $curPage
  * @var string $sortParam
  * @var int $sortOrder
+ * @var \yii\web\View $this
  */
 
 declare(strict_types = 1);
 
 use app\components\AdminMenuWidget;
-use app\components\PageSwitcherWidget;
+use app\components\AdminFilterOptionsWidget;
 
 echo AdminMenuWidget::widget(['amountUnusedTags' => count($unusedTags)]);
+$this->registerJsFile('@js/admin/tags.js');
+
 ?>
 
-<script src="../../web/assets/js/admin/tags.js"></script>
 <span class="admin-panel-header">Обзор тегов</span>
 <hr style="color: #14376c">
 <h6 >
@@ -65,7 +67,7 @@ echo AdminMenuWidget::widget(['amountUnusedTags' => count($unusedTags)]);
             &darr;
         </span>
     </span>
-    <?= PageSwitcherWidget::widget([
+    <?= AdminFilterOptionsWidget::widget([
         'offset' => $offset,
         'pages' => $pages,
         'curPage' => $curPage,

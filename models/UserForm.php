@@ -8,7 +8,7 @@ use Yii;
 use yii\db\ActiveRecord;
 use yii\db\Exception;
 
-class RegisterForm extends ActiveRecord
+class UserForm extends ActiveRecord
 {
     /**
      * @var string Имя пользователя.
@@ -26,6 +26,7 @@ class RegisterForm extends ActiveRecord
      * @var string Подтверждение пароля.
      */
     public string $confirmPassword = '';
+    const SCENARIO_CHANGE_EMAIL = 'change email';
 
     /**
      * {@inheritDoc}
@@ -47,6 +48,17 @@ class RegisterForm extends ActiveRecord
             ['confirmPassword', 'required', 'message' => 'Подтвердите Ваш пароль'],
             ['confirmPassword', 'compare', 'compareAttribute' => 'password', 'message' => 'Пароли не совпадают'],
         ];
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function scenarios(): array
+    {
+        $scenarios = parent::scenarios();
+        $scenarios[self::SCENARIO_CHANGE_EMAIL] = ['email'];
+
+        return $scenarios;
     }
 
     /**

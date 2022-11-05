@@ -22,14 +22,6 @@ class AdminFilterOptionsWidget extends Widget
     /**
      * {@inheritDoc}
      */
-    public function init()
-    {
-        parent::init();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public function run(): string
     {
         return $this->render('admin-filter-options', [

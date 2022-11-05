@@ -4,16 +4,20 @@
  * @var \app\models\Complaint[] $usersComplaints
  * @var \app\models\Complaint[] $postsComplaints
  * @var \app\models\Complaint[] $commentsComplaints
+ * @var \yii\web\View $this
  */
 
 declare(strict_types = 1);
 
 use app\components\AdminMenuWidget;
-use src\helpers\NormalizeData;
+use app\components\AdminPanelComplaintWidget;
 
 echo AdminMenuWidget::widget(['amountComplaints' => $amountComplaints]);
+
+$this->title = 'Жалобы пользователей';
+$this->registerJsFile('@js/admin/complaints.js');
+
 ?>
-<script src="../../web/assets/js/admin/complaints.js"></script>
 <span class="admin-panel-header">Жалобы пользователей</span>
 <hr style="color: #14376c">
 <h6>
@@ -37,26 +41,13 @@ echo AdminMenuWidget::widget(['amountComplaints' => $amountComplaints]);
         </h2>
         <div id="complaintsUsersAria" class="accordion-collapse collapse" aria-labelledby="complaintsUsers">
             <div class="accordion-body">
-                <?php foreach ($usersComplaints as $complaint): ?>
-                <div id="complaint_<?= $complaint->getId() ?>">
-                    <p style="font-size: smaller">
-                        <a class="author-link" href="/user?id=<?= $complaint->getSenderId() ?>" target="_blank">
-                            <?= $complaint->getSenderUsername() ?>
-                        </a>
-                        <?= NormalizeData::passedTime($complaint->getDatetime()) ?>
-                        отправил жалобу на
-                        <a class="author-link" href="/<?= "{$complaint->getObject()}?id={$complaint->getObjectId()}" ?>" target="_blank">
-                            пользователя
-                        </a>
-                    </p>
-                    <span style="font-size: x-small;font-style: italic;color: grey;display: block">
-                    Содержание жалобы:
-                </span>
-                    <?= $complaint->getComplaint() ?>
-                    <button onclick="closeComplaint('<?= $complaint->getId() ?>')" style="display: block;">Закрыть жалобу</button>
-                    <hr style="margin: .5rem 0 1rem 0">
-                </div>
-                <?php endforeach ?>
+                <?php
+
+                foreach ($usersComplaints as $complaint) {
+                    echo AdminPanelComplaintWidget::widget(['complaint' => $complaint]);
+                }
+
+                ?>
             </div>
         </div>
     </div>
@@ -75,26 +66,13 @@ echo AdminMenuWidget::widget(['amountComplaints' => $amountComplaints]);
         </h2>
         <div id="complaintsCommentsAria" class="accordion-collapse collapse" aria-labelledby="complaintsComments">
             <div class="accordion-body">
-                <?php foreach ($commentsComplaints as $complaint): ?>
-                <div id="complaint_<?= $complaint->getId() ?>">
-                    <p style="font-size: smaller">
-                        <a class="author-link" href="/user?id=<?= $complaint->getSenderId() ?>" target="_blank">
-                            <?= $complaint->getSenderUsername() ?>
-                        </a>
-                        <?= NormalizeData::passedTime($complaint->getDatetime()) ?>
-                        отправил жалобу на
-                        <a class="author-link" href="/<?= "{$complaint->getObject()}?id={$complaint->getObjectId()}" ?>" target="_blank">
-                            комментарий
-                        </a>
-                    </p>
-                    <span style="font-size: x-small;font-style: italic;color: grey;display: block">
-                    Содержание жалобы:
-                </span>
-                    <?= $complaint->getComplaint() ?>
-                    <button onclick="closeComplaint('<?= $complaint->getId() ?>')" style="display: block;">Закрыть жалобу</button>
-                    <hr style="margin: .5rem 0 1rem 0">
-                </div>
-                <?php endforeach ?>
+                <?php
+
+                foreach ($commentsComplaints as $complaint) {
+                    echo AdminPanelComplaintWidget::widget(['complaint' => $complaint]);
+                }
+
+                ?>
             </div>
         </div>
     </div>
@@ -113,26 +91,13 @@ echo AdminMenuWidget::widget(['amountComplaints' => $amountComplaints]);
         </h2>
         <div id="complaintsPostsAria" class="accordion-collapse collapse" aria-labelledby="complaintsPosts">
             <div class="accordion-body">
-                <?php foreach ($postsComplaints as $complaint): ?>
-                <div id="complaint_<?= $complaint->getId() ?>">
-                    <p style="font-size: smaller">
-                        <a class="author-link" href="/user?id=<?= $complaint->getSenderId() ?>" target="_blank">
-                            <?= $complaint->getSenderUsername() ?>
-                        </a>
-                        <?= NormalizeData::passedTime($complaint->getDatetime()) ?>
-                        отправил жалобу на
-                        <a class="author-link" href="/<?= "{$complaint->getObject()}?id={$complaint->getObjectId()}" ?>" target="_blank">
-                            пост
-                        </a>
-                    </p>
-                    <span style="font-size: x-small;font-style: italic;color: grey;display: block">
-                    Содержание жалобы:
-                </span>
-                    <?= $complaint->getComplaint() ?>
-                    <button onclick="closeComplaint('<?= $complaint->getId() ?>')" style="display: block;">Закрыть жалобу</button>
-                    <hr style="margin: .5rem 0 1rem 0">
-                </div>
-                <?php endforeach ?>
+                <?php
+
+                foreach ($postsComplaints as $complaint) {
+                    echo AdminPanelComplaintWidget::widget(['complaint' => $complaint]);
+                }
+
+                ?>
             </div>
         </div>
     </div>

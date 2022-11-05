@@ -150,7 +150,9 @@ class AdminController extends AppController
      */
     public function actionTags(string $offset = '0', string $page = '1', string $sortParam = 'id', string $sortOrder = '4'): string
     {
-        $user = Yii::$app->user->getIdentity();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
 
         if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();

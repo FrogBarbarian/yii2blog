@@ -9,7 +9,7 @@ declare(strict_types=1);
 use yii\widgets\ActiveForm;
 
 $errorClass = 'text-danger small';
-$this->registerJsFile('@web/assets/js/message-form.js');
+$this->registerJsFile('@js/message-form.js');
 $this->registerJs(<<<JS
     setMessageFormData();
 JS

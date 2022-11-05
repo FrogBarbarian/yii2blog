@@ -296,4 +296,25 @@ class CommentController extends AppController
 
         return $this->asJson($html);
     }
+
+    /**
+     * Удаляет/восстанавливает комментарий.
+     * @throws NotFoundHttpException
+     */
+    public function actionDelete(): void
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $commentId = (int)$request->post('ajax')['id'];
+        $comment = Comment::find()
+            ->byId($commentId)
+            ->one();
+        $comment
+            ->setIsDeleted(!$comment->getIsDeleted())
+            ->save();
+    }
 }

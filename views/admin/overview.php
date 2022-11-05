@@ -83,7 +83,7 @@ echo AdminMenuWidget::widget();
         ) ?>
     </div>
     <div class="stat-card">
-        <a href="/user?id=<?= $mostPostUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $lowestRatingUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
                 <?= $mostPostUser->getOwner() ?>
             </h6>
@@ -91,7 +91,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/user?id=<?= $mostCommentUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $lowestRatingUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
                 <?= $mostCommentUser->getOwner() ?>
             </h6>
@@ -99,7 +99,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/user?id=<?= $highestRatingUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $lowestRatingUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
                 <?= $highestRatingUser->getOwner() ?>
             </h6>
@@ -107,7 +107,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/user?id=<?= $lowestRatingUser->getOwnerId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $lowestRatingUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
                 <?= $lowestRatingUser->getOwner() ?>
             </h6>

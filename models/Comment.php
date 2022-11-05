@@ -294,4 +294,22 @@ class Comment extends ActiveRecord
         $this->setRating($this->getLikes() - $this->getDislikes());
         $this->save();
     }
+
+    /**
+     * Удален ли комментарий.
+     */
+    public function setIsDeleted(bool $isDeleted): self
+    {
+        $this->setAttribute('is_deleted', $isDeleted);
+
+        return $this;
+    }
+
+    /**
+     * @return bool Удален ли комментарий.
+     */
+    public function getIsDeleted(): bool
+    {
+        return $this->getAttribute('is_deleted');
+    }
 }

@@ -9,8 +9,8 @@ declare(strict_types=1);
  */
 
 $this->title = "Сообщение #{$message->getId()}";
-$this->registerJsFile('@web/assets/js/message.js');
-$this->registerJsFile('@web/assets/js/message-modal.js');
+$this->registerJsFile('@js/message.js');
+$this->registerJsFile('@js/message-modal.js');
 
 ?>
 <div

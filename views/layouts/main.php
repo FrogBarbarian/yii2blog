@@ -94,7 +94,7 @@ AppAsset::register($this);
     </nav>
 </header>
 <div style="max-width: 960px;margin: auto">
-    <div class="py-1" style="background-color:rgba(0,0,0,0);">
+    <div id="content" class="py-1" style="background-color:rgba(0,0,0,0);">
         <?= $content ?? '' ?>
     </div>
     <div id="modalDiv"></div>

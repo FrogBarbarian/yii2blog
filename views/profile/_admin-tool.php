@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var \app\models\User $user
  */
 
-$this->registerJsFile('@web/assets/js/profile-admin.js')
+$this->registerJsFile('@js/profile-admin.js')
 ?>
 <input type="hidden" id="userId" value="<?= $user->getId() ?>">
 <div class="window-basic">

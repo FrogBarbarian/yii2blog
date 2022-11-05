@@ -7,14 +7,15 @@ declare(strict_types=1);
  * @var int $curPage
  * @var string $sortParam
  * @var int $sortOrder
+ * @var \yii\web\View $this
  */
 
-use app\components\PageSwitcherWidget;
+use app\components\AdminFilterOptionsWidget;
 use app\components\AdminMenuWidget;
 
 echo AdminMenuWidget::widget();
+$this->registerJsFile('@js/admin/users.js');
 ?>
-<script src="../../web/assets/js/admin/users.js"></script>
 <span class="admin-panel-header">Пользователи</span>
 <hr style="color: #14376c">
 <h6>
@@ -41,7 +42,7 @@ echo AdminMenuWidget::widget();
             &darr;
         </span>
     </span>
-    <?= PageSwitcherWidget::widget([
+    <?= AdminFilterOptionsWidget::widget([
         'offset' => $offset,
         'pages' => $pages,
         'curPage' => $curPage,

@@ -10,11 +10,11 @@ $this->title = 'Вход';
 $options = [
     'errorOptions' => ['class' => 'text-danger small'],
 ];
-$this->registerJsFile('@web/assets/js/password-visibility.js');
+$this->registerJsFile('@js/password-visibility.js');
 ?>
 
-<div class="align-items-center vstack justify-content-center" style="height: 90vh">
-    <div class="window-basic">
+<div class="align-items-center vstack justify-content-center vh-90">
+    <div class="window-basic window-login">
         <h3 class="py-1">Вход</h3>
         <?php $activeForm = ActiveForm::begin([
             'id' => 'loginForm',
@@ -40,12 +40,12 @@ $this->registerJsFile('@web/assets/js/password-visibility.js');
         </button>
         <div class="hstack justify-content-between my-2">
             <?= $activeForm->field($loginForm, 'rememberMe')->checkbox([
-                'class' => 'form-check-input',
+                'class' => 'checkbox-input',
                 'label' => 'Запомнить меня',
             ])
             ?>
-            <!--                   TODO: реализовать восстановление пароля -->
-            <a class="small" href="#">Забыли пароль?</a>
+            <!--TODO: реализовать восстановление пароля -->
+            <a class="small" href="/user/restore">Забыли пароль?</a>
         </div>
         <button type="submit" class="btn-basic">Войти</button>
         <?php ActiveForm::end() ?>

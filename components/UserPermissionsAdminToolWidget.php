@@ -12,6 +12,10 @@ use app\models\User;
 class UserPermissionsAdminToolWidget extends \yii\base\Widget
 {
     public User $user;
+
+    /**
+     * {@inheritDoc}
+     */
     public function run(): string
     {
         return $this->render('user-permissions-admin-tool', ['user' => $this->user]);

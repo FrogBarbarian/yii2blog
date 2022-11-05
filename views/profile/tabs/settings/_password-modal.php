@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var \app\models\ChangePasswordForm $model
+ * @var \yii\web\View $this
  */
 
 use \yii\widgets\ActiveForm;
@@ -15,6 +16,13 @@ $options = [
             'class' => 'text-danger small',
         ],
 ];
+
+$this->registerJsFile('@js/password-visibility.js');
+$this->registerJsFile('@js/modals/change-password-form.js');
+$this->registerJs(<<<JS
+    setupPasswordFormJsData();
+JS);
+
 ?>
 
 <div class='modal-window-back' id='modalWindow' tabindex='-1'>
@@ -26,6 +34,7 @@ $options = [
         </div>
         <?php $form = ActiveForm::begin([
             'id' => 'changePasswordForm',
+            'enableAjaxValidation' => true,
             'action' => Url::to('/user/change-password'),
         ]) ?>
         <?= $form
@@ -56,41 +65,16 @@ $options = [
             ])
             ->label(false) ?>
         <?php ActiveForm::end() ?>
-        <button type="button" id="togglePasswordButton"></button>
+        <button type="button" id="togglePasswordButton" class="btn-basic">
+            <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
+        </button>
         <div class='modal-window-footer'>
             <button type='button' onclick='closeModalDiv()' class='btn-basic'>
                 Отмена
             </button>
-            <button type='button' onclick="ttt()" class='btn-basic'>
+            <button id="changePasswordButton" type='button' class='btn-basic'>
                 Изменить
             </button>
         </div>
     </div>
 </div>
-
-<script>
-    function ttt() {
-        let form = $('#changePasswordForm')
-        let formData = form.serialize()
-        $.ajax({
-            url: form.attr('action'),
-            cache: false,
-            type: 'post',
-            data: formData,
-            success: function (r) {
-                console.log(r)
-            }
-        })
-    }
-</script>
-
-<script>
-    const passwordFields = document.querySelectorAll('[type=password]');
-    const togglePasswordButton = document.getElementById('togglePasswordButton');
-    togglePasswordButton.addEventListener('click', () => {
-        for (const field of passwordFields) {
-            let typeIsPassword = field.getAttribute('type') === 'password';
-            field.setAttribute('type', typeIsPassword ? 'text' : 'password');
-        }
-    });
-</script>

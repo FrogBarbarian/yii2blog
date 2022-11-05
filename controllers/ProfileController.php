@@ -12,7 +12,6 @@ use app\models\TmpPost;
 use app\models\User;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\db\StaleObjectException;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -21,6 +20,24 @@ use yii\web\Response;
  */
 class ProfileController extends AppController
 {
+    /**
+     * Перенаправляет на профиль пользователя по ID.
+     * @throws NotFoundHttpException
+     */
+    public function actionIndex(string $id = '0'): Response
+    {
+        $id = (int)$id;
+        $user = User::find()
+            ->byId($id)
+            ->one();
+
+        if ($user !== null) {
+            return $this->redirect("/users/{$user->getUsername()}");
+        }
+
+        throw new NotFoundHttpException();
+    }
+
     /**
      * Профиль пользователя.
      * @throws NotFoundHttpException

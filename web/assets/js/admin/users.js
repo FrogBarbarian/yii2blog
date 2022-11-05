@@ -14,15 +14,15 @@ function construct(users) {
 
     users.forEach((user) => {
         usersDiv.html(usersDiv.html() +
-            '<div class="user-card">' +
+            '<div class="window-lite">' +
             '<h6>' +
             user['username'] +
             '</h6>' +
             '<p style="font-size: x-small; margin: 1px">' +
             user['email'] +
             '</p>' +
-            '<a class="author-link small" href="/user?id=' +
-            user['id'] +
+            '<a class="author-link small" href="/users/' +
+            user['username'] +
             '">' +
             (user['is_admin'] ? 'Администратор' : 'Пользователь') +
             '</a>' +
