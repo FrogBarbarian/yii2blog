@@ -9,9 +9,12 @@ use app\models\PostEditorForm;
 use app\models\Statistic;
 use app\models\Tag;
 use app\models\TmpPost;
+use app\models\UploadForm;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\web\UploadedFile;
+use yii\widgets\ActiveForm;
 
 class PostEditorController extends AppController
 {
@@ -27,12 +30,14 @@ class PostEditorController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $user = Yii::$app->user->getIdentity();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
         $postEditorForm = new PostEditorForm();
         $postEditorForm->isNew = $id === null;
         $id = $id === null ? $id : (int)$id;
 
-        if ($postEditorForm->load(Yii::$app->request->post()) && $postEditorForm->validate()) {
+        if ($postEditorForm->load($request->post()) && $postEditorForm->validate()) {
             $session = Yii::$app->session;
 
             if ($user->getIsAdmin()) {
@@ -157,5 +162,137 @@ class PostEditorController extends AppController
         }
 
         return $this->asJson($postEditorForm->errors);
+    }
+
+    /**
+     * Рендерит модальное окно для загрузки изображения.
+     * @throws NotFoundHttpException
+     */
+    public function actionCreateImageUploadModalWindow(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new UploadForm();
+
+        return $this->renderAjax('_image-modal', ['model' => $model]);
+    }
+
+    /**
+     * TODO
+     */
+    public function actionEdit(string $id = null): string
+    {
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        if ($user === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $id = (int)$id;
+        $post = Post::findOne($id);
+
+        if ($post === null || $post->getAuthor() !== $user->getUsername()) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new PostEditorForm();
+
+
+        return $this->render('editor', [
+            'id' => $id,
+            'model' => $model,
+            'post' => $post,
+        ]);
+    }
+
+    /**
+     * TODO
+     */
+    public function actionNew(): string
+    {
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        if ($user === null) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new PostEditorForm();
+
+        return $this->render('editor', ['model' => $model]);
+    }
+
+    /**
+     * TODO
+     */
+    public function actionUploadImage(): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $uploadForm = new UploadForm();
+        $uploadForm->image = UploadedFile::getInstance($uploadForm, 'image');
+        $uploadForm->signature = $request->post('UploadForm')['signature'];
+
+        if ($uploadForm->upload()) {
+            return $this->asJson([$uploadForm->imageName, $uploadForm->signature]);
+        }
+
+        return $this->asJson(ActiveForm::validate($uploadForm));
+    }
+
+    /**
+     * Поиск по тегам.
+     * @throws NotFoundHttpException
+     */
+    public function actionSearchTags(string $input): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->getIsAjax()) {
+            throw new NotFoundHttpException();
+        }
+
+        $tags = Tag::find()
+            ->byChars($input)
+            ->limit(5)
+            ->asArray()
+            ->all();
+
+        if ($tags === []) {
+            return $this->asJson(false);
+        }
+
+        return $this->asJson($tags);
+    }
+
+    public function actionTest()
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $model = new PostEditorForm();
+
+        if ($model->load($request->post()) && $model->validate()) {
+            //Сохраняем пост
+
+            return $this->asJson(true);
+        }
+
+
+        return $this->asJson(ActiveForm::validate($model));
     }
 }

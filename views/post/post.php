@@ -28,6 +28,13 @@ if ($visitorIsLogin) {
 }
 
 PostAsset::register($this);
+
+$views = "{$post->getViews()} " .
+    NormalizeData::wordForm($post->getViews(),
+        'просмотров',
+        'просмотр',
+        'просмотра',
+    );
 ?>
 <div class="mx-3 py-2">
     <?php if (Yii::$app->session->hasFlash('postFlash')): ?>
@@ -51,7 +58,7 @@ PostAsset::register($this);
         <div class="card-footer">
             <div class="hstack">
                 <div class="col text-start" style="font-size: small">
-                    <?= $post->getViews() . ' ' . NormalizeData::wordForm($post->getViews(), 'просмотров', 'просмотр', 'просмотра') ?>
+                    <?= $views ?>
                 </div>
                 <div class="col text-end" style="font-size: small">
                     <?= NormalizeData::passedTime($post->getDatetime()) ?>
@@ -102,39 +109,30 @@ PostAsset::register($this);
                             <?php endif ?>
                             <?php if ($userIsAdmin || $userIsAuthor): ?>
                                 <button class="btn btn-light" type="button" style="width: auto" data-bs-toggle="modal"
-                                        data-bs-target="#deletePost">
+                                        data-bs-target="#deletePostModal">
                                     <img src="<?= IMAGES ?>post-delete.svg"
                                          alt="delete" width="24"
                                          class="d-inline-block">
                                 </button>
-                                <!--TODO: удаление поста-->
-                                <div class="modal fade" id="deletePost" tabindex="-1"
-                                     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal fade" id="deletePostModal" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered">
                                         <div class="modal-content">
                                             <div class="modal-header">
-                                                <h5 class="modal-title" id="staticBackdropLabel">Вы уверены, что хотите
-                                                    удалить пост?</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+                                                <h5 class="modal-title">
+                                                    Вы уверены, что хотите удалить пост?
+                                                </h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
-                                            <div class="modal-body">
-                                                <h5>Статистика поста</h5>
-                                                <p><?= $post->getViews() ?> просмотра(ов)</p>
-                                                <div>
-                                                    <span>Рейтинг - <?= $post->getRating() ?></span>
-                                                    <span>Лайков - <?= $post->getLikes() ?></span>
-                                                    <span>Дизлайков - <?= $post->getDislikes() ?></span>
-                                                    <p class="text-warning">Будет удален пост и все комментарии, а также
-                                                        будет изменена соответствующим образом статистика всех
-                                                        затронутых пользователей.</p>
-                                                </div>
+                                            <div class="modal-body text-start">
+                                                <p class="text-danger small fst-italic">
+                                                    Будет удален пост и все комментарии, а также будет изменена соответствующим образом статистика всех затронутых пользователей.
+                                                </p>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                <button type="button" class="btn-basic" data-bs-dismiss="modal">
                                                     Назад
                                                 </button>
-                                                <button type="button" onclick="deletePost()" class="btn btn-primary">
+                                                <button id="deletePostButton" type="button" class="btn-basic">
                                                     Удалить
                                                 </button>
                                             </div>

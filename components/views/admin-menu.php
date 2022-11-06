@@ -8,7 +8,6 @@
 
 declare(strict_types=1);
 
-$this->title = 'Панель администратора';
 $this->registerJsFile('@js/admin/main.js');
 
 ?>

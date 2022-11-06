@@ -90,7 +90,7 @@ class UserController extends AppController
 
     /**
      * Меняет пароль.
-     * @throws NotFoundHttpException
+     * @throws NotFoundHttpException|Exception
      */
     public function actionChangePassword(): Response|string
     {

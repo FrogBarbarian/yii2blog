@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace src\helpers;
 
-use Psr\SimpleCache\InvalidArgumentException;
 use Yii;
 
 /**
@@ -17,9 +16,8 @@ class Get
      * @param string $obj Тип объекта (posts, comments, users, etc.).
      * @param string $param Параметр для сортировки.
      * @param int $sort Тип сортировки.
-     * @throws InvalidArgumentException
      */
-    public static function data(string $obj, string $param = 'id', int $sort = SORT_ASC, bool $useCache = true): array
+    public static function data(string $obj, int $sort = SORT_ASC, string $param = 'id', bool $useCache = false): array
     {
 
         $class = explode('_', $obj);

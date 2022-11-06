@@ -30,12 +30,7 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $posts = Get::data(
-            'posts',
-            'rating',
-            SORT_ASC,
-            false,
-        );
+        $posts = Get::data('posts', SORT_ASC, 'rating');
         $amountViews = 0;
 
         foreach ($posts as $post) {
@@ -45,36 +40,14 @@ class AdminController extends AppController
         $postsAmount = count($posts);
         $highestRatingPost = end($posts);
         $lowestRatingPost = $posts[0];
-        $mostViewedPost = Get::data(
-            'posts',
-            'viewed',
-            SORT_DESC,
-            false,
-        )[0];
-        $mostCommentablePost = Get::data(
-            'posts',
-            'comments_amount',
-            SORT_DESC,
-            false,
-        )[0];
-        $users = Get::data(
-            'statistics',
-            'rating',
-            SORT_ASC,
-            false);
+        $mostViewedPost = Get::data('posts', SORT_DESC, 'viewed')[0];
+        $mostCommentablePost = Get::data('posts', SORT_DESC, 'comments_amount')[0];
+        $users = Get::data('statistics', SORT_ASC, 'rating');
         $usersAmount = count($users);
         $highestRatingUser = end($users);
         $lowestRatingUser = $users[0];
-        $mostPostUser = Get::data(
-            'statistics',
-            'posts',
-            SORT_DESC,
-            false)[0];
-        $mostCommentUser = Get::data(
-            'statistics',
-            'comments',
-            SORT_DESC,
-            false)[0];
+        $mostPostUser = Get::data('statistics', SORT_DESC, 'posts')[0];
+        $mostCommentUser = Get::data('statistics', SORT_DESC, 'comments')[0];
         $statsWithLike = Statistic::find()
             ->byLikes()
             ->all();
@@ -93,11 +66,7 @@ class AdminController extends AppController
             $amountDislikes += $item->getDislikes();
         }
 
-        $comments = Get::data(
-            'comments',
-            'rating',
-            SORT_ASC,
-            false);
+        $comments = Get::data('comments', SORT_ASC, 'rating');
         $commentsAmount = count($comments);
         $highestRatingComment = end($comments);
         $lowestRatingComment = $comments[0];
@@ -134,12 +103,7 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $tmpPosts = Get::data(
-            'tmp_posts',
-            'id',
-            SORT_ASC,
-            false,
-        );
+        $tmpPosts = Get::data('tmp_posts');
 
         return $this->render('posts', ['tmpPosts' => $tmpPosts]);
     }
@@ -158,12 +122,7 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $tags = Get::data(
-            'tags',
-            'id',
-            SORT_ASC,
-            false,
-        );
+        $tags = Get::data('tags');
         $unusedTags = [];
 
         foreach ($tags as $tag) {
@@ -200,12 +159,7 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $complaints = Get::data(
-            'complaints',
-            'id',
-            SORT_ASC,
-            false,
-        );
+        $complaints = Get::data('complaints');
         $usersComplaints = [];
         $postsComplaints = [];
         $commentsComplaints = [];
@@ -224,7 +178,9 @@ class AdminController extends AppController
                     $commentsComplaints[] = $complaint;
                     break;
                 default:
-                    throw new Exception('Не правильный тип объекта.');
+                    throw new Exception(
+                        "Жалоба с ID {$complaint->getId()} имеет не правильный тип объекта."
+                    );
             }
         }
 
@@ -274,19 +230,32 @@ class AdminController extends AppController
      */
     public function actionUserPost(string $id = '0'): string
     {
-        if (!Yii::$app->session->has('admin') || $id < 1) {
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();
         }
-        $post = TmpPost::find()->byId($id)->one();
+
+        $id = (int)$id;
+        $post = TmpPost::find()
+            ->byId($id)
+            ->one();
+
         if ($post === null) {
             throw new NotFoundHttpException();
         }
+
         if (!$post->getIsNew()) {
-            $originalPost = Post::find()->byId($post->getUpdateId())->one();
+            $originalPost = Post::find()
+                ->byId($post->getUpdateId())
+                ->one();
         }
+
         $model = new PostEditorForm();
 
-        return $this->render('user-post', [
+        return $this->render('tools/user-post', [
             'post' => $post,
             'model' => $model,
             'originalPost' => $originalPost ?? null,

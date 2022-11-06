@@ -17,7 +17,7 @@ $(document).ready(function () {
      */
     $('#commentsButton').click(function () {
         $.ajax({
-            url: '/posts/comment-rule',
+            url: '/post/comment-rule',
             cache: false,
             type: 'post',
             data: data,
@@ -104,7 +104,7 @@ function updatePostRating(data) {
 function updateCommentsAmount(data) {
     data['ajax']['curCommentsAmount'] = parseInt(document.getElementById('commentsAmount').textContent);
     $.ajax({
-        url: '/posts/update-comments-amount',
+        url: '/post/update-comments-amount',
         cache: false,
         type: 'post',
         data: data,
@@ -149,14 +149,17 @@ function updateRatingButtons() {
 /**
  * Удаляет пост.
  */
-function deletePost() {
-    $.ajax({
-        url: '/posts/delete-post',
-        cache: false,
-        type: 'post',
-        data: data,
-        success: function (response) {
-            location.href = (response);
-        }
+const deletePostButton = document.getElementById('deletePostButton');
+if (deletePostButton !== null) {
+    deletePostButton.addEventListener('click', () => {
+        $.ajax({
+            url: '/post/delete',
+            cache: false,
+            type: 'post',
+            data: data,
+            success: function (response) {
+                location.href = (response);
+            }
+        });
     });
 }

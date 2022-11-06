@@ -1,7 +1,7 @@
 $(document).ready(function () {
     const tagsArea = $('#tagsArea');
-    const tagsString = $('#posteditorform-tags').val();
-    const tagsArray = tagsString.split('#');
+    const tags = $('#tagsInput').val();
+    const tagsArray = tags.split('#');
     tagsArray.shift();
 
     tagsArray.forEach((tag) => {
@@ -60,16 +60,12 @@ let selection = null;
  * Адрес выделения.
  */
 let range = null;
-/**
- *  Изображения в посте, на момент открытия редактора.
- */
-let startImages = [];
 
 /**
  * Удаляет выбранный тег.
  */
 function removeTag(tag) {
-    let tags = $('#postinteractionsform-tags');
+    const tags = $('#tagsInput');
     tag.remove();
     tag = '#' + tag.innerHTML;
     tags.val(tags.val().replace(tag, ''));
@@ -91,8 +87,8 @@ function addTag(tag = '') {
     }
 
     const tagsArea = $('#tagsArea');
-    const tags = $('#posteditorform-tags');
-    tags.val(tags.val() + '#' + tag);
+    const tags = $('#tagsInput');
+    tags.val(`${tags.val()}#${tag}`);
     tagsArea.html(
         tagsArea.html() +
         '<span onclick="removeTag(this)" class="tag-card">' +
@@ -115,7 +111,7 @@ function fillTagField(field) {
     }
 
     $.ajax({
-        url: '/post-u-i/search-tags',
+        url: '/post-editor/search-tags',
         cache: false,
         data: {input: field.value},
         success: function (response) {
@@ -298,7 +294,7 @@ function clearFormat() {
  * Создает ссылку.
  */
 function createUrl() {
-    let text = document.getElementById('textUrlInput').value.trim();
+    const text = document.getElementById('textUrlInput').value.trim();
 
     if (text === '') {
         alert('Текст ссылки не может быть пустым')
@@ -306,7 +302,7 @@ function createUrl() {
         return false;
     }
 
-    let url = document.getElementById('urlInput').value.trim();
+    const url = document.getElementById('urlInput').value.trim();
 
     if (url === '') {
         alert('Ссылка не может быть пустой')
@@ -314,7 +310,7 @@ function createUrl() {
         return false;
     }
 
-    let html = '<a class="post-body-link" href="' +
+    const html = '<a class="post-body-link" href="' +
         url +
         '" target="_blank">' +
         text +
@@ -330,7 +326,7 @@ function createUrl() {
  * Удаляет ссылку.
  */
 function removeLink() {
-    let text = window.getSelection().toString();
+    const text = window.getSelection().toString();
     formatting('unlink', false, text);
     clearFormat();
 }
@@ -386,7 +382,7 @@ function checkParent(element) {
 function setRange() {
     const inputBody = document.getElementById('inputBody');
     selection = window.getSelection();
-    let anchor = selection.anchorNode;
+    const anchor = selection.anchorNode;
 
     if (checkParent(anchor) !== true) {
         range = new Range();
@@ -408,10 +404,8 @@ function setRange() {
 function imageModal() {
     setRange();
     $.ajax({
-        url: '/post-u-i/image-modal',
+        url: '/post-editor/create-image-upload-modal-window',
         cache: false,
-        type: 'post',
-        data: {_csrf: $('meta[name=csrf-token]').attr("content")},
         success: function (response) {
             $('#modalDiv').html(response);
         }
@@ -432,9 +426,6 @@ function uploadImage() {
         contentType: false,
         data: formData,
         success: function (response) {
-            $('#imageErrorLabel').html('');
-            $('#signatureErrorLabel').html('');
-
             if (Array.isArray(response)) {
                 closeModalDiv();
                 let html = '<div class="post-image">' +
@@ -450,12 +441,6 @@ function uploadImage() {
                 formatting('insertHtml', false, html);
                 selection = null;
                 range = null;
-            } else {
-                let errors = Object.entries(response);
-
-                errors.forEach((object) => {
-                    $('#' + object[0] + 'ErrorLabel').html(object[1]);
-                });
             }
         }
     });
@@ -465,15 +450,8 @@ function uploadImage() {
  * Отправляет пост на проверку.
  */
 function submitPost() {
-    let img = document.getElementById('inputBody').querySelectorAll('img');
-    let endImages = [];
-    img.forEach(img => {
-        endImages.push(img.src);
-    });
     const form = $('#postEditorForm');
     const formData = new FormData(form[0]);
-    formData.append('startImages', startImages.toString());
-    formData.append('endImages', endImages.toString());
     $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),
@@ -504,4 +482,14 @@ function submitPost() {
             return false;
         }
     });
+}
+
+const titleInput = document.getElementById('titleInput');
+const tittleErrorLabel = document.getElementById('tittleErrorLabel');
+titleInput.onblur = () => {
+    setTimeout(() => {
+        if (tittleErrorLabel.innerText !== '') {
+            tittleErrorLabel.innerText += ` (сейчас ${titleInput.value.length})`
+        }
+    }, 500)
 }

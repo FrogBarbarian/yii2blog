@@ -18,7 +18,7 @@ $this->registerJsFile('@js/password-visibility.js');
     <div class="window-basic">
         <h3 class="mb-5">Регистрация</h3>
         <?php $activeForm = ActiveForm::begin([
-            'id' => 'register-form',
+            'id' => 'registerForm',
         ]) ?>
         <?= $activeForm->field($model, 'username', $options)
             ->input('text', [

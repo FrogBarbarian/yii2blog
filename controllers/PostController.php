@@ -19,7 +19,7 @@ use yii\db\Exception;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
-class PostsController extends AppController
+class PostController extends AppController
 {
     /**
      * Главная страница постами, здесь же выводятся результаты поиска постов.
@@ -183,7 +183,7 @@ class PostsController extends AppController
      * @throws NotFoundHttpException
      * @throws \Throwable
      */
-    public function actionDeletePost(): Response
+    public function actionDelete(): Response
     {
         $request = Yii::$app->getRequest();
 

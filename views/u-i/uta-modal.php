@@ -14,8 +14,8 @@ declare(strict_types=1);
             <button type="button" class="btn-close" onclick="closeModalDiv()">
             </button>
         </div>
-        Это назначит пользователя <b><?= $username ?></b> администратором. Отменить возможно
-        через прямой доступ к БД.
+        Это назначит пользователя <b><?= $username ?></b> администратором.
+        Отменить возможно через прямой доступ к БД.
         <div class="modal-window-footer">
             <button type="button" class="btn-basic" onclick="closeModalDiv()">
                 Отмена

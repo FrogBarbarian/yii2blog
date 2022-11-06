@@ -6,7 +6,11 @@ namespace app\models;
 
 use yii\base\Model;
 use yii\web\UploadedFile;
+use Yii;
 
+/**
+ * Форма загрузки изображений.
+ */
 class UploadForm extends Model
 {
     public ?UploadedFile $image = null;
@@ -17,7 +21,7 @@ class UploadForm extends Model
      * {@inheritDoc}
      */
     public function rules(): array
-    {//TODO: Параметры загружаемых изображений
+    {
         return [
             ['image', 'required', 'message' => 'Загрузите изображение'],
             ['signature', 'required', 'message' =>  'Добавьте подпись'],
@@ -25,15 +29,25 @@ class UploadForm extends Model
                 'image',
                 'image',
                 'extensions' => 'png, jpg',
+                'wrongExtension' => 'Изображение должно быть формата .jpg или .png',
             ],
         ];
     }
 
+    /**
+     * Загружает изображение на сервер.
+     */
     public function upload(): bool
     {
         if ($this->validate()) {
-            $this->imageName = time() . '.' . $this->image->extension;
-            $this->image->saveAs('uploads/' . $this->imageName);
+            $username = Yii::$app
+                ->user
+                ->getIdentity()
+                ->getUsername();
+            $this->imageName = "{$username}_" .  time() . ".{$this->image->extension}";
+            $this
+                ->image
+                ->saveAs('uploads/' . $this->imageName);
 
             return true;
         } else {

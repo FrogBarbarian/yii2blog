@@ -3,6 +3,7 @@
 const ADMIN_PANEL = '/admin';
 const POSTS_ON_PAGE = 5;
 const IMAGES = '/assets/images/';
+const UPLOAD_IMAGES = '/uploads/';
 const BASE_CACHE_TIME = 3600;
 const USER_LOGIN = '/user/login';
 const USER_REGISTER = '/user/register';
@@ -11,7 +12,7 @@ const USER_REGISTER = '/user/register';
 return [
     'id' => 'yii2test',
     'basePath' => dirname(__DIR__),
-    'defaultRoute' => 'posts/index',
+    'defaultRoute' => 'post/index',
     'bootstrap' => [
         'log',
     ],

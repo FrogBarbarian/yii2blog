@@ -13,13 +13,11 @@
  */
 
 use src\helpers\ConstructHtml;
-use \app\components\UserPermissionsAdminToolWidget;
 
 $this->title = $isOwn ? 'Профиль' : $user->getUsername();
-?>
 
-<?php if ($visitor !== null && !$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()) {
-    echo UserPermissionsAdminToolWidget::widget(['user' => $user]);
+ if ($visitor !== null && !$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()) {
+    echo $this->render('tabs/overview/_admin-tool', ['user' => $user]);
 }
 ?>
 <div class="mx-3 pt-5 pb-2">
@@ -53,7 +51,7 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                         <button type="button" style="max-width: 48px"
                                 onclick="createComplaint('user', <?= $user->getId() ?>, <?= $visitor->getId() ?>)"
                                 class="btn btn-light col">
-                            <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
+                            <img src="<?= IMAGES ?>>create-complaint.svg" width="24" alt="create complaint"/>
                         </button>
                     <?php endif ?>
                 </div>

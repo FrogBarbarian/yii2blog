@@ -1,14 +1,16 @@
 <?php
 
 return [
-    '' => 'posts',
-    'tag/<action>' => 'posts/tag',
-    'author/<action>' => 'posts/author',
+    '' => 'post',
+    'tag/<action>' => 'post/tag',
+    'author/<action>' => 'post/author',
     '/profile' => 'profile/profile',
+    '/edit-post' => 'post-editor/edit',
+    '/new-post' => 'post-editor/new',
     'users/<action>' => 'profile/profile',
     'profile/message/<action:\d+>' => 'profile/message',
     'admin' => 'admin',
-    '/<action>' => 'posts/<action>',
+    '/<action>' => 'post/<action>',
     'admin/<action>' => 'admin/<action>',
     '<controller>/<action>' => '<controller>/<action>',
 ];

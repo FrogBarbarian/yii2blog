@@ -24,20 +24,10 @@ class AdminMenuWidget extends Widget
         parent::init();
         $this->amountTmpPosts = $this->amountTmpPosts !== null
             ? $this->amountTmpPosts
-            : count(Get::data(
-                'tmp_posts',
-                'id',
-                SORT_DESC,
-                false,
-            ));
+            : count(Get::data('tmp_posts', SORT_DESC));
 
         if ($this->amountUnusedTags === null) {
-            $tags = Get::data(
-                'tags',
-                'id',
-                SORT_ASC,
-                false,
-            );
+            $tags = Get::data('tags');
 
             foreach ($tags as $tag) {
                 if ($tag->getAmountOfUses() === 0) {
@@ -48,12 +38,7 @@ class AdminMenuWidget extends Widget
 
         $this->amountComplaints = $this->amountComplaints !== null
             ? $this->amountComplaints
-            : count(Get::data(
-                'complaints',
-                'id',
-                SORT_ASC,
-                false,
-            ));
+            : count(Get::data('complaints'));
     }
 
     /**

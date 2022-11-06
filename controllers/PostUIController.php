@@ -13,6 +13,7 @@ use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\web\UploadedFile;
+use yii\widgets\ActiveForm;
 
 /**
  * Отвечает за UI/UX при работе с постом.
@@ -180,70 +181,5 @@ class PostUIController extends AppController
         }
 
         return $this->asJson(ConstructHtml::rating($post->getRating()));
-    }
-
-    /**
-     * Поиск по тегам.
-     * @throws NotFoundHttpException
-     */
-    public function actionSearchTags(string $input): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax()) {
-            throw new NotFoundHttpException();
-        }
-
-        $tags = Tag::find()
-            ->byChars($input)
-            ->limit(5)
-            ->asArray()
-            ->all();
-
-        if ($tags === []) {
-            return $this->asJson(false);
-        }
-
-        return $this->asJson($tags);
-    }
-
-    /**
-     * TODO: COMMENT
-     */
-    public function actionImageModal(): string
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax()) {
-            throw new NotFoundHttpException();
-        }
-
-        $uploadForm = new UploadForm();
-
-        return $this->renderAjax('@app/views/u-i/image-modal', ['uploadForm' => $uploadForm]);
-    }
-
-    /**
-     * TODO: do it
-     */
-    public function actionUploadImage(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax) {
-            throw new NotFoundHttpException();
-        }
-
-        $uploadForm = new UploadForm();
-        $uploadForm->image = UploadedFile::getInstance($uploadForm, 'image');
-        $uploadForm->signature = $request->post('UploadForm')['signature'];
-
-        if ($uploadForm->upload()) {
-            // Изображение загружено
-
-            return $this->asJson([$uploadForm->imageName, $uploadForm->signature]);
-        }
-
-        return $this->asJson($uploadForm->errors);
     }
 }

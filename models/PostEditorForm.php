@@ -48,31 +48,18 @@ class PostEditorForm extends ActiveRecord
                 'title',
                 'string',
                 'length' => [30, 150],
-                'tooShort' => 'Название не может быть короче 30 символов (сейчас - ' . $this->fieldLength('title') . ')',
-                'tooLong' => 'Название не может быть длиннее 150 символов (сейчас - ' . $this->fieldLength('title') . ')',
+                'tooShort' => 'Название не может быть короче 30 символов',
+                'tooLong' => 'Название не может быть длиннее 150 символов',
             ],
             ['body', 'required', 'message' => 'Заполните содержимое поста'],
             [
                 'body',
                 'string',
                 'length' => [300, 10000],
-                'tooShort' => 'Содержание не может быть короче 300 символов (сейчас - ' . $this->fieldLength('body') . ')',
-                'tooLong' => 'Содержание не может быть длиннее 10000 символов (сейчас - ' . $this->fieldLength('body') . ')',
+                'tooShort' => 'Содержание не может быть короче 300 символов',
+                'tooLong' => 'Содержание не может быть длиннее 10000 символов',
             ],
         ];
-    }
-
-    /**
-     * Получает длину строки выбранного поля.
-     * @param string $field Поле.
-     * @return int
-     */
-    private function fieldLength(string $field): int
-    {
-        $attribute = $_POST['PostEditorForm'][$field] ?? '';
-
-        return (new StringService($attribute))
-        ->getLength();
     }
 
     /**
@@ -81,7 +68,9 @@ class PostEditorForm extends ActiveRecord
     public function checkNameIfPostIsNew()
     {
         if ($this->isNew) {
-            $post = self::find()->where(['ILIKE', 'title', $this->title])->one();
+            $post = self::find()
+                ->where(['ILIKE', 'title', $this->title])
+                ->one();
 
             if ($post !== null) {
                 $this->addError('title', 'Пост с таким именем уже существует');
