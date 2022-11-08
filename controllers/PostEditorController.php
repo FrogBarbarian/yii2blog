@@ -19,152 +19,6 @@ use yii\widgets\ActiveForm;
 class PostEditorController extends AppController
 {
     /**
-     * Сохраняет пост.
-     * @throws NotFoundHttpException
-     */
-    public function actionSave(string $id = null): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax) {
-            throw new NotFoundHttpException();
-        }
-
-        $user = Yii::$app
-            ->user
-            ->getIdentity();
-        $postEditorForm = new PostEditorForm();
-        $postEditorForm->isNew = $id === null;
-        $id = $id === null ? $id : (int)$id;
-
-        if ($postEditorForm->load($request->post()) && $postEditorForm->validate()) {
-            $session = Yii::$app->session;
-
-            if ($user->getIsAdmin()) {
-                if ($postEditorForm->isNew) {
-                    $post = new Post();
-                    $post
-                        ->setTitle($postEditorForm->title)
-                        ->setBody($postEditorForm->body)
-                        ->setAuthor($user->getUsername())
-                        ->setAuthorId($user->getId())
-                        ->setTags($postEditorForm->tags)
-                        ->save();
-                    $statistics = Statistic::find()
-                        ->byUsername($post->getAuthor())
-                        ->one();
-                    $statistics
-                        ->increasePosts()
-                        ->save();
-
-                    foreach ($post->getTagsArray() as $tag) {
-                        $tagObj = Tag::find()
-                            ->byTag($tag)
-                            ->one();
-
-                        if ($tagObj === null) {
-                            $tagObj = new Tag();
-                            $tagObj
-                                ->setTag($tag)
-                                ->save();
-                        } else {
-                            $tagObj
-                                ->increaseAmountOfUse()
-                                ->save();
-                        }
-                    }
-                } else {
-                    $post = Post::find()
-                        ->byId($id)
-                        ->one();
-                    $oldTags = $post->getOldTagsArray();
-                    $post
-                        ->setTitle($postEditorForm->title)
-                        ->setBody($postEditorForm->body)
-                        ->setTags($postEditorForm->tags)
-                        ->save();
-                    $newTags = $post->getTagsArray();
-                    $unsetTags = array_diff($oldTags, $newTags);
-                    $setTags = array_diff($newTags, $oldTags);
-
-                    foreach ($unsetTags as $tag) {
-                        $tagObj = Tag::find()
-                            ->byTag($tag)
-                            ->one();
-                        $tagObj
-                            ->decreaseAmountOfUse()
-                            ->save();
-                    }
-
-                    foreach ($setTags as $tag) {
-                        $tagObj = Tag::find()
-                            ->byTag($tag)
-                            ->one();
-
-                        if ($tagObj === null) {
-                            $tagObj = new Tag();
-                            $tagObj
-                                ->setTag($tag)
-                                ->save();
-                        } else {
-                            $tagObj
-                                ->increaseAmountOfUse()
-                                ->save();
-                        }
-                    }
-                }
-
-                return $this->asJson(['success', $id]);
-            }
-
-            $postTmp = new TmpPost();
-
-            if ($postEditorForm->isNew) {
-                $postTmp
-                    ->setTitle($postEditorForm->title)
-                    ->setBody($postEditorForm->body)
-                    ->setTags($postEditorForm->tags)
-                    ->setAuthor($user->getUsername())
-                    ->setAuthorId($user->getId())
-                    ->save();
-                $message = 'Пост создан и отправлен на проверку администратору.';
-                $session->setFlash('messageForIndex', $message);
-
-                return $this->asJson(['success', null]);
-            }
-
-            if (TmpPost::find()->byUpdatedId($id)->one() !== null) {
-                $message = 'Пост уже редактировался и ожидает одобрения администратором.';
-                $session->setFlash('postFlash', $message);
-
-                return $this->asJson(['success', $id]);
-            }
-
-            $post = Post::find()
-                ->byId($id)
-                ->one();
-
-            $postTmp
-                ->setTitle($postEditorForm->title)
-                ->setBody($postEditorForm->body)
-                ->setTags($postEditorForm->tags)
-                ->setAuthor($user->getUsername())
-                ->setOldTitle($post->getOldTitle())
-                ->setOldBody($post->getOldBody())
-                ->setOldTags($post->getOldTags())
-                ->setIsNew(false)
-                ->setUpdateId($post->getId())
-                ->save();
-            $message = 'Пост отредактирован и отправлен на проверку администратору.';
-            $session->setFlash('postFlash', $message);
-
-            return $this->asJson(['success', $id]);
-        }
-
-        return $this->asJson($postEditorForm->errors);
-    }
-
-    /**
      * Рендерит модальное окно для загрузки изображения.
      * @throws NotFoundHttpException
      */
@@ -182,7 +36,7 @@ class PostEditorController extends AppController
     }
 
     /**
-     * TODO
+     * Страница редактирования поста.
      */
     public function actionEdit(string $id = null): string
     {
@@ -212,7 +66,7 @@ class PostEditorController extends AppController
     }
 
     /**
-     * TODO
+     * Страница создания поста.
      */
     public function actionNew(): string
     {
@@ -230,7 +84,7 @@ class PostEditorController extends AppController
     }
 
     /**
-     * TODO
+     * Загрузка изображения.
      */
     public function actionUploadImage(): Response
     {
@@ -276,7 +130,10 @@ class PostEditorController extends AppController
         return $this->asJson($tags);
     }
 
-    public function actionTest()
+    /**
+     * TODO
+     */
+    public function actionCreate(): Response
     {
         $request = Yii::$app->getRequest();
 
@@ -284,15 +141,124 @@ class PostEditorController extends AppController
             throw new NotFoundHttpException();
         }
 
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
         $model = new PostEditorForm();
+        $model->load($request->post());
 
-        if ($model->load($request->post()) && $model->validate()) {
-            //Сохраняем пост
+        if (isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
+        }
 
-            return $this->asJson(true);
+        if ($model->validate()) {
+            if ($user->getIsAdmin() === true) {
+                $post = new Post();
+                $post
+                    ->setTitle($model->title)
+                    ->setBody($model->body)
+                    ->setAuthor($user->getUsername())
+                    ->setAuthorId($user->getId())
+                    ->setTags($model->tags)
+                    ->save();
+                $statistics = Statistic::find()
+                    ->byUsername($post->getAuthor())
+                    ->one();
+                $statistics
+                    ->increasePosts()
+                    ->save();
+                Tag::checkWhenCreatePost($post->getTagsArray());
+
+                return $this->asJson($post->getId());
+            }
+
+            $postTmp = new TmpPost();
+            $postTmp
+                ->setTitle($model->title)
+                ->setBody($model->body)
+                ->setTags($model->tags)
+                ->setAuthor($user->getUsername())
+                ->setAuthorId($user->getId())
+                ->save();
+            $message = 'Пост создан и отправлен на проверку администратору.';
+            Yii::$app
+                ->session
+                ->setFlash('messageForIndex', $message);
+
+            return $this->asJson(null);
         }
 
 
-        return $this->asJson(ActiveForm::validate($model));
+        return $this->asJson(false);
+    }
+
+    /**
+     * TODO
+     */
+    public function actionUpdate(string $id): Response
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+        $model = new PostEditorForm();
+        $id = (int)$id;
+        $model->isNew = false;
+
+        if ($model->load($request->post()) && $model->validate()) {
+            if ($user->getIsAdmin() === true) {
+                $post = Post::find()
+                    ->byId($id)
+                    ->one();
+                $oldTags = $post->getOldTagsArray();
+                $post
+                    ->setTitle($model->title)
+                    ->setBody($model->body)
+                    ->setTags($model->tags)
+                    ->save();
+                $newTags = $post->getTagsArray();
+                Tag::checkWhenUpdatePost($oldTags, $newTags);
+
+                return $this->asJson($id);
+            }
+
+            $session = Yii::$app->session;
+            $tmpPost = TmpPost::find()
+                ->byUpdatedId($id)
+                ->one();
+
+            if ($tmpPost !== null) {
+                $message = 'Пост уже редактировался и ожидает одобрения администратором.';
+                $session->setFlash('postFlash', $message);
+            }
+
+            $post = Post::find()
+                ->byId($id)
+                ->one();
+            $tmpPost = new TmpPost();
+            $tmpPost
+                ->setTitle($model->title)
+                ->setBody($model->body)
+                ->setTags($model->tags)
+                ->setAuthor($user->getUsername())
+                ->setOldTitle($post->getOldTitle())
+                ->setOldBody($post->getOldBody())
+                ->setOldTags($post->getOldTags())
+                ->setIsNew(false)
+                ->setUpdateId($post->getId())
+                ->save();
+            $message = 'Пост отредактирован и отправлен на проверку администратору.';
+            $session->setFlash('postFlash', $message);
+
+            return $this->asJson($id);
+        }
+
+
+        return $this->asJson(false);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\models;
 
@@ -40,7 +40,7 @@ class UserForm extends ActiveRecord
             ['username', 'match', 'pattern' => '/^[\da-zА-яёЁ][\wА-яёЁ]+/i', 'message' => 'Используются недопустимые символы'],
             ['username', 'uniqueCaseInsensitiveValidation'],
             ['email', 'required', 'message' => 'Введите Ваш email'],
-            ['email' , 'email', 'message' => 'Введенный email не корректный'],
+            ['email', 'email', 'message' => 'Введенный email не корректный'],
             ['email', 'uniqueCaseInsensitiveValidation'],
             ['password', 'required', 'message' => 'Придумайте пароль'],
             ['password', 'string', 'length' => [5, 30], 'tooLong' => 'Максимум 30 символов', 'tooShort' => 'Минимум 5 символов'],
@@ -70,22 +70,19 @@ class UserForm extends ActiveRecord
     }
 
     /**
-     * Проверяет на регистронезависимую уникальность введенные email/username при регистрации.
+     * Проверяет на регистронезависимую уникальность введенный email/username при регистрации.
      * @param string $attribute Проверяемый атрибут.
-     * @return void
-     * @throws Exception
      */
     public function uniqueCaseInsensitiveValidation(string $attribute): void
     {
-        if (
-            Yii::$app->getDb()->createCommand(
-            "SELECT id FROM " . self::tableName() . " WHERE $attribute ILIKE '{$this->attributes[$attribute]}'"
-            )
-            ->queryOne()
-        ) {
+        $user = User::find()
+            ->where(['ILIKE', $attribute, "%{$this->$attribute}", false])
+            ->one();
+
+        if ($user !== null) {
             $error = match ($attribute) {
                 'username' => 'Данное имя пользователя уже занято',
-                default => 'Данный email уже занят',
+                'email' => 'Данная почта уже занята',
             };
             $this->addError($attribute, $error);
         }

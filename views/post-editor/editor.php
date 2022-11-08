@@ -13,6 +13,7 @@ $title = '';
 $body = '';
 $tags = '';
 $id = null;
+$action = 'create';
 $this->title = 'Новый пост';
 
 if (isset($post)) {
@@ -21,9 +22,11 @@ if (isset($post)) {
     $body = $post->getBody();
     $tags = $post->getTags();
     $id = $post->getId();
+    $action = 'update';
 }
 
 $this->registerJsFile('@js/post-editor.js');
+$errorOptions = ['class' => 'text-danger small help-block'];
 ?>
 <div class="card mx-auto rounded-0">
     <div class="card-header alert alert-warning small" role="alert">
@@ -34,20 +37,19 @@ $this->registerJsFile('@js/post-editor.js');
     </div>
     <?php $form = ActiveForm::begin([
         'id' => 'postEditorForm',
-        'action' => Url::to(['/post-editor/test', 'id' => $id]),
+        'action' => Url::to(["/post-editor/$action", 'id' => $id]),
         'method' => 'post',
-        'validateOnType' => true,
+        'enableAjaxValidation' => true,
     ]) ?>
     <div class="card-body">
         <?= $form
             ->field($model, 'title')
             ->input('text', [
                 'class' => 'txt-input-basic',
-                'id' => 'titleInput',
                 'value' => $title,
                 'placeholder' => 'Название',
             ])->label(false)
-            ->error(['class' => 'text-danger small help-block', 'id' => 'tittleErrorLabel']) ?>
+        ->error($errorOptions) ?>
         <div class="post-body-input-group">
             <div id="toolbar">
                 <div id="buttons">
@@ -108,11 +110,12 @@ $this->registerJsFile('@js/post-editor.js');
             </div>
 
         </div>
-        <?= $form->field($model, 'body', ['errorOptions' => ['class' => 'text-danger small help-block', 'id' => 'bodyErrorLabel']])
+        <?= $form->field($model, 'body')
             ->hiddenInput([
                 'id' => 'bodyInput',
                 'value' => $body,
-            ])->label(false) ?>
+            ])->label(false)
+        ->error($errorOptions)?>
         <hr>
         <div class="input-group">
             <span class="input-group-text">теги</span>
@@ -122,15 +125,16 @@ $this->registerJsFile('@js/post-editor.js');
         </div>
         <ul class="list-group" id="suggestedTags"></ul>
         <div class="my-3" id="tagsArea"></div>
-        <?= $form->field($model, 'tags', ['errorOptions' => ['class' => 'text-danger small help-block', 'id' => 'tagsErrorLabel']])
+        <?= $form->field($model, 'tags')
             ->hiddenInput([
                 'id' => 'tagsInput',
                 'value' => $tags,
-            ])->label(false) ?>
+            ])->label(false)
+        ->error($errorOptions)?>
     </div>
     <div class="card-footer">
         <div>
-            <input type="button" onclick="submitPost()" class="btn btn-outline-dark" value="Опубликовать">
+            <input type="submit" onclick="submitPost()" class="btn btn-outline-dark" value="Опубликовать">
         </div>
     </div>
     <?php ActiveForm::end() ?>

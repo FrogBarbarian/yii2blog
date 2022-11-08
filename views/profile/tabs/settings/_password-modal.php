@@ -21,7 +21,8 @@ $this->registerJsFile('@js/password-visibility.js');
 $this->registerJsFile('@js/modals/change-password-form.js');
 $this->registerJs(<<<JS
     setupPasswordFormJsData();
-JS);
+JS
+);
 
 ?>
 
@@ -40,7 +41,6 @@ JS);
         <?= $form
             ->field($model, 'oldPassword', $options)
             ->input('password', [
-                'id' => 'oldPasswordInput',
                 'class' => 'txt-input-basic',
                 'autocomplete' => 'off',
                 'placeholder' => 'Старый пароль',
@@ -49,7 +49,6 @@ JS);
         <?= $form
             ->field($model, 'newPassword', $options)
             ->input('password', [
-                'id' => 'newPasswordInput',
                 'class' => 'txt-input-basic',
                 'autocomplete' => 'off',
                 'placeholder' => 'Новый пароль',
@@ -58,7 +57,6 @@ JS);
         <?= $form
             ->field($model, 'confirmNewPassword', $options)
             ->input('password', [
-                'id' => 'confirmNewPasswordInput',
                 'class' => 'txt-input-basic',
                 'autocomplete' => 'off',
                 'placeholder' => 'Подтвердите новый пароль',

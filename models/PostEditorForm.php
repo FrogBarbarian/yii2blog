@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace app\models;
 
+use src\helpers\NormalizeData;
 use src\services\StringService;
 use yii\db\ActiveRecord;
 
@@ -52,13 +53,7 @@ class PostEditorForm extends ActiveRecord
                 'tooLong' => 'Название не может быть длиннее 150 символов',
             ],
             ['body', 'required', 'message' => 'Заполните содержимое поста'],
-            [
-                'body',
-                'string',
-                'length' => [300, 10000],
-                'tooShort' => 'Содержание не может быть короче 300 символов',
-                'tooLong' => 'Содержание не может быть длиннее 10000 символов',
-            ],
+            ['body', 'checkBodyTextLength'],
         ];
     }
 
@@ -75,6 +70,34 @@ class PostEditorForm extends ActiveRecord
             if ($post !== null) {
                 $this->addError('title', 'Пост с таким именем уже существует');
             }
+        }
+    }
+
+    /**
+     * Проверяет длину строки атрибута 'body' без учета HTML тегов.
+     */
+    public function checkBodyTextLength() {
+        $length = mb_strlen(strip_tags($this->body));
+
+        if ($length === 0) {
+            $message = 'Заполните содержимое поста';
+            $this->addError('body', $message);
+        }
+
+        if ($length < 300) {
+            $needChars = 300 - $length;
+            $word =  NormalizeData::wordForm($needChars, 'символов', 'символ', 'символа');
+            $format = 'Содержание должно быть длиннее, еще %d %s';
+            $message = sprintf($format, $needChars, $word);
+            $this->addError('body', $message);
+        }
+
+        if ($length > 10000) {
+            $extraChars = $length - 10000;
+            $word =  NormalizeData::wordForm($extraChars, 'символов', 'символ', 'символа');
+            $format = 'Содержание должно быть короче, уберите %d %s';
+            $message = sprintf($format, $extraChars, $word);
+            $this->addError('body', $message);
         }
     }
 }

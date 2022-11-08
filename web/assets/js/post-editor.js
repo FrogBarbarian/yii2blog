@@ -60,11 +60,30 @@ let selection = null;
  * Адрес выделения.
  */
 let range = null;
+/**
+ * Событие потери фокуса.
+ */
+const blurEvent = new Event ('blur');
+/**
+ * Div контейнер для ввода содержания поста.
+ */
+const inputBodyContainer = document.getElementById('inputBody');
+/**
+ * Поле ввода для поиска тегов.
+ */
+const inputTagContainer = document.getElementById('tagField');
+inputBodyContainer.onblur = () => {
+    document.getElementById('bodyInput').dispatchEvent(blurEvent)
+}
+inputTagContainer.onblur = () => {
+    document.getElementById('tagsInput').dispatchEvent(blurEvent)
+}
 
 /**
  * Удаляет выбранный тег.
  */
 function removeTag(tag) {
+    document.getElementById('tagsInput').dispatchEvent(blurEvent)
     const tags = $('#tagsInput');
     tag.remove();
     tag = '#' + tag.innerHTML;
@@ -75,15 +94,14 @@ function removeTag(tag) {
  * Добавляет тег.
  */
 function addTag(tag = '') {
+    document.getElementById('tagsInput').dispatchEvent(blurEvent)
     $('#suggestedTags').html('');
-    const tagsField = $('#tagField');
-
-    if (tagsField.val() === '' && tag === '') {
+    if (inputTagContainer.value === '' && tag === '') {
         return false;
     }
 
     if (tag === '') {
-        tag = tagsField.val();
+        tag = inputTagContainer.value;
     }
 
     const tagsArea = $('#tagsArea');
@@ -95,7 +113,7 @@ function addTag(tag = '') {
         tag +
         '</span>'
     );
-    tagsField.val('');
+    inputTagContainer.value = '';
 }
 
 /**
@@ -151,7 +169,7 @@ function edit(textarea) {
  */
 function formatting(type, showUI = false, value = null) {
     document.execCommand(type, showUI, value);
-    document.getElementById('inputBody').focus();
+    inputBodyContainer.focus();
 }
 
 /**
@@ -170,7 +188,7 @@ function paste(event) {
  * Ловит сочетания клавиш.
  */
 $(window).keydown(function (event) {
-    if (event.target.id === 'inputBody') {
+    if (event.target.id === inputBodyContainer.id) {
         if (event.ctrlKey) {
             switch (event.which) {
                 case 66:
@@ -369,7 +387,7 @@ function checkParent(element) {
         return false;
     }
 
-    if (element.id === 'inputBody') {
+    if (element.id === inputBodyContainer.id) {
         return true;
     }
 
@@ -380,14 +398,13 @@ function checkParent(element) {
  * Устанавливает диапазон выделения.
  */
 function setRange() {
-    const inputBody = document.getElementById('inputBody');
     selection = window.getSelection();
     const anchor = selection.anchorNode;
 
     if (checkParent(anchor) !== true) {
         range = new Range();
-        range.setStart(inputBody, 0);
-        range.setEnd(inputBody, 0);
+        range.setStart(inputBodyContainer, 0);
+        range.setEnd(inputBodyContainer, 0);
 
         return false;
     }
@@ -460,8 +477,8 @@ function submitPost() {
         processData: false,
         contentType: false,
         success: function (response) {
-            if (Array.isArray(response) === true) {
-                let id = response[1];
+            if (response !== false) {
+                let id = response;
                 let url = id === null
                     ? '/'
                     : '/post?id=' + id;
@@ -469,27 +486,7 @@ function submitPost() {
                 return location.href = url;
             }
 
-            document.querySelectorAll('[id$=ErrorLabel]').forEach(object => {
-                object.innerHTML = '';
-            });
-
-            let errors = Object.entries(response);
-
-            errors.forEach((object) => {
-                $('#' + object[0] + 'ErrorLabel').html(object[1]);
-            });
-
             return false;
         }
     });
-}
-
-const titleInput = document.getElementById('titleInput');
-const tittleErrorLabel = document.getElementById('tittleErrorLabel');
-titleInput.onblur = () => {
-    setTimeout(() => {
-        if (tittleErrorLabel.innerText !== '') {
-            tittleErrorLabel.innerText += ` (сейчас ${titleInput.value.length})`
-        }
-    }, 500)
 }

@@ -23,7 +23,6 @@ JS
             </button>
         </div>
         <?php $form = ActiveForm::begin([
-            'enableAjaxValidation' => false,
             'id' => 'messageForm',
             'action' => '/u-i/send-message',
         ]) ?>

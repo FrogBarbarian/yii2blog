@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \app\models\LoginForm $loginForm
+ * @var \app\models\LoginForm $model
  * @var \yii\web\View $this
  */
 
@@ -16,22 +16,20 @@ $this->registerJsFile('@js/password-visibility.js');
 <div class="align-items-center vstack justify-content-center vh-90">
     <div class="window-basic window-login">
         <h3 class="py-1">Вход</h3>
-        <?php $activeForm = ActiveForm::begin([
+        <?php $form = ActiveForm::begin([
             'id' => 'loginForm',
         ]) ?>
-        <?= $activeForm
-            ->field($loginForm, 'email', $options)
+        <?= $form
+            ->field($model, 'email', $options)
             ->input('email', [
                 'class' => 'txt-input-basic',
-                'id' => 'emailInput',
                 'placeholder' => 'Почта',
             ])
             ->label(false) ?>
-        <?= $activeForm
-            ->field($loginForm, 'password', $options)
+        <?= $form
+            ->field($model, 'password', $options)
             ->input('password', [
                 'class' => 'txt-input-basic',
-                'id' => 'passwordInput',
                 'placeholder' => 'Пароль',
             ])
             ->label(false) ?>
@@ -39,7 +37,7 @@ $this->registerJsFile('@js/password-visibility.js');
             <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
         </button>
         <div class="hstack justify-content-between my-2">
-            <?= $activeForm->field($loginForm, 'rememberMe')->checkbox([
+            <?= $form->field($model, 'rememberMe')->checkbox([
                 'class' => 'checkbox-input',
                 'label' => 'Запомнить меня',
             ])

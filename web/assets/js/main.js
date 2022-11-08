@@ -54,6 +54,7 @@ window.onkeyup = function (e) {
  */
 function shakeModal() {
     const window = $('.modal-window');
+    window.stop(false, true);
     window.animate({left: '-=1rem'}, 50);
     window.animate({left: '+=2rem'}, 100);
     window.animate({left: '-=1rem'}, 50);

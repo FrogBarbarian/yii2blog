@@ -7,6 +7,9 @@ namespace app\models;
 use app\models\queries\TagQuery;
 use yii\db\ActiveRecord;
 
+/**
+ * Тег.
+ */
 class Tag extends ActiveRecord
 {
     /**
@@ -87,5 +90,52 @@ class Tag extends ActiveRecord
         $this->setAmountOfUses($this->getAmountOfUses() - $value);
 
         return $this;
+    }
+
+    /**
+     * Проверяет набор тегов у создаваемого поста.
+     * Если тег новый - создает его.
+     * Иначе увеличивает количество использований тега на 1.
+     */
+    public static function checkWhenCreatePost(array $tags)
+    {
+        foreach ($tags as $tag) {
+            $tagObj = self::find()
+                ->byTag($tag)
+                ->one();
+
+            if ($tagObj === null) {
+                $tagObj = new self();
+                $tagObj
+                    ->setTag($tag)
+                    ->save();
+            } else {
+                $tagObj
+                    ->increaseAmountOfUse()
+                    ->save();
+            }
+        }
+    }
+
+    /**
+     * Проверяет набор тегов у обновляемого поста.
+     * @param array $oldTags Теги до обновления.
+     * @param array $newTags Теги после обновления.
+     */
+    public static function checkWhenUpdatePost(array $oldTags, array $newTags)
+    {
+        $unsetTags = array_diff($oldTags, $newTags);
+        $setTags = array_diff($newTags, $oldTags);
+
+        foreach ($unsetTags as $tag) {
+            $tagObj = self::find()
+                ->byTag($tag)
+                ->one();
+            $tagObj
+                ->decreaseAmountOfUse()
+                ->save();
+        }
+
+        self::checkWhenCreatePost($setTags);
     }
 }

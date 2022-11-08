@@ -28,9 +28,18 @@ class UserController extends AppController
             $this->goHome();
         }
 
+        $request = Yii::$app->getRequest();
         $model = new UserForm();
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($request->isAjax || $request->getIsPost()) {
+            $model->load($request->post());
+        }
+
+        if ($request->isAjax && isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
+        }
+
+        if ($request->getIsPost() && $model->validate()) {
             $user = new User();
             $user
                 ->setUsername($model->username)
@@ -72,20 +81,20 @@ class UserController extends AppController
             return $this->goHome();
         }
 
-        $loginForm = new LoginForm();
+        $model = new LoginForm();
 
-        if ($loginForm->load(Yii::$app->request->post()) && $loginForm->validate()) {
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $user = User::find()
-                ->byEmail($loginForm->email)
+                ->byEmail($model->email)
                 ->one();
             Yii::$app
                 ->user
-                ->login($user, $loginForm->rememberMe ? 3600 * 24 * 30 : 0);
+                ->login($user, $model->rememberMe ? 3600 * 24 * 30 : 0);
 
             return $this->redirect('/profile');
         }
 
-        return $this->render('login', ['loginForm' => $loginForm]);
+        return $this->render('login', ['model' => $model]);
     }
 
     /**
@@ -101,8 +110,13 @@ class UserController extends AppController
         }
 
         $model = new ChangePasswordForm();
+        $model->load($request->post());
 
-        if ($model->load($request->post()) && $model->validate()) {
+        if (isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
+        }
+
+        if ($model->validate()) {
             $user = Yii::$app
                 ->user
                 ->getIdentity();
@@ -113,7 +127,7 @@ class UserController extends AppController
             return $this->asJson(true);
         }
 
-        return $this->asJson(ActiveForm::validate($model));
+        return $this->asJson(false);
     }
 
     /**
@@ -129,8 +143,13 @@ class UserController extends AppController
         }
 
         $model = new UserForm(['scenario' => UserForm::SCENARIO_CHANGE_EMAIL]);
+        $model->load($request->post());
 
-        if ($model->load($request->post()) && $model->validate()) {
+        if (isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
+        }
+
+        if ($model->validate()) {
             $user = Yii::$app
                 ->user
                 ->getIdentity();
@@ -141,6 +160,6 @@ class UserController extends AppController
             return $this->asJson(true);
         }
 
-        return $this->asJson(ActiveForm::validate($model));
+        return $this->asJson(false);
     }
 }
