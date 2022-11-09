@@ -185,7 +185,7 @@ class PostEditorController extends AppController
                 ->session
                 ->setFlash('messageForIndex', $message);
 
-            return $this->asJson(null);
+            return $this->asJson(true);
         }
 
 
@@ -209,8 +209,13 @@ class PostEditorController extends AppController
         $model = new PostEditorForm();
         $id = (int)$id;
         $model->isNew = false;
+        $model->load($request->post());
 
-        if ($model->load($request->post()) && $model->validate()) {
+        if (isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
+        }
+
+        if ($model->validate()) {
             if ($user->getIsAdmin() === true) {
                 $post = Post::find()
                     ->byId($id)
@@ -235,6 +240,8 @@ class PostEditorController extends AppController
             if ($tmpPost !== null) {
                 $message = 'Пост уже редактировался и ожидает одобрения администратором.';
                 $session->setFlash('postFlash', $message);
+
+                return $this->asJson($id);
             }
 
             $post = Post::find()
@@ -246,6 +253,7 @@ class PostEditorController extends AppController
                 ->setBody($model->body)
                 ->setTags($model->tags)
                 ->setAuthor($user->getUsername())
+                ->setAuthorId($user->getId())
                 ->setOldTitle($post->getOldTitle())
                 ->setOldBody($post->getOldBody())
                 ->setOldTags($post->getOldTags())
@@ -257,7 +265,6 @@ class PostEditorController extends AppController
 
             return $this->asJson($id);
         }
-
 
         return $this->asJson(false);
     }

@@ -9,6 +9,7 @@
 declare(strict_types=1);
 
 $this->registerJsFile('@js/admin/main.js');
+$this->registerJsFile('@js/utilities/notice.js');
 
 ?>
 <div class="row">
@@ -56,7 +57,24 @@ $this->registerJsFile('@js/admin/main.js');
                     <?php endif ?>
                 </a>
             </li>
+            <li>
+                <button id="clearStorageButton" class="nav-link text-white me-2">
+                    Очистить хранилище
+                </button>
+            </li>
         </ul>
     </div>
 
     <div class="col bg-white">
+
+        <script>
+            document.getElementById('clearStorageButton').onclick = () => {
+                $.ajax({
+                    url: '/admin-u-i/clear-images',
+                    cache: false,
+                    success: function () {
+                        notice('Хранилище очищено', '');
+                    }
+                });
+            }
+        </script>

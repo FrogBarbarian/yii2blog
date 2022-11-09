@@ -10,8 +10,6 @@ function createMessageModal(recipient = '', subject = '', content = '') {
     $.ajax({
         url: '/u-i/message-modal',
         cache: false,
-        type: 'post',
-        data: {_csrf: token},
         success: function (response) {
             $('#modalDiv').html(response);
         }

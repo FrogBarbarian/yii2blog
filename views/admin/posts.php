@@ -20,9 +20,7 @@ echo AdminMenuWidget::widget(['amountTmpPosts' => count($tmpPosts)]);
     </p>
     <div class="posts-grid">
         <?php foreach ($tmpPosts as $post): ?>
-            <a class="grid-post" href="<?= ADMIN_PANEL ?>/user-post?id=<?= $post->getId() ?>" data-toggle="tooltip"
-               data-placement="top"
-               title="<?= $post->getTitle() ?>">
+            <a class="grid-post" target="_blank" href="<?= ADMIN_PANEL ?>/user-post?id=<?= $post->getId() ?>" title="<?= $post->getTitle() ?>">
                 <?= $post->getPreview($post->getTitle(), 25, '') ?>
                 <hr style="margin: 3px 0 3px 0;">
                 <?= $post->getAuthor() ?>

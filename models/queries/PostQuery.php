@@ -27,6 +27,14 @@ class PostQuery extends ActiveQuery
     }
 
     /**
+     *  Поиск по названию.
+     */
+    public function byTitle(string $title): self
+    {
+        return $this->where(['title' => $title]);
+    }
+
+    /**
      * Сортирует по ID в обратном порядке.
      */
     public function orderDescById(): self

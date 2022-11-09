@@ -1,3 +1,4 @@
+const noticeHeader = 'Настройки применены'.
 /**
  * Переключатель видимости профиля.
  */
@@ -15,7 +16,7 @@ visibilitySwitcher.addEventListener('change', () => {
         type: 'post',
         data: data,
         success: function () {
-            notice(
+            notice(noticeHeader,
                 'Профиль ' +
                 (visibilitySwitcher.checked ? 'открыт' : 'скрыт')
             );
@@ -40,7 +41,7 @@ messagesSwitcher.addEventListener('change', () => {
         type: 'post',
         data: data,
         success: function () {
-            notice(
+            notice(noticeHeader,
                 'Личные сообщения ' +
                 (messagesSwitcher.checked ? 'открыты' : 'закрыты')
             );
@@ -75,23 +76,3 @@ createEmailModalButton.addEventListener('click', () => {
         }
     });
 });
-
-/**
- * Отрисовывает небольшое уведомление в углу.
- */
-function notice(text) {
-    let content = $("#content");
-    content.append(
-        '<div id="notice" class="notice-window">' +
-        '<h6>' +
-        'Настройки применены' +
-        '</h6>' +
-        '<p class="small">' +
-        text +
-        '</p>' +
-        '</div>'
-    );
-    setTimeout(() => {
-        content.children('#notice').remove();
-    }, 2000);
-}

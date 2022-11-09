@@ -1,76 +1,66 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\ComplaintForm $complaintForm
  * @var string $objectType
  * @var string $objectId
+ * @var \yii\web\View $this
  */
 
-declare(strict_types=1);
-
 use yii\helpers\Url;
-use yii\web\View;
 use yii\widgets\ActiveForm;
 
-$this->registerJsFile(
-    '@js/complaint-form.js',
-    ['position' => View::POS_HEAD],
-    'complaint',
-);
+$this->registerJsFile('@js/modals/complaint-form.js');
+$this->registerJsFile('@js/utilities/notice.js');
 $this->registerJS(<<<JS
     setComplaintFormData();
-JS);
+JS
+);
 
 ?>
 
-<div class='modal-window-back' id='modalWindow' tabindex='-1' aria-modal='true' style='display: block;z-index: 10001'>
+<div class='modal-window-back' id='modalWindow' tabindex='-1'>
     <div class='modal-window'>
         <div class='modal-window-header'>
             Отправить жалобу
             <button type='button' onclick='closeModalDiv()' class='btn-close'>
             </button>
         </div>
-        <?php
-        $options = [
-            'options' => ['class' => 'form-floating'],
-            'errorOptions' => ['class' => 'text-danger small', 'id' => 'complaintErrorLabel'],
-            'template' => "{input}\n{label}\n{error}",
-        ] ?>
-        <?php $activeForm = ActiveForm::begin([
-            'id' => 'complaint-form',
-            'options' => [
-                'style' => 'width: 100%',
-            ],
+        <?php $form = ActiveForm::begin([
+            'id' => 'complaintForm',
+            'enableAjaxValidation' => true,
             'action' => Url::to('/u-i/send-complaint'),
         ]) ?>
-        <span style="font-size: small">
+        <span class="small">
             Изложите суть жалобы. Избегайте размытых выражений и конкретизируйте.
             Уложитесь в 250 символов.
         </span>
         <div id="complaintInputField" class="div-input-basic" contenteditable="true"></div>
-        <?= $activeForm
-            ->field($complaintForm, 'complaint', $options)
+        <?= $form
+            ->field($complaintForm, 'complaint')
             ->hiddenInput(['id' => 'complaintHiddenInput'])
-            ->label(false) ?>
-        <?= $activeForm
+            ->label(false)
+            ->error(['class' => 'text-danger small help-block']) ?>
+        <?= $form
             ->field($complaintForm, 'objectType')
             ->hiddenInput(['value' => $objectType])
-            ->label(false) ?>
-        <?= $activeForm
+            ->label(false)
+            ->error(false) ?>
+        <?= $form
             ->field($complaintForm, 'objectId')
             ->hiddenInput(['value' => $objectId])
-            ->label(false) ?>
+            ->label(false)
+            ->error(false) ?>
         <div class='modal-window-footer'>
-            <button type='button' onclick='closeModalDiv()' class='toolbar-button me-1'
-                    style="width: auto; font-weight: lighter">
+            <button type='button' onclick='closeModalDiv()' class='btn-basic'>
                 Отмена
             </button>
-            <button type='button' onclick="sendComplaint()" class='toolbar-button'
-                    style="width: auto; font-weight: lighter">
+            <button type='submit' onclick="sendComplaint()" class='btn-basic'>
                 Отправить
             </button>
         </div>
         <?php ActiveForm::end() ?>
     </div>
 </div>
-
-

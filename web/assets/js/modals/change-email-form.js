@@ -14,7 +14,7 @@ function changeEmail() {
         data: formData,
         success: function (response) {
             if (response === true) {
-                notice('Email изменен');
+                notice(noticeHeader,'Email изменен');
                 closeModalDiv();
             }
 

@@ -13,7 +13,7 @@ function changePassword() {
         data: formData,
         success: function (response) {
             if (response === true) {
-                notice('Пароль изменен');
+                notice(noticeHeader,'Пароль изменен');
                 closeModalDiv();
             }
 

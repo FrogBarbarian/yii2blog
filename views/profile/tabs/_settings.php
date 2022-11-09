@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 $this->title = 'Настройки';
 $this->registerJsFile('@js/settings.js');
+$this->registerJsFile('@js/utilities/notice.js');
 ?>
 <ul class="list-group">
     <li class="list-group-item d-flex justify-content-between align-items-center">

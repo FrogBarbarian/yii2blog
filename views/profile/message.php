@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 $this->title = "Сообщение #{$message->getId()}";
 $this->registerJsFile('@js/message.js');
-$this->registerJsFile('@js/message-modal.js');
+$this->registerJsFile('@js/utilities/message-modal.js');
 
 ?>
 <div

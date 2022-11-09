@@ -15,6 +15,6 @@ class MailboxAsset extends AssetBundle
     ];
     public $js = [
         'assets/js/mailbox.js',
-        'assets/js/message-modal.js',
+        'assets/js/utilities/message-modal.js',
     ];
 }

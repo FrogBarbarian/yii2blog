@@ -1,44 +1,53 @@
 <?php
-/** @var \app\models\TmpPost $post */
-/** @var \app\models\PostEditorForm $model */
 
-use yii\helpers\Url;
-use yii\widgets\ActiveForm;
+declare(strict_types=1);
 
-$this->title = ($post['isNew'] ? 'Новый' : 'Отредактированный') . ' пост ' . $post['title'];
+/**
+ * @var \app\models\TmpPost $post
+ * @var \app\models\Post|null $originalPost
+ * @var \yii\web\View $this
+ */
+
+use src\helpers\NormalizeData;
+
+$this->title = "Пост пользователя {$post->getAuthor()}";
+$this->registerJsFile('@js/utilities/notice.js');
+$this->registerJsFile('@js/admin/post-approval.js');
 ?>
 
-    <div class="mx-3 py-5">
-        <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
-            <div class="card-body">
-                <h5 class="card-title"><?=$post->getTitle()?></h5>
-                <p class="card-text"><?=$post->getBody()?></p>
-            </div>
-            <div class="card-footer">
-                <div>
-                    Отправлен: <b>дата</b>. Автор - <?=$post->getAuthor()?>
-                    <?php $activeForm = ActiveForm::begin([
-                        'id' => 'post-confirm-form',
-                        'action' => Url::to(ADMIN_PANEL. '/confirm'),
-                    ]) ?>
-                    <?= $activeForm->field($model, 'id')
-                        ->hiddenInput(['value' => $post->getId()])
-                        ->label(false)->error(false) ?>
-                    <!--TODO: Функционал одобрения статьи-->
-                    <button type="submit" class="btn btn-outline-dark">Одобрить</button>
-                    <?php ActiveForm::end() ?>
-                    <!--TODO: Функционал неодобрения статьи (открывается модальное окно с комментарием создателю)-->
-                    <a href="" class="btn btn-outline-dark">Отказать</a>
-                    <?php if (!$post['isNew']): ?>
-                        <!--TODO: Реализовать ссылку на оригинал-->
-                        <a href="/" class="btn btn-outline-dark">Открыть оригинал</a>
-                    <?php endif ?>
-                    <hr>
-                    <h5>Тэги:</h5>
-                    <?php foreach ($post->getTagsArray($post->getTags()) as $tag): ?>
-                        <b class="mx-1"><?=$tag?></b>
-                    <?php endforeach ?>
-                </div>
-            </div>
+<div class="window-basic card">
+    <div class="card-body">
+        <h5 class="card-title"><?= $post->getTitle() ?></h5>
+        <p class="card-text"><?= $post->getBody() ?></p>
+    </div>
+    <div class="card-footer">
+        <div>
+            <?php foreach ($post->getTagsArray() as $tag): ?>
+                <span class="tag-card"><?= $tag ?></span>
+            <?php endforeach ?>
+            <hr>
+            <a class="author-link" target="_blank" href="/users/<?= $post->getAuthor() ?>">
+                <?= $post->getAuthor() ?>
+            </a>
+            отправил <?= NormalizeData::passedTime($post->getDatetime()) ?>
+
+        </div>
+        <hr>
+        <button id="postApproveButton" class="btn-basic">Одобрить</button>
+        <button id="postDisapproveButton" class="btn-basic">Отказать</button>
+    </div>
+</div>
+<?php if ($post->getIsNew() === false): ?>
+    <div class="window-basic card mt-2">
+        <h4 class="card-header">Оригинал поста</h4>
+        <div class="card-body">
+            <h5 class="card-title"><?= $originalPost->getTitle() ?></h5>
+            <p class="card-text"><?= $originalPost->getBody() ?></p>
+        </div>
+        <div class="card-footer">
+            <?php foreach ($originalPost->getTagsArray() as $tag): ?>
+                <span class="tag-card"><?= $tag ?></span>
+            <?php endforeach ?>
         </div>
     </div>
+<?php endif ?>

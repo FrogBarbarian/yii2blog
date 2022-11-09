@@ -21,7 +21,6 @@ use kartik\file\FileInput;
             'id' => 'uploadImageForm',
             'options' => ['enctype' => 'multipart/form-data'],
             'action' => Url::to('/post-editor/upload-image'),
-            'method' => 'post',
         ]); ?>
         <?=
         $form
@@ -31,8 +30,10 @@ use kartik\file\FileInput;
                 'options' => ['accept' => 'image/*'],
                 'pluginOptions' => [
                     'mainClass' => 'd-flex justify-content-between',
-                    'browseLabel' => 'Выберите изображение',
-                    'removeLabel' => '',
+                    'browseLabel' => 'Выбрать изображение',
+                    'browseClass' => 'btn-basic',
+                    'removeClass' => 'btn-basic',
+                    'removeLabel' => 'Удалить',
                     'showClose' => false,
                     'fileActionSettings' => [
                         'indicatorNew' => '',
@@ -43,19 +44,14 @@ use kartik\file\FileInput;
                     'showCaption' => false,
                 ],
             ])
-            ->error([
-                'class' => 'text-danger small help-block',
-                'id' => 'signatureErrorLabel',])
+            ->error(['class' => 'text-danger small help-block'])
             ->label(false);
         ?>
         <?= $form
             ->field($model, 'signature')
             ->input('text', ['class' => 'txt-input-basic', 'placeholder' => 'Подпись'])
             ->label(false)
-            ->error([
-                'class' => 'text-danger small help-block',
-                'id' => 'signatureErrorLabel',
-            ])
+            ->error(['class' => 'text-danger small help-block'])
         ?>
         <div class="modal-window-footer">
             <button type="button" class="btn-basic" onclick="closeModalDiv()">

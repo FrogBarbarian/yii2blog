@@ -67,13 +67,15 @@ class UserController extends AppController
      */
     public function actionLogout(): Response
     {
-        Yii::$app->user->logout();
+        Yii::$app
+            ->user
+            ->logout();
 
         return $this->goHome();
     }
 
     /**
-     * Страница для входа пользователя, если пользователь уже залогинен - переправляет на главную страницу.
+     * Страница входа пользователя.
      */
     public function actionLogin(): Response|string
     {

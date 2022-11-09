@@ -19,6 +19,8 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
  if ($visitor !== null && !$user->getIsAdmin() && !$isOwn && $visitor->getIsAdmin()) {
     echo $this->render('tabs/overview/_admin-tool', ['user' => $user]);
 }
+
+ $this->registerJsFile('@js/utilities/message-modal.js');
 ?>
 <div class="mx-3 pt-5 pb-2">
     <div class="col">
@@ -47,12 +49,17 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                         </h5>
                         <?= ConstructHtml::rating($statistics->getRating()) ?>
                     </div>
-                    <?php if ($visitor !== null && !$visitor->getIsAdmin() && !$isOwn): ?>
-                        <button type="button" style="max-width: 48px"
-                                onclick="createComplaint('user', <?= $user->getId() ?>, <?= $visitor->getId() ?>)"
-                                class="btn btn-light col">
-                            <img src="<?= IMAGES ?>>create-complaint.svg" width="24" alt="create complaint"/>
+                    <?php if (!$isOwn && $visitor !== null): ?>
+                        <button onclick="createMessageModal('<?= $user->getUsername() ?>')"
+                                class="btn-basic">
+                            <img src="<?= IMAGES ?>button-new-message.svg" width="24" alt="send message"/>
                         </button>
+                        <?php if (!$visitor->getIsAdmin()): ?>
+                            <button onclick="createComplaint('user', <?= $user->getId() ?>, <?= $visitor->getId() ?>)"
+                                    class="btn-basic">
+                                <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
+                            </button>
+                        <?php endif ?>
                     <?php endif ?>
                 </div>
                 <?= match ($tab) {
@@ -72,5 +79,3 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
         </div>
     </div>
 </div>
-
-

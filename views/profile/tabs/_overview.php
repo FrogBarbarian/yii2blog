@@ -63,7 +63,7 @@ use src\helpers\NormalizeData;
             <a href="/post?id=<?= $post->getId() ?>" target="_blank" class="list-group-item list-group-item-action"
                aria-current="true">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1"><?= $post->getTitle() ?></h5>
+                    <h5 class="mb-1 overflow-hidden"><?= $post->getTitle() ?></h5>
 
                 </div>
                 <small class="hstack">
@@ -73,13 +73,13 @@ use src\helpers\NormalizeData;
                     <div class="col text-muted" style="font-size:small;text-align:end;">
                         <?= ConstructHtml::rating($post->getRating()) ?>
                         <span>
-                                <?= $post->getViews() ?>
-                                <img src="/assets/images/views.svg" width="16" alt="views">
-                            </span>
+                            <?= $post->getViews() ?>
+                            <img src="<?= IMAGES ?>views.svg" width="16" alt="views"/>
+                        </span>
                         <span>
-                                <?= $post->getCommentsAmount() ?>
-                                <img src="/assets/images/comments.svg" width="16" alt="comments"/>
-                            </span>
+                            <?= $post->getCommentsAmount() ?>
+                            <img src="<?= IMAGES ?>comments.svg" width="16" alt="comments"/>
+                        </span>
                     </div>
                 </small>
             </a>

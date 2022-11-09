@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\models\Message;
 use app\models\Post;
 use app\models\PostEditorForm;
 use app\models\Statistic;
+use app\models\Tag;
 use app\models\TmpPost;
 use app\models\User;
 use src\helpers\Get;
@@ -222,10 +224,7 @@ class AdminController extends AppController
     }
 
     /**
-     * TODO: переделать
-     * Отображает пост из временного хранилища по ID из GET (если такой пост найден).
-     * @param string $id
-     * @return string Вид "пост пользователя".
+     * Страница поста пользователя, для одобрения администратором.
      * @throws NotFoundHttpException
      */
     public function actionUserPost(string $id = '0'): string
@@ -263,52 +262,102 @@ class AdminController extends AppController
     }
 
     /**
-     * TODO: переделать
-     * Проверяет входные данные и на их основе создает/изменяет существующий пост на основе данных из таблицы хранилища.
-     * @return Response
+     * Одобрение публикации поста пользователя.
      * @throws NotFoundHttpException
-     * @throws \Throwable
      * @throws StaleObjectException
+     * @throws \Throwable
      */
-    public function actionConfirm(): Response
+    public function actionApprovePost(): Response
     {
-        $id = $_POST['PostEditorForm']['id'] ?? null;
-        if ($id !== null) {
-            $postTmp = TmpPost::find()->byId($id)->one();
-            if ($postTmp !== null) {
-                if ($postTmp->getIsNew()) {
-                    $post = new Post();
-                    $post
-                        ->setTitle($postTmp->getTitle())
-                        ->setBody($postTmp->getBody())
-                        ->setAuthor($postTmp->getAuthor())
-                        ->setTags($postTmp->getTags())
-                        ->save();
-                    $postTmp->delete();
-                    $statistics = Statistic::find()
-                        ->byUsername($post->getAuthor())
-                        ->one();
-                    $statistics
-                        ->increasePosts()
-                        ->save();
-                    //TODO: Публикуем статью, отправляем email создателю о публикации
+        $request = Yii::$app->getRequest();
 
-                    return $this->redirect('/post?id=' . $post->getId());
-                }
-                $post = Post::find()->byId($postTmp->getUpdateId())->one();
-                if ($post !== null) {
-                    $post
-                        ->setTitle($postTmp->getTitle())
-                        ->setBody($postTmp->getBody())
-                        ->setTags($postTmp->getTags())
-                        ->save();
-                    $postTmp->delete();
-                    //TODO: Изменяем статью, отправляем email создателю об изменении
-
-                    return $this->redirect('/post?id=' . $post->getId());
-                }
-            }
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
         }
-        throw new NotFoundHttpException();
+
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+        $id = $request->post('id');
+        $tmpPost = TmpPost::findOne($id);
+        $isNew = $tmpPost->getIsNew();
+
+        if ($isNew === true) {
+            $post = Post::find()
+                ->byTitle($tmpPost->getTitle())
+                ->one();
+
+            if ($post !== null) {
+                return $this->asJson('Пост с таким названием уже существует');
+            }
+
+            $post = new Post();
+            $post
+                ->setTitle($tmpPost->getTitle())
+                ->setBody($tmpPost->getBody())
+                ->setAuthor($tmpPost->getAuthor())
+                ->setAuthorId($tmpPost->getAuthorId())
+                ->setTags($tmpPost->getTags())
+                ->save();
+            Tag::checkWhenCreatePost($post->getTagsArray());
+            $statistics = Statistic::find()
+                ->byUsername($post->getAuthor())
+                ->one();
+            $statistics
+                ->increasePosts()
+                ->save();
+        }
+
+        if ($isNew === false) {
+            $post = Post::findOne($tmpPost->getUpdateId());
+
+            if ($post === null) {
+                return $this->asJson('Оригинальный пост не найден');
+            }
+
+            $post
+                ->setTitle($tmpPost->getTitle())
+                ->setBody($tmpPost->getBody())
+                ->setTags($tmpPost->getTags())
+                ->save();
+            Tag::checkWhenUpdatePost($tmpPost->getOldTagsArray(), $tmpPost->getTagsArray());
+        }
+
+        (new Message())
+            ->setSenderUsername($user->getUsername())
+            ->setSenderStatus('deleted')
+            ->setRecipientUsername($post->getAuthor())
+            ->setSubject('Ваш пост одобрен')
+            ->setContent("Пост с названием '{$post->getTitle()}' одобрен и опубликован")
+            ->save();
+        $tmpPost->delete();
+
+        return $this->asJson(true);
+    }
+
+    public function actionDisapprovePost()
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+        $id = $request->post('id');
+        $comment = $request->post('comment');
+        $tmpPost = TmpPost::findOne($id);
+        $format = '%s<hr><h5>%s</h5>%s<br>Использованные теги: %s';
+        $message = sprintf($format, $comment,$tmpPost->getTitle(), $tmpPost->getBody(), $tmpPost->getTags());
+        (new Message())
+            ->setSenderUsername($user->getUsername())
+            ->setSenderStatus('deleted')
+            ->setRecipientUsername($tmpPost->getAuthor())
+            ->setSubject('Ваш пост не одобрен')
+            ->setContent($message)
+            ->save();
+        $tmpPost->delete();
     }
 }

@@ -23,24 +23,8 @@ $(document).ready(function () {
             if (entry.isIntersecting) {
                 buttonsPanel.removeAttribute('class');
                 buttonsPanel.style.removeProperty('left');
-                buttonsPanel.lastChild.remove();
             } else {
                 buttonsPanel.className = 'absolute-buttons-panel';
-                let hideToolbarButton = document.createElement('button');
-                hideToolbarButton.className = 'toolbar-button';
-                hideToolbarButton.type = 'button';
-                hideToolbarButton.innerHTML = '&#10005;';
-                hideToolbarButton.title = 'Скрыть панель';
-                hideToolbarButton.onclick = () => {
-                    if (buttonsPanel.style.left !== '-20px') {
-                        hideToolbarButton.title = 'Показать панель';
-                        buttonsPanel.style.left = '-20px';
-                    } else {
-                        hideToolbarButton.title = 'Скрыть панель';
-                        buttonsPanel.style.left = '0px';
-                    }
-                }
-                buttonsPanel.appendChild(hideToolbarButton);
             }
 
         });
@@ -146,7 +130,7 @@ function fillTagField(field) {
 
             response.forEach((tag) => {
                 suggestedTags.html(suggestedTags.html() +
-                    '<li class="mt-1 list-group-item suggested-tag" onclick="addTag(\'' +
+                    '<li class="mt-1 list-group-item message-suggested-user" onclick="addTag(\'' +
                     tag['tag'] +
                     '\')">' +
                     tag['tag'] +
@@ -181,7 +165,7 @@ function paste(event) {
     event.preventDefault();
     clipboardData = event.clipboardData || window.clipboardData;
     pastedData = clipboardData.getData('text');
-    formatting('insertText', false, pastedData);
+    document.execCommand('insertText', false, pastedData);
 }
 
 /**
@@ -477,16 +461,16 @@ function submitPost() {
         processData: false,
         contentType: false,
         success: function (response) {
-            if (response !== false) {
-                let id = response;
-                let url = id === null
-                    ? '/'
-                    : '/post?id=' + id;
-
-                return location.href = url;
+            if (response === false) {
+                return false;
             }
 
-            return false;
+            let id = response;
+            let url = id === true
+                ? '/'
+                : '/post?id=' + id;
+
+            return location.href = url;
         }
     });
 }

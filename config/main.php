@@ -21,6 +21,7 @@ return [
         '@js' => '/assets/js',
         '@css' => '/assets/css',
     ],
+    'params' => ['bsDependencyEnabled' => false],
 //    'timeZone' => 'Europe/Moscow',
     'components' => [
         'user' => [

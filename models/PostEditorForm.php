@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace app\models;
 
 use src\helpers\NormalizeData;
-use src\services\StringService;
 use yii\db\ActiveRecord;
 
 class PostEditorForm extends ActiveRecord

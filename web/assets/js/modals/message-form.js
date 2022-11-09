@@ -15,6 +15,10 @@ function setMessageFormData() {
     contentInputField.oninput = () => {
         contentHiddenInput.value = contentInputField.innerText;
     }
+    const blur = new Event('blur');
+    contentInputField.onblur = () => {
+        contentHiddenInput.dispatchEvent(blur)
+    }
 }
 
 /**
@@ -29,24 +33,12 @@ function sendMessage() {
         cache: false,
         data: formData,
         success: function (response) {
+            alert(1)
             if (response === true) {
                 closeModalDiv();
-                alert('Сообщение успешно отправлено.')
+                notice('Сообщение отправлено','');
 
                 return true;
-            }
-
-            let errorLabels = form[0].querySelectorAll('[id$=ErrorLabel]');
-
-            for (const errorLabel of errorLabels) {
-                let field = errorLabel.id.slice(0, -10);
-
-                if (field in response) {
-                    errorLabel.innerHTML = response[field][0];
-                    continue;
-                }
-
-                errorLabel.innerHTML = '';
             }
         }
     });
@@ -67,6 +59,7 @@ function addRecipient(username) {
  */
 function getRecipients(data) {
     let field = $('#suggestedRecipients');
+
     if (data === '') {
         field.html('');
 

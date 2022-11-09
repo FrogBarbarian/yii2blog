@@ -28,8 +28,8 @@ if (isset($post)) {
 $this->registerJsFile('@js/post-editor.js');
 $errorOptions = ['class' => 'text-danger small help-block'];
 ?>
-<div class="card mx-auto rounded-0">
-    <div class="card-header alert alert-warning small" role="alert">
+<div class="window-basic">
+    <div class="alert alert-warning small">
         Название должно содержать от 30 до 150 символов.
         Текст поста должен содержать от 300 до 10000 символов. <br>
         Рекомендуется использовать не более 5 тегов и не менее 2. <br>
@@ -47,9 +47,8 @@ $errorOptions = ['class' => 'text-danger small help-block'];
             ->input('text', [
                 'class' => 'txt-input-basic',
                 'value' => $title,
-                'placeholder' => 'Название',
-            ])->label(false)
-        ->error($errorOptions) ?>
+            ])->label('Название')
+            ->error($errorOptions) ?>
         <div class="post-body-input-group">
             <div id="toolbar">
                 <div id="buttons">
@@ -102,27 +101,24 @@ $errorOptions = ['class' => 'text-danger small help-block'];
                 </div>
             </div>
             <hr>
-            <div class="form-floating">
-                <div oninput="edit(this)" id="inputBody" class="post-body-input" contenteditable="true">
-                    <?= $body ?>
-                </div>
-                <label for="inputBody" style="color: grey; margin-top: -10px">Содержимое</label>
+            <label for="inputBody">Содержимое</label>
+            <div oninput="edit(this)" id="inputBody" class="div-input-basic" contenteditable="true">
+                <?= $body ?>
             </div>
-
         </div>
         <?= $form->field($model, 'body')
             ->hiddenInput([
                 'id' => 'bodyInput',
                 'value' => $body,
             ])->label(false)
-        ->error($errorOptions)?>
+            ->error($errorOptions) ?>
         <hr>
-        <div class="input-group">
-            <span class="input-group-text">теги</span>
-            <label for="tagField"></label>
-            <input oninput="fillTagField(this)" type="text" autocomplete="off" class="form-control" id="tagField">
-            <button onclick="addTag()" class="btn btn-outline-secondary" type="button">+</button>
+        <label for="tagField">Теги</label>
+        <div class="d-flex">
+            <input oninput="fillTagField(this)" type="text" autocomplete="off" class="txt-input-basic" id="tagField">
+            <button onclick="addTag()" class="toolbar-button my-1 ms-1" type="button">+</button>
         </div>
+
         <ul class="list-group" id="suggestedTags"></ul>
         <div class="my-3" id="tagsArea"></div>
         <?= $form->field($model, 'tags')
@@ -130,11 +126,11 @@ $errorOptions = ['class' => 'text-danger small help-block'];
                 'id' => 'tagsInput',
                 'value' => $tags,
             ])->label(false)
-        ->error($errorOptions)?>
+            ->error($errorOptions) ?>
     </div>
     <div class="card-footer">
         <div>
-            <input type="submit" onclick="submitPost()" class="btn btn-outline-dark" value="Опубликовать">
+            <input type="submit" onclick="submitPost()" class="btn-basic" value="Опубликовать">
         </div>
     </div>
     <?php ActiveForm::end() ?>

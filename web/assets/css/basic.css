@@ -87,7 +87,7 @@ input:checked + .slider {
 Поля ввода
  */
 .txt-input-basic {
-    display: block;
+    display: flex; /*TODO FLEX OR BLOCK*/
     width: 100%;
     border: var(--border-basic);
     margin: .25rem 0;

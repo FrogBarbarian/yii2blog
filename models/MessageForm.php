@@ -47,6 +47,7 @@ class MessageForm extends ActiveRecord
                     $this->addError($attribute, 'Введен некорректный текст');
                 }
             }],
+            ['subject', 'string', 'max' => 100, 'tooLong' => 'Тема письма должна быть не более 100 символов'],
             ['content', 'checkCanUserWrite'],
             ['content', 'required', 'message' => 'Напишите что-нибудь'],
             ['content', function (string $attribute) {
@@ -105,6 +106,9 @@ class MessageForm extends ActiveRecord
         }
     }
 
+    /**
+     * Проверка, открыты ли сообщения у получателя.
+     */
     public function checkRecipientIsOpenMessages(string $attribute)
     {
         $sender = Yii::$app

@@ -7,14 +7,18 @@
 declare(strict_types=1);
 
 use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
-$errorClass = 'text-danger small';
-$this->registerJsFile('@js/message-form.js');
+$errorOptions = ['class' => 'text-danger small help-block'];
+$this->registerJsFile('@js/modals/message-form.js');
+$this->registerJsFile('@js/utilities/notice.js');
 $this->registerJs(<<<JS
     setMessageFormData();
 JS
 );
+
 ?>
+
 <div id="modalWindow" class="modal-window-back" tabindex="-1">
     <div class="modal-window" style="width: 450px; max-width: 90vw">
         <div class="modal-window-header">
@@ -24,7 +28,8 @@ JS
         </div>
         <?php $form = ActiveForm::begin([
             'id' => 'messageForm',
-            'action' => '/u-i/send-message',
+            'enableAjaxValidation' => true,
+            'action' =>  Url::to('/u-i/send-message'),
         ]) ?>
         <?= $form
             ->field($messageForm, 'recipientUsername')
@@ -35,7 +40,7 @@ JS
                 'placeholder' => 'Получатель',
             ])
             ->label(false)
-            ->error(['class' => $errorClass, 'id' => 'recipientUsernameErrorLabel']) ?>
+            ->error($errorOptions) ?>
         <ul class="list-group" id="suggestedRecipients"></ul>
         <?= $form
             ->field($messageForm, 'subject')
@@ -46,18 +51,18 @@ JS
                 'placeholder' => 'Тема письма',
             ])
             ->label(false)
-            ->error(['class' => $errorClass, 'id' => 'subjectErrorLabel']) ?>
+            ->error($errorOptions) ?>
         <div class='div-input-basic' id="contentInputField" contenteditable="true"></div>
         <?= $form
             ->field($messageForm, 'content')
             ->hiddenInput(['id' => 'contentHiddenInput'])
             ->label(false)
-            ->error(['class' => $errorClass, 'id' => 'contentErrorLabel']) ?>
+            ->error($errorOptions) ?>
         <div class="modal-window-footer">
             <button type="button" class="btn-basic" onclick="closeModalDiv()">
                 Отмена
             </button>
-            <button onclick="sendMessage()" type="button" class="btn-basic">
+            <button onclick="sendMessage()" type="submit" class="btn-basic">
                 Отправить
             </button>
         </div>

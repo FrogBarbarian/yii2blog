@@ -13,6 +13,7 @@ use app\models\User;
 use Yii;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yii\widgets\ActiveForm;
 
 class UIController extends AppController
 {
@@ -50,7 +51,7 @@ class UIController extends AppController
         $objectId = $request->post('ajax')['objectId'];
 
 
-        return $this->renderAjax('complaint-modal', [
+        return $this->renderAjax('/ui/complaint-modal', [
             'complaintForm' => $complaintForm,
             'objectType' => $objectType,
             'objectId' => $objectId,
@@ -65,42 +66,35 @@ class UIController extends AppController
     public function actionSendComplaint(): Response
     {
         $request = Yii::$app->getRequest();
-        $complaintForm = new ComplaintForm();
 
-        if (!$request->isAjax && $complaintForm->load($request->post())) {
+        if (!$request->isAjax) {
             throw new NotFoundHttpException();
         }
 
-        $sender = Yii::$app
-            ->user
-            ->getIdentity();
-        $content = $request->post('ComplaintForm')['complaint'];
-        $objectType = $request->post('ComplaintForm')['objectType'];
-        $objectId = (int)$request->post('ComplaintForm')['objectId'];
-        $complaint = Complaint::find()
-            ->same($sender->getUsername(), $objectType, $objectId)
-            ->one();
+        $model = new ComplaintForm();
+        $model->load($request->post());
 
-        if ($complaint !== null) {
-            $complaintForm->addError('complaint', 'Вы уже отправляли подобную жалобу');
-
-            return $this->asJson($complaintForm->errors);
+        if (isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
         }
 
-        if ($complaintForm->validate()) {
+        if ($model->validate()) {
+            $sender = Yii::$app
+                ->user
+                ->getIdentity();
             $complaint = new Complaint();
             $complaint
-                ->setObject($objectType)
-                ->setObjectId($objectId)
+                ->setObject($model->objectType)
+                ->setObjectId($model->objectId)
                 ->setSenderId($sender->getId())
                 ->setSenderUsername($sender->getUsername())
-                ->setComplaint($content)
+                ->setComplaint($model->complaint)
                 ->save();
 
             return $this->asJson(true);
         }
 
-        return $this->asJson($complaintForm->errors);
+        return $this->asJson(false);
     }
 
     /**
@@ -140,7 +134,7 @@ class UIController extends AppController
 
         $messageForm = new MessageForm();
 
-        return $this->renderAjax('@app/views/u-i/message-modal', ['messageForm' => $messageForm]);
+        return $this->renderAjax('/ui/message-modal', ['messageForm' => $messageForm]);
     }
 
     /**
@@ -154,24 +148,29 @@ class UIController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $messageForm = new MessageForm();
+        $model = new MessageForm();
+        $model->load($request->post());
 
-        if ($messageForm->load($request->post()) && $messageForm->validate()) {
+        if (isset($_REQUEST['ajax'])) {
+            return $this->asJson(ActiveForm::validate($model));
+        }
+
+        if ($model->validate()) {
             $message = new Message();
             $user = Yii::$app
                 ->user
                 ->getIdentity();
             $message
                 ->setSenderUsername($user->getUsername())
-                ->setRecipientUsername($messageForm->recipientUsername)
-                ->setSubject($messageForm->subject)
-                ->setContent($messageForm->content)
+                ->setRecipientUsername($model->recipientUsername)
+                ->setSubject($model->subject)
+                ->setContent($model->content)
                 ->save();
 
             return $this->asJson(true);
         }
 
-        return $this->asJson($messageForm->errors);
+        return $this->asJson(false);
     }
 
     /**

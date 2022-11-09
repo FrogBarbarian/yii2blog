@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace app\controllers;
 
 use app\models\Complaint;
+use app\models\Message;
+use app\models\Post;
 use app\models\Tag;
+use app\models\TmpPost;
 use app\models\User;
 use Yii;
 use yii\db\StaleObjectException;
@@ -44,12 +47,26 @@ class AdminUIController extends AppController
             throw new NotFoundHttpException();
         }
 
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
         $id = (int)$id;
-        Complaint::find()
+        $complaint = Complaint::find()
             ->byId($id)
-            ->one()
-            ->delete();
-        //TODO: Пользователь получает оповещение в ЛС
+            ->one();
+        $format = '<a href="%s">Жалоба</a> рассмотрена, меры приняты';
+        $link = match($complaint->getObject()) {
+            'user' => "/profile/index?id={$complaint->getObjectId()}",
+            'post' => "/post?id={$complaint->getObjectId()}",
+            'comment' => "/comment?id={$complaint->getObjectId()}",
+        };
+        (new Message())
+            ->setSenderUsername($user->getUsername())
+            ->setRecipientUsername($complaint->getSenderUsername())
+            ->setSubject('Жалоба закрыта')
+            ->setContent(sprintf($format, $link))
+            ->save();
+        $complaint->delete();
     }
 
     /**
@@ -206,5 +223,38 @@ class AdminUIController extends AppController
             ->setIsBanned($isBanned)
             ->setStatus($status)
             ->save();
+    }
+
+    /**
+     * Удаляет неиспользуемые изображения из папки с загрузки.
+     * @throws NotFoundHttpException
+     */
+    public function actionClearImages()
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $dir = $_SERVER['DOCUMENT_ROOT'] . '/uploads';
+        $files = scandir($dir);
+
+        foreach ($files as $file) {
+            if ($file === '.' || $file === '..') {
+                continue;
+            }
+
+            $post = Post::find()
+                ->where(['ILIKE', 'body', $file])
+                ->one();
+            $tmpPost = TmpPost::find()
+                ->where(['ILIKE', 'body', $file])
+                ->one();
+
+            if ($post === null && $tmpPost === null) {
+                unlink("$dir/$file");
+            }
+        }
     }
 }
