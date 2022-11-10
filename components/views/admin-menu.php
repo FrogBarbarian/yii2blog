@@ -70,7 +70,7 @@ $this->registerJsFile('@js/utilities/notice.js');
         <script>
             document.getElementById('clearStorageButton').onclick = () => {
                 $.ajax({
-                    url: '/admin-u-i/clear-images',
+                    url: '/admin-ajax/clear-images',
                     cache: false,
                     success: function () {
                         notice('Хранилище очищено', '');

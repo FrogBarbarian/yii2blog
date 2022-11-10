@@ -28,7 +28,8 @@
     "yidas/yii2-bower-asset": "~2.0.5",
     "yiisoft/yii2": "2.0.13.1",
     "yiisoft/yii2-bootstrap": "~2.0.0",
-    "kartik-v/yii2-widget-fileinput": "@dev"
+    "kartik-v/yii2-widget-fileinput": "@dev",
+    "yiisoft/yii2-swiftmailer": "~2.0.0"
   },
   "config": {
     "allow-plugins": true

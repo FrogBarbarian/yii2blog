@@ -63,9 +63,12 @@ JS
             ])
             ->label(false) ?>
         <?php ActiveForm::end() ?>
-        <button type="button" id="togglePasswordButton" class="btn-basic">
-            <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
-        </button>
+        <div class="d-flex justify-content-between">
+            <button type="button" id="togglePasswordButton" class="btn-basic">
+                <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
+            </button>
+            <a href="<?= USER_PASSWORD_RESTORE_PAGE ?>">Забыли пароль?</a>
+        </div>
         <div class='modal-window-footer'>
             <button type='button' onclick='closeModalDiv()' class='btn-basic'>
                 Отмена

@@ -10,7 +10,7 @@ model = 'Tag';
  */
 function deleteTag(id) {
     $.ajax({
-        url: '/admin-u-i/delete-tag',
+        url: '/admin-ajax/delete-tag',
         cache: false,
         data: {id: id},
         success: function () {

@@ -42,8 +42,7 @@ $this->registerJsFile('@js/password-visibility.js');
                 'label' => 'Запомнить меня',
             ])
             ?>
-            <!--TODO: реализовать восстановление пароля -->
-            <a class="small" href="/user/restore">Забыли пароль?</a>
+            <a class="small" href="<?= USER_PASSWORD_RESTORE_PAGE ?>">Забыли пароль?</a>
         </div>
         <button type="submit" class="btn-basic">Войти</button>
         <?php ActiveForm::end() ?>

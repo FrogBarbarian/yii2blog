@@ -3,7 +3,7 @@
  */
 function closeComplaint(id) {
     $.ajax({
-        url: '/admin-u-i/delete-complaint',
+        url: '/admin-ajax/delete-complaint',
         cache: false,
         data: {id: id},
         success: function () {

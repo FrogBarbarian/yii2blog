@@ -350,4 +350,68 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return $this->getAttribute('is_pm_open');
     }
+
+    /**
+     * Находит пользователя по токену восстановления пароля.
+     */
+    public static function findByPasswordResetToken(string $token): ?static
+    {
+
+        if (!static::isPasswordResetTokenValid($token)) {
+            return null;
+        }
+
+        return static::findOne([
+            'password_reset_token' => $token,
+            'status' => self::STATUS_ACTIVE,
+        ]);
+    }
+
+    /**
+     * Проверяет, истек ли срок хранения токена для восстановления пароля.
+     */
+    public static function isPasswordResetTokenValid(string $token): bool
+    {
+        if (empty($token)) {
+            return false;
+        }
+
+        $timestamp = (int)substr($token, strrpos($token, '_') + 1);
+        $expire = Yii::$app->params['passwordResetTokenExpire'];
+
+        return $timestamp + $expire >= time();
+    }
+
+    /**
+     * Генерирует токен восстановления пароля.
+     * @throws Exception
+     */
+    public function generatePasswordResetToken(): self
+    {
+        $value = Yii::$app
+                ->security
+                ->generateRandomString() .
+            '_' . time();
+        $this->setAttribute('password_reset_token', $value);
+
+        return $this;
+    }
+
+    /**
+     * Сбрасывает токен восстановления пароля.
+     */
+    public function removePasswordResetToken(): self
+    {
+        $this->setAttribute('password_reset_token', null);
+
+        return $this;
+    }
+
+    /**
+     * @return string Токен восстановления пароля.
+     */
+    public function getPasswordResetToken(): string
+    {
+        return $this->getAttribute('password_reset_token');
+    }
 }

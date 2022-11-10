@@ -1,7 +1,7 @@
 const id = params.get('id');
 document.getElementById('postApproveButton').onclick = () => {
     $.ajax({
-        url: '/admin/approve-post',
+        url: '/admin-ajax/approve-post',
         method: 'post',
         cache: false,
         data: {_csrf: token, id: id},
@@ -39,7 +39,7 @@ document.getElementById('postDisapproveButton').onclick = () => {
     document.getElementById('disapproveButton').onclick = () => {
         const comment = document.getElementById('disapproveTextField').innerText;
         $.ajax({
-            url: '/admin/disapprove-post',
+            url: '/admin-ajax/disapprove-post',
             method: 'post',
             cache: false,
             data: {_csrf: token, comment: comment, id: id},

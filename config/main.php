@@ -7,6 +7,9 @@ const UPLOAD_IMAGES = '/uploads/';
 const BASE_CACHE_TIME = 3600;
 const USER_LOGIN = '/user/login';
 const USER_REGISTER = '/user/register';
+const NO_REPLY_MAIL = 'noreply.fatfrog@yandex.ru'; //TODO CHANE
+const USER_PASSWORD_RESTORE_PAGE = '/user/restore';
+const HOST = 'localhost';
 //TODO: Организовать хранение констант
 
 return [
@@ -21,12 +24,27 @@ return [
         '@js' => '/assets/js',
         '@css' => '/assets/css',
     ],
-    'params' => ['bsDependencyEnabled' => false],
+    'params' => [
+        'bsDependencyEnabled' => false,
+        'passwordResetTokenExpire' => 6000, //TODO 600
+        ],
 //    'timeZone' => 'Europe/Moscow',
     'components' => [
         'user' => [
             'identityClass' => 'app\models\User',
             'enableAutoLogin' => true,
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.yandex.ru', //TODO CHANE
+                'username' => 'noreply.fatfrog@yandex.ru', //TODO CHANGE DATA
+                'password' => 'auhfboxpzeortlub', //TODO CHANE
+                'port' => '465', //TODO CHANE
+                'encryption' => 'ssl', //TODO CHANE
+            ],
         ],
         'request' => [
             'baseUrl' => '',

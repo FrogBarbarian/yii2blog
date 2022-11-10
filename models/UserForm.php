@@ -25,6 +25,8 @@ class UserForm extends ActiveRecord
      */
     public string $confirmPassword = '';
     const SCENARIO_CHANGE_EMAIL = 'change email';
+    const SCENARIO_RESTORE_PASSWORD = 'restore password';
+    const SCENARIO_NEW_PASSWORD = 'new password';
 
     /**
      * {@inheritDoc}
@@ -39,7 +41,8 @@ class UserForm extends ActiveRecord
             ['username', 'uniqueCaseInsensitiveValidation'],
             ['email', 'required', 'message' => 'Введите Ваш email'],
             ['email', 'email', 'message' => 'Введенный email не корректный'],
-            ['email', 'uniqueCaseInsensitiveValidation'],
+            ['email', 'uniqueCaseInsensitiveValidation', 'on' => [self::SCENARIO_CHANGE_EMAIL, self::SCENARIO_DEFAULT]],
+            ['email', 'checkEmailExist', 'on' => self::SCENARIO_RESTORE_PASSWORD],
             ['password', 'required', 'message' => 'Придумайте пароль'],
             ['password', 'string', 'length' => [5, 30], 'tooLong' => 'Максимум 30 символов', 'tooShort' => 'Минимум 5 символов'],
             ['password', 'match', 'pattern' => '/^[\w-]+$/i', 'message' => 'Используются недопустимые символы'],
@@ -55,6 +58,8 @@ class UserForm extends ActiveRecord
     {
         $scenarios = parent::scenarios();
         $scenarios[self::SCENARIO_CHANGE_EMAIL] = ['email'];
+        $scenarios[self::SCENARIO_RESTORE_PASSWORD] = ['email'];
+        $scenarios[self::SCENARIO_NEW_PASSWORD] = ['password'];
 
         return $scenarios;
     }
@@ -83,6 +88,20 @@ class UserForm extends ActiveRecord
                 'email' => 'Данная почта уже занята',
             };
             $this->addError($attribute, $error);
+        }
+    }
+
+    /**
+     * Проверка на существование пользователя с введенным Email.
+     */
+    public function checkEmailExist(string $attribute): void
+    {
+        $user = User::find()
+            ->byEmail($this->email)
+            ->one();
+
+        if ($user === null) {
+            $this->addError($attribute, 'Email не найден');
         }
     }
 }

@@ -93,21 +93,4 @@ class SettingsController extends AppController
 
         return $this->renderAjax('//profile/tabs/settings/_email-modal', ['model' => $model]);
     }
-
-    /**
-     * Отрисовывает модальное окно изменения имени.
-     * @throws NotFoundHttpException
-     */
-    public function actionCreateUsernameModal(): string
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax) {
-            throw new NotFoundHttpException();
-        }
-
-        $model = new UserForm(['scenario' => UserForm::SCENARIO_CHANGE_USERNAME]);
-
-        return $this->renderAjax('//profile/tabs/settings/_username-modal', ['model' => $model]);
-    }
 }

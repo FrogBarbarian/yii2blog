@@ -39,7 +39,7 @@ function getObjects() {
         sortOrder: sortOrder,
     };
     $.ajax({
-        url: '/admin-u-i/get-objects',
+        url: '/admin-ajax/get-objects',
         cache: false,
         data: data,
         success: function (response) {

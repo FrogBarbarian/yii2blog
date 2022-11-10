@@ -53,6 +53,14 @@ class UserController extends AppController
                 ->save();
 
             Yii::$app
+                ->mailer
+                ->compose('register')
+                ->setFrom(NO_REPLY_MAIL)
+                ->setTo($model->email)
+                ->setSubject('Спасибо за регистрацию')
+                ->send();
+
+            Yii::$app
                 ->user
                 ->login($user, true ? 3600 * 24 * 30 : 0);
 
@@ -163,5 +171,83 @@ class UserController extends AppController
         }
 
         return $this->asJson(false);
+    }
+
+    /**
+     * TODO
+     */
+    public function actionRestore()
+    {
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+        $model = new UserForm(['scenario' => UserForm::SCENARIO_RESTORE_PASSWORD]);
+        $request = Yii::$app->getRequest();
+
+        if ($request->getIsAjax()) {
+            $model->load($request->post());
+
+            if (isset($_REQUEST['ajax'])) {
+                return $this->asJson(ActiveForm::validate($model));
+            }
+
+            if ($model->validate()) {
+                $user = User::find()
+                    ->byEmail($model->email)
+                    ->one();
+                $user
+                    ->generatePasswordResetToken()
+                    ->save();
+                $token = $user->getPasswordResetToken();
+            Yii::$app
+                ->mailer
+                ->compose('reset-password', ['token' => $token])
+                ->setFrom(NO_REPLY_MAIL)
+                ->setTo($model->email)
+                ->setSubject('Восстановление пароля')
+                ->send();
+
+                return $this->asJson(true);
+            }
+
+            return $this->asJson(false);
+        }
+
+        $email = $user === null ? '' : $user->getEmail();
+
+        return $this->render('restore', ['model' => $model, 'email' => $email]);
+    }
+
+    /**
+     * TODO
+     */
+    public function actionNewPassword(string $token = '')
+    {
+        $user = User::findByPasswordResetToken($token);
+        $model = new UserForm(['scenario' => UserForm::SCENARIO_NEW_PASSWORD]);
+        $request = Yii::$app->getRequest();
+
+        if ($request->getIsAjax()) {
+            $model->load($request->post());
+
+            if (isset($_REQUEST['ajax'])) {
+                return $this->asJson(ActiveForm::validate($model));
+            }
+
+            if ($model->validate()) {
+                $user
+                    ->setPassword($model->password)
+                    ->removePasswordResetToken()
+                    ->save();
+
+                return $this->asJson(true);
+            }
+
+            return $this->asJson(false);
+        }
+
+        $tokenIsValid = $user !== null;
+
+        return $this->render('new-password', ['model' => $model, 'tokenIsValid' => $tokenIsValid]);
     }
 }

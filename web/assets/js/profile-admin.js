@@ -38,16 +38,14 @@ const username = decodeURI(url.pathname.slice(7));
 /**
  * Меняет права пользователя на написание комментариев.
  */
-changeCommentPermissionsButton.addEventListener('click', () => {
+changeCommentPermissionsButton.onclick = () => {
     let data = {
         _csrf: token,
-        ajax: {
-            username: username,
-        },
+        username: username,
     }
 
     $.ajax({
-        url: '/admin-u-i/set-comments-permissions',
+        url: '/profile-ajax/set-comments-permissions',
         type: 'post',
         cache: false,
         data: data,
@@ -63,7 +61,7 @@ changeCommentPermissionsButton.addEventListener('click', () => {
             return false;
         }
     });
-});
+}
 
 /**
  * Меняет права пользователя на написание постов.
@@ -71,13 +69,11 @@ changeCommentPermissionsButton.addEventListener('click', () => {
 changePostPermissionsButton.addEventListener('click', () => {
     let data = {
         _csrf: token,
-        ajax: {
-            username: username,
-        },
+        username: username,
     }
 
     $.ajax({
-        url: '/admin-u-i/set-create-posts-permissions',
+        url: '/profile-ajax/set-create-posts-permissions',
         type: 'post',
         cache: false,
         data: data,
@@ -101,13 +97,11 @@ changePostPermissionsButton.addEventListener('click', () => {
 changeMessagesPermissionsButton.addEventListener('click', () => {
     let data = {
         _csrf: token,
-        ajax: {
-            username: username,
-        },
+        username: username,
     }
 
     $.ajax({
-        url: '/admin-u-i/set-private-messages-permissions',
+        url: '/profile-ajax/set-private-messages-permissions',
         type: 'post',
         cache: false,
         data: data,
@@ -128,12 +122,10 @@ changeMessagesPermissionsButton.addEventListener('click', () => {
 createAdminModalButton.addEventListener('click', () => {
     let data = {
         _csrf: token,
-        ajax: {
-            username: username,
-        },
+        username: username,
     };
     $.ajax({
-        url: '/admin-u-i/create-user-to-admin-window',
+        url: '/profile-ajax/create-user-to-admin-window',
         cache: false,
         type: 'post',
         data: data,
@@ -154,7 +146,7 @@ function setUserAdmin() {
         },
     };
     $.ajax({
-        url: '/admin-u-i/set-user-admin',
+        url: '/profile-ajax/set-user-admin',
         cache: false,
         type: 'post',
         data: data,
@@ -170,12 +162,10 @@ function setUserAdmin() {
 banUserButton.addEventListener('click', () => {
     let data = {
         _csrf: token,
-        ajax: {
-            username: username,
-        },
+        username: username,
     };
     $.ajax({
-        url: '/admin-u-i/set-user-ban',
+        url: '/profile-ajax/set-user-ban',
         cache: false,
         type: 'post',
         data: data,

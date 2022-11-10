@@ -4,29 +4,31 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
-use app\models\Message;
 use app\models\Post;
 use app\models\PostEditorForm;
 use app\models\Statistic;
-use app\models\Tag;
 use app\models\TmpPost;
 use app\models\User;
 use src\helpers\Get;
 use Yii;
-use yii\db\Exception;
-use yii\db\StaleObjectException;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
-class AdminController extends AppController
+/**
+ * Контроллер панели администратора.
+ */
+class AdminController extends Controller
 {
     /**
      * Вкладка со статистикой сайта в админ-панели.
-     * @throws \Throwable
+     *
+     * @throws NotFoundHttpException
      */
     public function actionIndex(): string
     {
-        $user = Yii::$app->user->getIdentity();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
 
         if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();
@@ -95,11 +97,14 @@ class AdminController extends AppController
 
     /**
      * Вкладка с постами пользователей в админ-панели.
-     * @throws \Throwable
+     *
+     * @throws NotFoundHttpException
      */
     public function actionPosts(): string
     {
-        $user = Yii::$app->user->getIdentity();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
 
         if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();
@@ -112,7 +117,8 @@ class AdminController extends AppController
 
     /**
      * Вкладка с тегами в админ-панели.
-     * @throws \Throwable
+     *
+     * @throws NotFoundHttpException
      */
     public function actionTags(string $offset = '0', string $page = '1', string $sortParam = 'id', string $sortOrder = '4'): string
     {
@@ -151,11 +157,14 @@ class AdminController extends AppController
 
     /**
      * Вкладка с жалобами пользователей в админ-панели.
-     * @throws \Throwable
+     *
+     * @throws NotFoundHttpException
      */
     public function actionComplaints(): string
     {
-        $user = Yii::$app->user->getIdentity();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
 
         if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();
@@ -179,10 +188,6 @@ class AdminController extends AppController
                 case 'comment':
                     $commentsComplaints[] = $complaint;
                     break;
-                default:
-                    throw new Exception(
-                        "Жалоба с ID {$complaint->getId()} имеет не правильный тип объекта."
-                    );
             }
         }
 
@@ -197,12 +202,15 @@ class AdminController extends AppController
     }
 
     /**
-     * Вклада с пользователями в админ-панели.
-     * @throws \Throwable
+     * Вкладка с пользователями в админ-панели.
+     *
+     * @throws NotFoundHttpException
      */
     public function actionUsers(string $offset = '0', string $page = '1', string $sortParam = 'id', string $sortOrder = '4'): string
     {
-        $user = Yii::$app->user->getIdentity();
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
 
         if ($user === null || !$user->getIsAdmin()) {
             throw new NotFoundHttpException();
@@ -225,6 +233,7 @@ class AdminController extends AppController
 
     /**
      * Страница поста пользователя, для одобрения администратором.
+     *
      * @throws NotFoundHttpException
      */
     public function actionUserPost(string $id = '0'): string
@@ -237,19 +246,14 @@ class AdminController extends AppController
             throw new NotFoundHttpException();
         }
 
-        $id = (int)$id;
-        $post = TmpPost::find()
-            ->byId($id)
-            ->one();
+        $post = TmpPost::findOne($id);
 
         if ($post === null) {
             throw new NotFoundHttpException();
         }
 
         if (!$post->getIsNew()) {
-            $originalPost = Post::find()
-                ->byId($post->getUpdateId())
-                ->one();
+            $originalPost = Post::findOne($post->getUpdateId());
         }
 
         $model = new PostEditorForm();
@@ -259,105 +263,5 @@ class AdminController extends AppController
             'model' => $model,
             'originalPost' => $originalPost ?? null,
         ]);
-    }
-
-    /**
-     * Одобрение публикации поста пользователя.
-     * @throws NotFoundHttpException
-     * @throws StaleObjectException
-     * @throws \Throwable
-     */
-    public function actionApprovePost(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax) {
-            throw new NotFoundHttpException();
-        }
-
-        $user = Yii::$app
-            ->user
-            ->getIdentity();
-        $id = $request->post('id');
-        $tmpPost = TmpPost::findOne($id);
-        $isNew = $tmpPost->getIsNew();
-
-        if ($isNew === true) {
-            $post = Post::find()
-                ->byTitle($tmpPost->getTitle())
-                ->one();
-
-            if ($post !== null) {
-                return $this->asJson('Пост с таким названием уже существует');
-            }
-
-            $post = new Post();
-            $post
-                ->setTitle($tmpPost->getTitle())
-                ->setBody($tmpPost->getBody())
-                ->setAuthor($tmpPost->getAuthor())
-                ->setAuthorId($tmpPost->getAuthorId())
-                ->setTags($tmpPost->getTags())
-                ->save();
-            Tag::checkWhenCreatePost($post->getTagsArray());
-            $statistics = Statistic::find()
-                ->byUsername($post->getAuthor())
-                ->one();
-            $statistics
-                ->increasePosts()
-                ->save();
-        }
-
-        if ($isNew === false) {
-            $post = Post::findOne($tmpPost->getUpdateId());
-
-            if ($post === null) {
-                return $this->asJson('Оригинальный пост не найден');
-            }
-
-            $post
-                ->setTitle($tmpPost->getTitle())
-                ->setBody($tmpPost->getBody())
-                ->setTags($tmpPost->getTags())
-                ->save();
-            Tag::checkWhenUpdatePost($tmpPost->getOldTagsArray(), $tmpPost->getTagsArray());
-        }
-
-        (new Message())
-            ->setSenderUsername($user->getUsername())
-            ->setSenderStatus('deleted')
-            ->setRecipientUsername($post->getAuthor())
-            ->setSubject('Ваш пост одобрен')
-            ->setContent("Пост с названием '{$post->getTitle()}' одобрен и опубликован")
-            ->save();
-        $tmpPost->delete();
-
-        return $this->asJson(true);
-    }
-
-    public function actionDisapprovePost()
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax) {
-            throw new NotFoundHttpException();
-        }
-
-        $user = Yii::$app
-            ->user
-            ->getIdentity();
-        $id = $request->post('id');
-        $comment = $request->post('comment');
-        $tmpPost = TmpPost::findOne($id);
-        $format = '%s<hr><h5>%s</h5>%s<br>Использованные теги: %s';
-        $message = sprintf($format, $comment,$tmpPost->getTitle(), $tmpPost->getBody(), $tmpPost->getTags());
-        (new Message())
-            ->setSenderUsername($user->getUsername())
-            ->setSenderStatus('deleted')
-            ->setRecipientUsername($tmpPost->getAuthor())
-            ->setSubject('Ваш пост не одобрен')
-            ->setContent($message)
-            ->save();
-        $tmpPost->delete();
     }
 }
