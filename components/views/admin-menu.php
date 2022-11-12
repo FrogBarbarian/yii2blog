@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var int $amountTmpPosts
  * @var int $amountUnusedTags
@@ -6,11 +9,8 @@
  * @var \yii\web\View $this
  */
 
-declare(strict_types=1);
-
 $this->registerJsFile('@js/admin/main.js');
 $this->registerJsFile('@js/utilities/notice.js');
-
 ?>
 <div class="row">
     <div class="col-4 bg-dark text-white">
@@ -64,17 +64,4 @@ $this->registerJsFile('@js/utilities/notice.js');
             </li>
         </ul>
     </div>
-
     <div class="col bg-white">
-
-        <script>
-            document.getElementById('clearStorageButton').onclick = () => {
-                $.ajax({
-                    url: '/admin-ajax/clear-images',
-                    cache: false,
-                    success: function () {
-                        notice('Хранилище очищено', '');
-                    }
-                });
-            }
-        </script>

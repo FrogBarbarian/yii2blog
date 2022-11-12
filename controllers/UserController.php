@@ -11,6 +11,7 @@ use app\models\Statistic;
 use app\models\User;
 use Yii;
 use yii\base\Exception;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
@@ -18,7 +19,7 @@ use yii\widgets\ActiveForm;
 /**
  *  Контроллер пользователя.
  */
-class UserController extends AppController
+class UserController extends Controller
 {
     /**
      * Страница регистрации.
@@ -227,7 +228,7 @@ class UserController extends AppController
      *
      * @throws Exception
      */
-    public function actionNewPassword(string $token = '')
+    public function actionNewPassword(string $token = ''): Response|string
     {
         $user = User::findByPasswordResetToken($token);
         $model = new UserForm(['scenario' => UserForm::SCENARIO_NEW_PASSWORD]);

@@ -2,7 +2,7 @@
  * Выводит предложения по поиску.
  */
 function suggestSearch(field) {
-    const searchSuggest = $('#suggestedSearchField');
+    const searchSuggest = $('#suggestedForSearch');
 
     if (field.value === '') {
         searchSuggest.html('')
@@ -45,7 +45,7 @@ function suggestSearch(field) {
  */
 function removeSuggest() {
     setTimeout(function () {
-        $('#suggestedSearchField').html('');
+        $('#suggestedForSearch').html('');
     }, 150);
 }
 

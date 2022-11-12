@@ -13,8 +13,14 @@ use yii\base\Widget;
  */
 class CommentWidget extends Widget
 {
-    public ?User $user = null;
-    public ?Comment $comment = null;
+    /**
+     * @var User Пользователь.
+     */
+    public User $user;
+    /**
+     * @var Comment Комментарий.
+     */
+    public Comment $comment;
 
     /**
      * {@inheritDoc}

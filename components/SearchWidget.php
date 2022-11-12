@@ -7,7 +7,7 @@ namespace app\components;
 use yii\base\Widget;
 
 /**
- * Поиск по постам.
+ * Поиск по статьям.
  */
 class SearchWidget extends Widget
 {

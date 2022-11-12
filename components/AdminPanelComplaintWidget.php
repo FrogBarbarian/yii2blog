@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace app\components;
 
 use app\models\Complaint;
-use yii\web\NotFoundHttpException;
+use yii\base\Widget;
 
-class AdminPanelComplaintWidget extends \yii\base\Widget
+/**
+ * Жалоба пользователя в панели администратора.
+ */
+class AdminPanelComplaintWidget extends Widget
 {
     /**
      * @var Complaint Жалоба.

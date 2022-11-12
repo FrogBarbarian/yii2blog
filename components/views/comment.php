@@ -60,9 +60,13 @@ $timestamp = NormalizeData::passedTime($comment->getDate());
             </div>
         <?php endif ?>
     <?php else: ?>
-        <span class="text-muted fst-italic d-flex py-3">Данный комментарий был удален</span>
-    <?php if ($user !== null && $user->getIsAdmin()): ?>
-        <button onclick="deleteComment('<?= $comment->getId() ?>')" class="btn-basic complaint-link">Восстановить?</button>
+        <span class="text-muted fst-italic d-flex py-3">
+            Данный комментарий был удален
+        </span>
+        <?php if ($user !== null && $user->getIsAdmin()): ?>
+            <button onclick="deleteComment('<?= $comment->getId() ?>')" class="btn-basic complaint-link">
+                Восстановить?
+            </button>
         <?php endif ?>
     <?php endif ?>
 </li>

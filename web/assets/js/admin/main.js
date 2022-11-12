@@ -63,3 +63,13 @@ function drawArrows() {
 function setOffsetInput(offset) {
     $('#setOffset').val(offset);
 }
+
+document.getElementById('clearStorageButton').onclick = () => {
+    $.ajax({
+        url: '/admin-ajax/clear-images',
+        cache: false,
+        success: function () {
+            notice('Хранилище очищено', '');
+        }
+    });
+}

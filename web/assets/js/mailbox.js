@@ -57,7 +57,7 @@ function renderMails(page = 1) {
  * Добавляет обработчик событий к кнопкам переключения страниц с сообщениями.
  */
 function setPageButtons() {
-    let pageButtons = document.querySelectorAll('[class=mailbox-page-switcher]');
+    let pageButtons = document.querySelectorAll('[class^=mailbox-page-switcher]');
     if (pageButtons.length > 0) {
         for (let pageButton of pageButtons) {
             pageButton.addEventListener('click', () => {

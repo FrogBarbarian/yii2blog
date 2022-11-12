@@ -8,12 +8,21 @@ use src\helpers\Get;
 use yii\base\Widget;
 
 /**
- * Меню навигации в панели админа.
+ * Меню навигации в панели администратора.
  */
 class AdminMenuWidget extends Widget
 {
+    /**
+     * @var int|null Количество постов пользователей.
+     */
     public ?int $amountTmpPosts = null;
+    /**
+     * @var int|null Количество неиспользуемых тегов.
+     */
     public ?int $amountUnusedTags = null;
+    /**
+     * @var int|null Количество жалоб пользователей.
+     */
     public ?int $amountComplaints = null;
 
     /**
@@ -24,7 +33,7 @@ class AdminMenuWidget extends Widget
         parent::init();
         $this->amountTmpPosts = $this->amountTmpPosts !== null
             ? $this->amountTmpPosts
-            : count(Get::data('tmp_posts', SORT_DESC));
+            : count(Get::data('tmp_posts'));
 
         if ($this->amountUnusedTags === null) {
             $tags = Get::data('tags');

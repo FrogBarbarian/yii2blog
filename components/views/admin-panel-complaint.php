@@ -9,11 +9,9 @@ declare(strict_types=1);
  */
 
 use src\helpers\NormalizeData;
-
 ?>
-
 <div id="complaint_<?= $complaint->getId() ?>">
-    <p style="font-size: smaller">
+    <p class="smaller">
         <a class="author-link" href="/users/<?= $complaint->getSenderUsername() ?>" target="_blank">
             <?= $complaint->getSenderUsername() ?>
         </a>
@@ -23,7 +21,7 @@ use src\helpers\NormalizeData;
             <?= $targetObject ?>
         </a>
     </p>
-    <span style="font-size: x-small;font-style: italic;color: grey;display: block">
+    <span class="x-small fst-italic d-block text-muted">
         Содержание жалобы:
     </span>
     <?= $complaint->getComplaint() ?>
