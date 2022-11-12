@@ -1,17 +1,6 @@
 <?php
 
-const ADMIN_PANEL = '/admin';
-const POSTS_ON_PAGE = 5;
-const IMAGES = '/assets/images/';
-const UPLOAD_IMAGES = '/uploads/';
-const BASE_CACHE_TIME = 3600;
-const USER_LOGIN = '/user/login';
-const USER_REGISTER = '/user/register';
-const NO_REPLY_MAIL = 'noreply.fatfrog@yandex.ru'; //TODO CHANE
-const USER_PASSWORD_RESTORE_PAGE = '/user/restore';
-const HOST = 'localhost';
-const LIMIT_MESSAGE_ON_PROFILE = 20;
-//TODO: Организовать хранение констант
+require __DIR__ . '/constants.php';
 
 return [
     'id' => 'yii2test',
@@ -25,10 +14,7 @@ return [
         '@js' => '/assets/js',
         '@css' => '/assets/css',
     ],
-    'params' => [
-        'bsDependencyEnabled' => false,
-        'passwordResetTokenExpire' => 6000, //TODO 600
-        ],
+    'params' => require __DIR__ . '/params.php',
 //    'timeZone' => 'Europe/Moscow',
     'components' => [
         'user' => [
@@ -40,11 +26,11 @@ return [
             'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.yandex.ru', //TODO CHANE
-                'username' => 'noreply.fatfrog@yandex.ru', //TODO CHANGE DATA
-                'password' => 'auhfboxpzeortlub', //TODO CHANE
-                'port' => '465', //TODO CHANE
-                'encryption' => 'ssl', //TODO CHANE
+                'host' => 'smtp.yandex.ru', //TODO CHANGE
+                'username' => 'noreply.fatfrog@yandex.ru', //TODO CHANGE
+                'password' => 'auhfboxpzeortlub', //TODO CHANGE
+                'port' => '465', //TODO CHANGE
+                'encryption' => 'ssl', //TODO CHANGE
             ],
         ],
         'request' => [

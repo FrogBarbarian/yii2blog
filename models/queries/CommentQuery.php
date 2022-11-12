@@ -6,6 +6,9 @@ namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 
+/**
+ * Запросы к комментарию.
+ */
 class CommentQuery extends ActiveQuery
 {
     /**
@@ -14,13 +17,6 @@ class CommentQuery extends ActiveQuery
     public function byPostId(int $postId): self
     {
         return $this->where(['post_id' => $postId]);
-    }
-    /**
-     * Поиск по ID.
-     */
-    public function byId(int $id): self
-    {
-        return $this->where(['id' => $id]);
     }
 
     /**
