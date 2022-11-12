@@ -7,7 +7,7 @@ namespace app\models\queries;
 use yii\db\ActiveQuery;
 
 /**
- * Запросы к комментарию.
+ * Запросы к комментариям.
  */
 class CommentQuery extends ActiveQuery
 {

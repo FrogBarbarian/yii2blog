@@ -8,18 +8,13 @@ use src\services\StringService;
 use yii\db\ActiveQuery;
 use yii\db\Expression;
 
+/**
+ * Запросы к постам.
+ */
 class PostQuery extends ActiveQuery
 {
     /**
-     * Поиск по ID поста.
-     */
-    public function byId(int $id): self
-    {
-        return $this->where(['id' => $id]);
-    }
-
-    /**
-     * Поиск по автору поста.
+     * Поиск по автору.
      */
     public function byAuthor(string $author): self
     {
@@ -58,7 +53,7 @@ class PostQuery extends ActiveQuery
     {
         $strLength = (new StringService($words))
             ->getLength();
-        $position = intval(ceil($strLength * .8));
+        $position = (int)(ceil($strLength * .8));
         $words = mb_substr($words, 0, $position);
 
         return $this
@@ -72,8 +67,6 @@ class PostQuery extends ActiveQuery
      */
     public function byTag(string $tag): self
     {
-        $tag = "#$tag";
-
-        return $this->where(['ILIKE', 'tags', $tag]);
+        return $this->where(['ILIKE', 'tags', "#$tag"]);
     }
 }

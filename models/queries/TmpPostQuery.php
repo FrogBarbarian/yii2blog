@@ -4,6 +4,9 @@ declare(strict_types = 1);
 
 namespace app\models\queries;
 
+/**
+ * Запросы к временным постам.
+ */
 class TmpPostQuery extends PostQuery
 {
     /**

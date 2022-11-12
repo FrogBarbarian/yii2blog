@@ -6,16 +6,11 @@ namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 
+/**
+ * Запросы к сообщениям.
+ */
 class MessageQuery extends ActiveQuery
 {
-    /**
-     * Фильтр по ID.
-     */
-    public function byId(int $id): self
-    {
-        return $this->where(['id' => $id]);
-    }
-
     /**
      * Фильтр по статусу.
      */

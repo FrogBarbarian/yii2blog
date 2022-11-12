@@ -6,6 +6,9 @@ namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 
+/**
+ * Запросы к статистике.
+ */
 class StatisticQuery extends ActiveQuery
 {
     /**

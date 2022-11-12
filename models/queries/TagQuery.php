@@ -6,16 +6,11 @@ namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 
+/**
+ * Запросы к тегам.
+ */
 class TagQuery extends ActiveQuery
 {
-    /**
-     * Поиск по ID.
-     */
-    public function byId(int $id): self
-    {
-        return $this->where(['id' => $id]);
-    }
-
     /**
      * Поиск по символам.
      */

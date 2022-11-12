@@ -6,6 +6,9 @@ namespace app\models\queries;
 
 use yii\db\ActiveQuery;
 
+/**
+ * Запросы к жалобам.
+ */
 class ComplaintQuery extends ActiveQuery
 {
     /**
@@ -14,13 +17,5 @@ class ComplaintQuery extends ActiveQuery
     public function bySenderId(int $id): self
     {
         return $this->where(['sender_id' => $id]);
-    }
-
-    /**
-     * Поиск по ID.
-     */
-    public function byId(int $id): self
-    {
-        return $this->where(['id' => $id]);
     }
 }
