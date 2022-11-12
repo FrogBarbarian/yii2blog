@@ -11,7 +11,7 @@ class PostAsset extends AssetBundle
     public $basePath = '@webroot';
     public $baseUrl = '@web';
     public $js = [
-        'assets/js/post.js',
         'assets/js/comments.js',
+        'assets/js/post.js',
     ];
 }

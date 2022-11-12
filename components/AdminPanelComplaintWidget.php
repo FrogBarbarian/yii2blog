@@ -31,10 +31,10 @@ class AdminPanelComplaintWidget extends \yii\base\Widget
         $object = $this->complaint->getObject();
 
         if ($object === 'user') {
-            $this->link = "/profile/index?id=$objectId";
+            $this->link = "/site/find-profile?id=$objectId";
             $this->targetObject = 'пользователя';
         } elseif ($object === 'comment') {
-            $this->link = "/comment?id=$objectId";
+            $this->link = "/site/find-comment?id=$objectId";
             $this->targetObject = 'комментарий';
         } elseif ($object === 'post') {
             $this->link = "/post?id=$objectId";

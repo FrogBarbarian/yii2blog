@@ -2,6 +2,7 @@
 /**
  * @var \app\models\PostEditorForm $model
  * @var \app\models\Post $post
+ * @var bool $isNew
  */
 
 declare(strict_types=1);
@@ -9,21 +10,12 @@ declare(strict_types=1);
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-$title = '';
-$body = '';
-$tags = '';
-$id = null;
-$action = 'create';
-$this->title = 'Новый пост';
-
-if (isset($post)) {
-    $this->title = 'Редактирование';
-    $title = $post->getTitle();
-    $body = $post->getBody();
-    $tags = $post->getTags();
-    $id = $post->getId();
-    $action = 'update';
-}
+$id = $isNew ? null : $post->getId();
+$title = $isNew ? '' : $post->getTitle();
+$body = $isNew ? '' : $post->getBody();
+$tags = $isNew ? '' : $post->getTags();
+$action = $isNew ? 'create' : 'update';
+$this->title = $isNew ? 'Новый пост' : 'Редактирование';
 
 $this->registerJsFile('@js/post-editor.js');
 $errorOptions = ['class' => 'text-danger small help-block'];
@@ -37,7 +29,7 @@ $errorOptions = ['class' => 'text-danger small help-block'];
     </div>
     <?php $form = ActiveForm::begin([
         'id' => 'postEditorForm',
-        'action' => Url::to(["/post-editor/$action", 'id' => $id]),
+        'action' => Url::to(["/post-editor-ajax/$action", 'id' => $id]),
         'method' => 'post',
         'enableAjaxValidation' => true,
     ]) ?>

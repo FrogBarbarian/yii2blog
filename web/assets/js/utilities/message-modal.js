@@ -8,7 +8,7 @@ function createMessageModal(recipient = '', subject = '', content = '') {
     messageSubject = subject;
     messageContent = content;
     $.ajax({
-        url: '/u-i/message-modal',
+        url: '/message/create-modal-window',
         cache: false,
         success: function (response) {
             $('#modalDiv').html(response);

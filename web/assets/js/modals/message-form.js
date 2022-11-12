@@ -33,13 +33,14 @@ function sendMessage() {
         cache: false,
         data: formData,
         success: function (response) {
-            alert(1)
             if (response === true) {
                 closeModalDiv();
                 notice('Сообщение отправлено','');
 
                 return true;
             }
+
+            shakeModal();
         }
     });
 }
@@ -67,9 +68,9 @@ function getRecipients(data) {
     }
 
     $.ajax({
-        url: '/u-i/get-users',
+        url: '/message/get-recipients',
         cache: false,
-        data: {data: data},
+        data: {input: data},
         success: function (response) {
             field.html('');
 

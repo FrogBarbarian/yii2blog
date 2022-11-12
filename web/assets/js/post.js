@@ -5,9 +5,7 @@ const postId = params.get('id');
 
 let data = {
     _csrf: token,
-    ajax: {
-        postId: postId,
-    }
+    postId: postId,
 };
 
 $(document).ready(function () {
@@ -17,7 +15,7 @@ $(document).ready(function () {
      */
     $('#commentsButton').click(function () {
         $.ajax({
-            url: '/post/comment-rule',
+            url: '/post-ajax/comment-permissions',
             cache: false,
             type: 'post',
             data: data,
@@ -43,35 +41,19 @@ $(document).ready(function () {
     });
 
     setInterval(updatePostRating, 2000, data);
-    setInterval(updateCommentsAmount, 2000, data);
+    setInterval(updateComments, 2000);
 });
 
 /**
- * Ставит лайк посту.
+ * Ставит лайк/дизлайк посту.
  */
-function likePost() {
+function likeOrDislikePost(isLike) {
+    data['isLike'] = isLike;
     $.ajax({
-        url: '/post-u-i/like-post',
-        cache: false,
+        url: '/post-ajax/like-or-dislike',
         type: 'post',
         data: data,
-        success: function () {
-            updatePostRating(data);
-            updateRatingButtons();
-        },
-    });
-}
-
-/**
- * Ставит дизлайк посту.
- */
-function dislikePost() {
-    $.ajax({
-        url: '/post-u-i/dislike-post',
-        cache: false,
-        type: 'post',
-        data: data,
-        success: function () {
+        success: function (response) {
             updatePostRating(data);
             updateRatingButtons();
         }
@@ -82,10 +64,9 @@ function dislikePost() {
  * Обновляет рейтинг поста.
  */
 function updatePostRating(data) {
-    data['ajax']['curRating'] = document.getElementById('post-rating').textContent;
+    data['curRating'] = document.getElementById('post-rating').textContent;
     $.ajax({
-        url: '/post-u-i/update-post-rating',
-        cache: false,
+        url: '/post-ajax/update-post-rating',
         type: 'post',
         data: data,
         success: function (response) {
@@ -99,23 +80,28 @@ function updatePostRating(data) {
 }
 
 /**
- * Обновляет количество комментариев.
+ * Обновляет комментарии к посту.
  */
-function updateCommentsAmount(data) {
-    data['ajax']['curCommentsAmount'] = parseInt(document.getElementById('commentsAmount').textContent);
+function updateComments() {
+    let data = {
+        _csrf: token,
+        postId: postId,
+        curCommentsAmount: comments.children('li').length,
+    }
     $.ajax({
-        url: '/post/update-comments-amount',
-        cache: false,
+        url: '/post-ajax/update-comments',
         type: 'post',
         data: data,
         success: function (response) {
             if (response !== false) {
-                $("#commentsAmount").html(response);
+                let html = comments.html();
+                comments.html(html + response['comments']);
+                $("#commentsAmount").html(response['amount']);
             }
 
-            return false;
+            updateCommentsRating();
         }
-    })
+    });
 }
 
 /**
@@ -123,7 +109,7 @@ function updateCommentsAmount(data) {
  */
 function updateRatingButtons() {
     $.ajax({
-        url: '/post-u-i/update-post-rating-buttons',
+        url: '/post-ajax/update-post-rating-buttons',
         cache: false,
         type: 'post',
         data: data,
@@ -153,12 +139,12 @@ const deletePostButton = document.getElementById('deletePostButton');
 if (deletePostButton !== null) {
     deletePostButton.addEventListener('click', () => {
         $.ajax({
-            url: '/post/delete',
+            url: '/post-ajax/delete',
             cache: false,
             type: 'post',
             data: data,
-            success: function (response) {
-                location.href = (response);
+            success: function () {
+                location.href = ('/');
             }
         });
     });

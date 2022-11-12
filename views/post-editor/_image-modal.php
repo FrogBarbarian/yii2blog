@@ -20,7 +20,8 @@ use kartik\file\FileInput;
         <?php $form = ActiveForm::begin([
             'id' => 'uploadImageForm',
             'options' => ['enctype' => 'multipart/form-data'],
-            'action' => Url::to('/post-editor/upload-image'),
+            'enableClientValidation' => true,
+            'action' => Url::to('/post-editor-ajax/upload-image'),
         ]); ?>
         <?=
         $form

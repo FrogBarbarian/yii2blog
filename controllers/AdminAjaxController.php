@@ -190,9 +190,9 @@ class AdminAjaxController extends Controller
         $complaint = Complaint::findOne($id);
         $format = '<a href="%s">Жалоба</a> рассмотрена, меры приняты';
         $link = match ($complaint->getObject()) {
-            'user' => "/profile/index?id={$complaint->getObjectId()}",
+            'user' => "/site/find-profile?id={$complaint->getObjectId()}",
             'post' => "/post?id={$complaint->getObjectId()}",
-            'comment' => "/comment?id={$complaint->getObjectId()}",
+            'comment' => "/site/find-comment?id={$complaint->getObjectId()}",
         };
         (new Message())
             ->setSenderUsername($user->getUsername())

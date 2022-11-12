@@ -38,22 +38,17 @@ document.querySelector('[name="refreshMessages"]').addEventListener('click', () 
 function renderMails(page = 1) {
     let data = {
         _csrf: token,
-        ajax: {
-            event: tab,
-            page: page,
-        },
+        event: tab,
+        page: page,
     };
     $.ajax({
-        url: '/profile/get-mails',
+        url: '/profile-ajax/get-mails',
         cache: false,
         type: 'post',
         data: data,
         success: function (response) {
             mails.innerHTML = response;
             setPageButtons();
-        },
-        error: function () {
-            console.log('Error');
         }
     });
 }

@@ -7,24 +7,22 @@ namespace app\controllers;
 use app\models\Comment;
 use app\models\CommentForm;
 use app\models\Post;
-use app\models\PostEditorForm;
 use app\models\Statistic;
-use app\models\Tag;
-use app\models\Test;
 use app\models\User;
-use src\helpers\NormalizeData;
 use Yii;
-use yii\data\Pagination;
-use yii\db\Exception;
+use yii\base\InvalidConfigException;
+use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\web\Response;
 
-class PostController extends AppController
+/**
+ * Контроллер для отображения постов.
+ */
+class PostController extends Controller
 {
     /**
-     * Главная страница постами, здесь же выводятся результаты поиска постов.
-     * @return string Вид "главная страница".
-     * @throws \Throwable
+     * Главная страница с постами.
+     *
+     * @throws NotFoundHttpException
      */
     public function actionIndex(string $page = '1', string $search = null): string
     {
@@ -32,38 +30,41 @@ class PostController extends AppController
             $search = null;
         }
 
-        if (!is_numeric($page) || $page < 1) {
+        $curPage = (int)$page;
+
+        if ($curPage < 1) {
             throw new NotFoundHttpException();
         }
 
-        $curPage = (int)$page;
 
         if ($search !== null) {
             $posts = Post::find()
                 ->postHasWords($search)
                 ->orderDescById()
-                ->offset(($page - 1) * POSTS_ON_PAGE)
+                ->offset(($curPage - 1) * POSTS_ON_PAGE)
                 ->limit(POSTS_ON_PAGE)
                 ->all();
-            $postAmount = count(Post::find()
+            $postsAmount = count(Post::find()
                 ->postHasWords($search)
                 ->asArray()
                 ->all());
-            $pages = intval(ceil($postAmount / POSTS_ON_PAGE));
+            $pages = (int)(ceil($postsAmount / POSTS_ON_PAGE));
             $message = $posts
                 ? "Результат поиска по фразе '$search'"
                 : "К сожалению, по запросу '$search' ничего не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>";
-            Yii::$app->session->setFlash('messageForIndex', $message);
+            Yii::$app
+                ->session
+                ->setFlash('messageForIndex', $message);
         } else {
             $posts = Post::find()
                 ->orderDescById()
-                ->offset(($page - 1) * POSTS_ON_PAGE)
+                ->offset(($curPage - 1) * POSTS_ON_PAGE)
                 ->limit(POSTS_ON_PAGE)
                 ->all();
-            $pages = intval(ceil(Post::find()->count() / POSTS_ON_PAGE));
+            $pages = (int)(ceil(Post::find()->count() / POSTS_ON_PAGE));
         }
 
-        if (!$posts && $search === null || $search !== null && $page > 1 && $page > $pages) {
+        if (!$posts && $search === null || $search !== null && $curPage > 1 && $curPage > $pages) {
             throw new NotFoundHttpException();
         }
 
@@ -81,10 +82,9 @@ class PostController extends AppController
     }
 
     /**
-     * Отображает страницу с выбранным (по ID из $_GET) постом, если поста с таким ID нет, открывает 404.
-     * @param string $id
-     * @return string Вид "пост".
-     * @throws \Throwable
+     * Страница поста.
+     *
+     * @throws NotFoundHttpException
      */
     public function actionPost(string $id = '0'): string
     {
@@ -94,16 +94,13 @@ class PostController extends AppController
         $id = (int)$id;
 
         if ($id > 0) {
-            $post = Post::find()
-                ->byId($id)
-                ->one();
+            $post = Post::findOne($id);
 
             if ($post !== null) {
                 $commentForm = new CommentForm();
-                $ownerStatistics = Statistic::find()
+                Statistic::find()
                     ->byUsername($post->getAuthor())
-                    ->one();
-                $ownerStatistics
+                    ->one()
                     ->increaseViews()
                     ->save();
                 $post
@@ -130,147 +127,22 @@ class PostController extends AppController
                 ]);
             }
         }
+
         throw new NotFoundHttpException();
     }
 
+
     /**
-     * Страница создания нового поста.
+     * Главная страница с постами с определенным тегом.
+     *
      * @throws NotFoundHttpException
-     */
-    public function actionNewPost(): string
-    {
-        $user = Yii::$app->user->getIdentity();
-
-        if ($user === null) {
-            throw new NotFoundHttpException();
-        }
-
-        $postEditorForm = new PostEditorForm();
-
-        return $this->render('post-editor', ['postEditorForm' => $postEditorForm]);
-    }
-
-    /**
-     * Страница редактирования уже созданного поста пользователя.
-     * @throws Exception|NotFoundHttpException
-     */
-    public function actionEditPost(string $id = '0'): string
-    {
-        $user = Yii::$app->user->getIdentity();
-
-        $id = (int)$id;
-
-        if ($id < 1 || !$user === null) {
-            throw new NotFoundHttpException();
-        }
-
-        $post = Post::find()
-            ->byId($id)
-            ->one();
-
-        if ($post === null || $post->getAuthor() !== $user->getUsername()) {
-            throw new NotFoundHttpException();
-        }
-
-        $postEditorForm = new PostEditorForm();
-
-
-        return $this->render('post-editor', ['postEditorForm' => $postEditorForm, 'post' => $post]);
-    }
-
-    /**
-     * Удаляет пост.
-     * @throws NotFoundHttpException
-     * @throws \Throwable
-     */
-    public function actionDelete(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $postId = (int)$request->post('ajax')['postId'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-        $ownerStatistics = Statistic::find()
-            ->byUsername($post->getAuthor())
-            ->one();
-        $ownerStatistics
-            ->decreasePosts()
-            ->decreaseViews($post->getViews())
-            ->decreaseLikes($post->getLikes())
-            ->decreaseDislikes($post->getDislikes())
-            ->save();
-        $ownerStatistics->updateRating();
-        $comments = Comment::find()
-            ->byPostId($postId)
-            ->all();
-
-        foreach ($post->getTagsArray() as $tag) {
-            $tagObj = Tag::find()
-                ->byTag($tag)
-                ->one();
-            $tagObj
-                ->decreaseAmountOfUse()
-                ->save();
-        }
-
-        foreach ($comments as $comment) {
-            $commentOwnerStatistics = Statistic::find()
-                ->byUsername($comment->getAuthor())
-                ->one();
-            $commentOwnerStatistics
-                ->decreaseLikes($comment->getLikes())
-                ->decreaseDislikes($comment->getDislikes())
-                ->decreaseComments()
-                ->save();
-            $commentOwnerStatistics->updateRating();
-            $comment->delete();
-        }
-
-        Yii::$app
-            ->session
-            ->setFlash('messageForIndex', "Пост '<b>{$post->getTitle()}</b>' удален.");
-        $post->delete();
-
-        return $this->asJson('/');
-    }
-
-
-    /**
-     * Формирует ссылку на комментарий.
-     * @throws NotFoundHttpException
-     */
-    public function actionComment(string $id = null): Response
-    {
-        if ($id === null) {
-            throw new NotFoundHttpException();
-        }
-
-        $id = (int)$id;
-        $comment = Comment::find()
-            ->byId($id)
-            ->one();
-
-        if ($comment === null) {
-            throw new NotFoundHttpException();
-        }
-
-        $postId = $comment->getPostId();
-
-        return $this->redirect("/post?id=$postId#comment$id");
-    }
-
-    /**
-     * Выгружает статьи по определенному тегу.
-     * @throws \Throwable
+     * @throws InvalidConfigException
      */
     public function actionTag(string $page = '1'): string
     {
-        $path = Yii::$app->request->getPathInfo();
+        $path = Yii::$app
+            ->getRequest()
+            ->getPathInfo();
 
         if ($path === 'tag') {
             throw new NotFoundHttpException();
@@ -280,22 +152,29 @@ class PostController extends AppController
         $posts = Post::find()
             ->byTag($tag)
             ->all();
-        $message = $posts === []
-            ? "Постов с тегом '$tag' не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>"
-            : "Посты по тегу '$tag'";
-        Yii::$app->session->setFlash('messageForIndex', $message);
-        Yii::$app->session->setFlash('messageForIndex', $message);
 
-        $pages = intval(ceil(count($posts) / POSTS_ON_PAGE));
+        $pages = (int)(ceil(count($posts) / POSTS_ON_PAGE));
         $curPage = (int)$page;
         $posts = Post::find()
             ->byTag($tag)
             ->orderDescById()
             ->offset(($page - 1) * POSTS_ON_PAGE)
-            ->limit(POSTS_ON_PAGE)->all();
+            ->limit(POSTS_ON_PAGE)
+            ->all();
         $user = Yii::$app
             ->user
             ->getIdentity();
+
+        if (!$posts && $curPage > 1) {
+            throw new NotFoundHttpException();
+        }
+
+        $message = $posts
+            ? "Посты по тегу '$tag'"
+            : "Постов с тегом '$tag' не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>";
+        Yii::$app
+            ->session
+            ->setFlash('messageForIndex', $message);
 
         return $this->render('index', [
             'user' => $user,
@@ -307,12 +186,16 @@ class PostController extends AppController
     }
 
     /**
-     * Выгружает статьи определенного автора.
-     * @throws \Throwable
+     * Главная страница с постами определенного автора.
+     *
+     * @throws NotFoundHttpException
+     * @throws InvalidConfigException
      */
     public function actionAuthor(string $page = '1'): string
     {
-        $path = Yii::$app->request->getPathInfo();
+        $path = Yii::$app
+            ->request
+            ->getPathInfo();
 
         if ($path === 'author') {
             throw new NotFoundHttpException();
@@ -322,21 +205,29 @@ class PostController extends AppController
         $posts = Post::find()
             ->byAuthor($author)
             ->all();
-        $message = $posts === []
-            ? "Постов от автора '$author' не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>"
-            : "Посты автора '$author'";
-        Yii::$app->session->setFlash('messageForIndex', $message);
 
-        $pages = intval(ceil(count($posts) / POSTS_ON_PAGE));
+        $pages = (int)(ceil(count($posts) / POSTS_ON_PAGE));
         $curPage = (int)$page;
         $posts = Post::find()
             ->byAuthor($author)
             ->orderDescById()
             ->offset(($page - 1) * POSTS_ON_PAGE)
-            ->limit(POSTS_ON_PAGE)->all();
+            ->limit(POSTS_ON_PAGE)
+            ->all();
         $user = Yii::$app
             ->user
             ->getIdentity();
+
+        if (!$posts && $curPage > 1) {
+            throw new NotFoundHttpException();
+        }
+
+        $message = $posts
+            ? "Посты автора '$author'"
+            : "Постов от автора '$author' не найдено. <a class='complaint-link' href='/'>Сбросить результат?</a>";
+        Yii::$app
+            ->session
+            ->setFlash('messageForIndex', $message);
 
         return $this->render('index', [
             'user' => $user,
@@ -345,61 +236,5 @@ class PostController extends AppController
             'curPage' => $curPage,
             'search' => null,
         ]);
-    }
-
-    /**
-     * Запрещает/разрешает комментирование поста.
-     * @throws NotFoundHttpException
-     */
-    public function actionCommentRule(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $postId = (int)$request->post('ajax')['postId'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-        $post
-            ->setIsCommentable(!$post->getisCommentable())
-            ->save();
-        $isCommentable = $post->getIsCommentable();
-
-        return $this->asJson($isCommentable);
-    }
-
-    /**
-     * Обновляет отображаемое количество комментариев.
-     * @throws NotFoundHttpException
-     */
-    public function actionUpdateCommentsAmount(): Response
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->getIsAjax() && !isset($_REQUEST['ajax'])) {
-            throw new NotFoundHttpException();
-        }
-
-        $postId = (int)$request->post('ajax')['postId'];
-        $curCommentsAmount = (int)$request->post('ajax')['curCommentsAmount'];
-        $post = Post::find()
-            ->byId($postId)
-            ->one();
-        $postCommentsAmount = $post->getCommentsAmount();
-
-        if ($postCommentsAmount == $curCommentsAmount) {
-            return $this->asJson(false);
-        }
-
-        $wordForm = NormalizeData::wordForm(
-            $postCommentsAmount, 'комментариев',
-            'комментарий',
-            'комментария',
-        );
-
-        return $this->asJson("$postCommentsAmount $wordForm");
     }
 }

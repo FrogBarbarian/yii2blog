@@ -44,7 +44,7 @@ AppAsset::register($this);
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item mx-1 my-auto">
-                        <a onclick="randomPost()" class="nav-button" style="cursor: pointer">
+                        <a class="nav-button" href="/site/random" target="_blank" style="cursor: pointer">
                             Случайная статья
                         </a>
                     </li>

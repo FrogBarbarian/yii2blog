@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\controllers;
 
+use app\models\Message;
 use app\models\User;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -94,7 +95,7 @@ class ProfileAjaxController extends Controller
      *
      * @throws NotFoundHttpException
      */
-    public function actionCreateUserToAdminWindow(): string
+    public function actionCreateSetUserAsAdminWindow(): string
     {
         $request = Yii::$app->getRequest();
 
@@ -104,7 +105,7 @@ class ProfileAjaxController extends Controller
 
         $username = $request->post('username');
 
-        return $this->renderAjax('//ui/uta-modal', ['username' => $username]);
+        return $this->renderAjax('/ui/uta-modal', ['username' => $username]);
     }
 
     /**
@@ -112,7 +113,7 @@ class ProfileAjaxController extends Controller
      *
      * @throws NotFoundHttpException
      */
-    public function actionSetUserAdmin(): void
+    public function actionSetUserAsAdmin(): void
     {
         $request = Yii::$app->getRequest();
 
@@ -154,5 +155,65 @@ class ProfileAjaxController extends Controller
             ->setIsBanned($isBanned)
             ->setStatus($status)
             ->save();
+    }
+
+    /** Общий функционал */
+
+    /**
+     * Получает и рендерит список сообщений.
+     *
+     * @throws NotFoundHttpException
+     */
+    public function actionGetMails(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        $event = $request->post('event');
+        $page = (int)$request->post('page');
+        $username = Yii::$app
+            ->user
+            ->getIdentity()
+            ->getUsername();
+        $status = $event;
+        $sender = null;
+        $recipient = null;
+        $isSender = null;
+
+        switch ($event) {
+            case 'sent':
+                $sender = $username;
+                $isSender = true;
+                break;
+            case 'inbox':
+                $status = 'received';
+                $recipient = $username;
+                $isSender = false;
+                break;
+            case 'spam':
+                $isSender = false;
+                $recipient = $username;
+                break;
+        }
+
+        $limit = LIMIT_MESSAGE_ON_PROFILE;
+        $offset = $limit * ($page - 1);
+        $messages = Message::find()
+            ->byStatus($status, $isSender)
+            ->sentFrom($sender)
+            ->sentFor($recipient)
+            ->orderById()
+            ->all();
+        $pages = (int)ceil(count($messages) / $limit);
+        $messages = array_slice($messages, $offset, $limit);
+
+        return $this->renderAjax("/profile/tabs/mailbox/_$event", [
+            'messages' => $messages,
+            'pages' => $pages,
+            'page' => $page,
+        ]);
     }
 }

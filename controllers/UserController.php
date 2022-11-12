@@ -15,17 +15,20 @@ use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yii\widgets\ActiveForm;
 
+/**
+ *  Контроллер пользователя.
+ */
 class UserController extends AppController
 {
     /**
-     * Страница регистрации пользователя,
-     * если пользователь залогинен, то переадресует на домашнюю страницу.
+     * Страница регистрации.
+     *
      * @throws Exception
      */
     public function actionRegister(): Response|string
     {
         if (!Yii::$app->user->isGuest) {
-            $this->goHome();
+            return $this->goHome();
         }
 
         $request = Yii::$app->getRequest();
@@ -46,8 +49,7 @@ class UserController extends AppController
                 ->setEmail($model->email)
                 ->setPassword($model->password)
                 ->save();
-            $statistics = new Statistic();
-            $statistics
+            (new Statistic())
                 ->setOwnerId($user->getId())
                 ->setOwner($model->username)
                 ->save();
@@ -71,7 +73,7 @@ class UserController extends AppController
     }
 
     /**
-     * Разлогинивает пользователя и отправляет на главную страницу.
+     * Разлогинивание.
      */
     public function actionLogout(): Response
     {
@@ -83,7 +85,7 @@ class UserController extends AppController
     }
 
     /**
-     * Страница входа пользователя.
+     * Страница входа.
      */
     public function actionLogin(): Response|string
     {
@@ -109,7 +111,9 @@ class UserController extends AppController
 
     /**
      * Меняет пароль.
-     * @throws NotFoundHttpException|Exception
+     *
+     * @throws NotFoundHttpException
+     * @throws Exception
      */
     public function actionChangePassword(): Response|string
     {
@@ -142,6 +146,7 @@ class UserController extends AppController
 
     /**
      * Меняет почту.
+     *
      * @throws NotFoundHttpException
      */
     public function actionChangeEmail(): Response|string
@@ -174,9 +179,9 @@ class UserController extends AppController
     }
 
     /**
-     * TODO
+     * Страница восстановления пароля.
      */
-    public function actionRestore()
+    public function actionRestore(): Response|string
     {
         $user = Yii::$app
             ->user
@@ -194,8 +199,7 @@ class UserController extends AppController
             if ($model->validate()) {
                 $user = User::find()
                     ->byEmail($model->email)
-                    ->one();
-                $user
+                    ->one()
                     ->generatePasswordResetToken()
                     ->save();
                 $token = $user->getPasswordResetToken();
@@ -219,7 +223,9 @@ class UserController extends AppController
     }
 
     /**
-     * TODO
+     * Страница создания нового пароля.
+     *
+     * @throws Exception
      */
     public function actionNewPassword(string $token = '')
     {

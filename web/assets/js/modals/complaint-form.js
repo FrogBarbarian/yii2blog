@@ -30,6 +30,8 @@ function sendComplaint() {
 
                 return true;
             }
+
+            shakeModal();
         }
     });
 }

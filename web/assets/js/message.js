@@ -35,7 +35,7 @@ if (forwardButton !== null) {
  * Отрисовывает модальное окно с подтверждением на удаление.
  * Отправляет запрос на удаление сообщения.
  */
-deleteButton.addEventListener('click', () => {
+deleteButton.onclick = () => {
     $('#modalDiv').html(
         '<div id="modalWindow" class="modal-window-back" tabindex="-1">' +
         '<div class="modal-window">' +
@@ -56,25 +56,22 @@ deleteButton.addEventListener('click', () => {
         '</div>'
     );
 
-    document.getElementById('confirmDelete').addEventListener('click', () => {
+    document.getElementById('confirmDelete').onclick = () => {
         let data = {
             _csrf: token,
-            ajax: {
-                id: _messageId,
-                isSender: _userIsSender,
-            }
+            id: _messageId,
+            isSender: _userIsSender,
         }
         $.ajax({
-            url: '/profile/delete-message',
+            url: '/message/delete',
             method: 'post',
-            cache: false,
             data: data,
             success: function (response) {
                 location.href = response;
             }
         });
-    });
-});
+    }
+}
 
 if (spamButton !== null) {
     /**
@@ -83,14 +80,11 @@ if (spamButton !== null) {
     spamButton.addEventListener('click', () => {
         let data = {
             _csrf: token,
-            ajax: {
-                id: _messageId,
-            }
+            id: _messageId,
         }
         $.ajax({
-            url: '/profile/spam-message',
+            url: '/message/spam',
             method: 'post',
-            cache: false,
             data: data,
             success: function (response) {
                 location.href = response;

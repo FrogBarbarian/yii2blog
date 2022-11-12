@@ -6,13 +6,11 @@
 function createComplaint(objectType, objectId) {
     let data = {
         _csrf: token,
-        ajax: {
-            objectType: objectType,
-            objectId: objectId,
-        },
+        objectType: objectType,
+        objectId: objectId,
     };
     $.ajax({
-        url: '/u-i/create-complaint-window',
+        url: '/complaint/create-modal-window',
         cache: false,
         type: 'post',
         data: data,

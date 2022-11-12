@@ -43,5 +43,5 @@ use app\components\PageSwitcherWidget;
             написать
         </button>
     </p>
-    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages">
+    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages" style="max-width: 100%">
 <?php endif ?>

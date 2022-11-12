@@ -106,7 +106,7 @@ $session = Yii::$app->session;
                 <div class="hstack card-footer" style="font-size: small">
                     <?php if ($user !== null && !$user->getIsAdmin()): ?>
                         <button type="button" style="max-width: 48px"
-                                onclick="createComplaint('post', <?= $post->getId() ?>, <?= $user->getId() ?>)"
+                                onclick="createComplaint('post', '<?= $post->getId() ?>')"
                                 class="btn btn-light col">
                             <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
                         </button>

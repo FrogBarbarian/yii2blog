@@ -47,7 +47,7 @@ class ComplaintForm extends ActiveRecord
         ];
     }
 
-    public function checkComplaintForExist(string $attribute)
+    public function checkComplaintForExist()
     {
         $senderId = Yii::$app
             ->user

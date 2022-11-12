@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \app\models\MessageForm $messageForm
+ * @var \app\models\MessageForm $model
  * @var \yii\web\View $this
  */
 
@@ -29,10 +29,10 @@ JS
         <?php $form = ActiveForm::begin([
             'id' => 'messageForm',
             'enableAjaxValidation' => true,
-            'action' =>  Url::to('/u-i/send-message'),
+            'action' =>  Url::to('/message/send'),
         ]) ?>
         <?= $form
-            ->field($messageForm, 'recipientUsername')
+            ->field($model, 'recipientUsername')
             ->input('text', [
                 'id' => 'recipientUsername',
                 'class' => 'txt-input-basic',
@@ -43,7 +43,7 @@ JS
             ->error($errorOptions) ?>
         <ul class="list-group" id="suggestedRecipients"></ul>
         <?= $form
-            ->field($messageForm, 'subject')
+            ->field($model, 'subject')
             ->input('text', [
                 'id' => 'subjectInputField',
                 'class' => 'txt-input-basic',
@@ -54,7 +54,7 @@ JS
             ->error($errorOptions) ?>
         <div class='div-input-basic' id="contentInputField" contenteditable="true"></div>
         <?= $form
-            ->field($messageForm, 'content')
+            ->field($model, 'content')
             ->hiddenInput(['id' => 'contentHiddenInput'])
             ->label(false)
             ->error($errorOptions) ?>

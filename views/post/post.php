@@ -71,7 +71,7 @@ $views = "{$post->getViews()} " .
             <div class="hstack">
                 <div class="col">
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
-                        <button class="like-button" type="button" onclick="likePost()">
+                        <button class="like-button" type="button" onclick="likeOrDislikePost(true)">
                             <img id="likePost"
                                  src="/assets/images/like<?= $post->isUserAlreadyLikedPost($user->getId()) ? 'd' : '' ?>.svg"
                                  width="24" alt="like"/>
@@ -81,7 +81,7 @@ $views = "{$post->getViews()} " .
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </span>
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
-                        <button class="like-button" onclick="dislikePost()">
+                        <button class="like-button" onclick="likeOrDislikePost(false)">
                             <img id="dislikePost"
                                  src="/assets/images/dislike<?= $post->isUserAlreadyDislikedPost($user->getId()) ? 'd' : '' ?>.svg"
                                  width="24" alt="dislike"/>
@@ -142,7 +142,7 @@ $views = "{$post->getViews()} " .
                             <?php endif ?>
                             <?php if (!$userIsAuthor && !$userIsAdmin): ?>
                                 <button type="button"
-                                        onclick="createComplaint('post', <?= $post->getId() ?>, <?= $user->getId() ?>)"
+                                        onclick="createComplaint('post', '<?= $post->getId() ?>')"
                                         class="btn btn-light rounded-end">
                                     <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
                                 </button>

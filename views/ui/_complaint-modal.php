@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * @var \app\models\ComplaintForm $complaintForm
+ * @var \app\models\ComplaintForm $model
  * @var string $objectType
  * @var string $objectId
  * @var \yii\web\View $this
@@ -31,7 +31,7 @@ JS
         <?php $form = ActiveForm::begin([
             'id' => 'complaintForm',
             'enableAjaxValidation' => true,
-            'action' => Url::to('/u-i/send-complaint'),
+            'action' => Url::to('/complaint/send'),
         ]) ?>
         <span class="small">
             Изложите суть жалобы. Избегайте размытых выражений и конкретизируйте.
@@ -39,17 +39,17 @@ JS
         </span>
         <div id="complaintInputField" class="div-input-basic" contenteditable="true"></div>
         <?= $form
-            ->field($complaintForm, 'complaint')
+            ->field($model, 'complaint')
             ->hiddenInput(['id' => 'complaintHiddenInput'])
             ->label(false)
             ->error(['class' => 'text-danger small help-block']) ?>
         <?= $form
-            ->field($complaintForm, 'objectType')
+            ->field($model, 'objectType')
             ->hiddenInput(['value' => $objectType])
             ->label(false)
             ->error(false) ?>
         <?= $form
-            ->field($complaintForm, 'objectId')
+            ->field($model, 'objectId')
             ->hiddenInput(['value' => $objectId])
             ->label(false)
             ->error(false) ?>

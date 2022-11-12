@@ -12,9 +12,10 @@ use app\models\Tag;
 use app\models\TmpPost;
 use app\models\User;
 use yii\db\Expression;
+use yii\web\Controller;
 use yii\web\Response;
 
-class TestController extends AppController
+class TestController extends Controller
 {
     /**
      * Добавляет случайные жалобы.

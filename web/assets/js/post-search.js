@@ -11,7 +11,7 @@ function suggestSearch(field) {
     }
 
     $.ajax({
-        url: '/u-i/search-suggest',
+        url: '/site/search-suggestion',
         cache: false,
         data: {input: field.value},
         success: function (response) {

@@ -113,8 +113,7 @@ function fillTagField(field) {
     }
 
     $.ajax({
-        url: '/post-editor/search-tags',
-        cache: false,
+        url: '/post-editor-ajax/search-tags',
         data: {input: field.value},
         success: function (response) {
             if (response === false) {
@@ -405,7 +404,7 @@ function setRange() {
 function imageModal() {
     setRange();
     $.ajax({
-        url: '/post-editor/create-image-upload-modal-window',
+        url: '/post-editor-ajax/create-image-upload-modal-window',
         cache: false,
         success: function (response) {
             $('#modalDiv').html(response);
@@ -422,12 +421,11 @@ function uploadImage() {
     $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),
-        cache: false,
         processData: false,
         contentType: false,
         data: formData,
         success: function (response) {
-            if (Array.isArray(response)) {
+            if (response !== false) {
                 closeModalDiv();
                 let html = '<div class="post-image">' +
                     '<img src="/uploads/' +
@@ -443,6 +441,8 @@ function uploadImage() {
                 selection = null;
                 range = null;
             }
+
+            shakeModal();
         }
     });
 }

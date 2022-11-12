@@ -6,13 +6,10 @@ const visibilitySwitcher = document.getElementById('profileVisibility');
 visibilitySwitcher.addEventListener('change', () => {
     let data = {
         _csrf: token,
-        ajax: {
             isVisible: visibilitySwitcher.checked,
-        },
     };
     $.ajax({
         url: '/settings/change-visibility',
-        cache: false,
         type: 'post',
         data: data,
         success: function () {
@@ -31,9 +28,7 @@ const messagesSwitcher = document.getElementById('messagesStatus');
 messagesSwitcher.addEventListener('change', () => {
     let data = {
         _csrf: token,
-        ajax: {
             isOpen: messagesSwitcher.checked,
-        },
     };
     $.ajax({
         url: '/settings/open-close-messages',
@@ -55,7 +50,7 @@ messagesSwitcher.addEventListener('change', () => {
 const createPasswordModalButton = document.getElementById('createPasswordModalButton');
 createPasswordModalButton.addEventListener('click', () => {
     $.ajax({
-        url: '/settings/create-password-modal',
+        url: '/settings/create-password-modal-window',
         cache: false,
         success: function (response) {
             $('#modalDiv').html(response);
@@ -69,7 +64,7 @@ createPasswordModalButton.addEventListener('click', () => {
 const createEmailModalButton = document.getElementById('createEmailModalButton');
 createEmailModalButton.addEventListener('click', () => {
     $.ajax({
-        url: '/settings/create-email-modal',
+        url: '/settings/create-email-modal-window',
         cache: false,
         success: function (response) {
             $('#modalDiv').html(response);

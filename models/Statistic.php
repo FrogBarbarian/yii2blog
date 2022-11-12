@@ -287,9 +287,10 @@ class Statistic extends ActiveRecord
     /**
      * Обновляет рейтинг на основе общего количества лайков и дизлайков.
      */
-    public function updateRating()
+    public function updateRating(): self
     {
         $this->setRating($this->getLikes() - $this->getDislikes());
-        $this->save();
+
+        return $this;
     }
 }

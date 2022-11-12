@@ -127,7 +127,7 @@ echo AdminMenuWidget::widget();
         ) ?>
     </div>
     <div class="stat-card">
-        <a href="/comment?id=<?= $highestRatingComment->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/site/find-comment?id=<?= $highestRatingComment->getId() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
                 ID: <?= $highestRatingComment->getId() ?>
             </h6>
@@ -135,7 +135,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/comment?id=<?= $lowestRatingComment->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/site/find-comment?id=<?= $lowestRatingComment->getId() ?>" target="_blank" class="author-link" style="font-size: small">
             <h6>
                 ID: <?= $lowestRatingComment->getId() ?>
             </h6>

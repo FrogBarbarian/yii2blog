@@ -10,6 +10,7 @@ const USER_REGISTER = '/user/register';
 const NO_REPLY_MAIL = 'noreply.fatfrog@yandex.ru'; //TODO CHANE
 const USER_PASSWORD_RESTORE_PAGE = '/user/restore';
 const HOST = 'localhost';
+const LIMIT_MESSAGE_ON_PROFILE = 20;
 //TODO: Организовать хранение констант
 
 return [

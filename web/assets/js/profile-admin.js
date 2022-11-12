@@ -125,7 +125,7 @@ createAdminModalButton.addEventListener('click', () => {
         username: username,
     };
     $.ajax({
-        url: '/profile-ajax/create-user-to-admin-window',
+        url: '/profile-ajax/create-set-user-as-admin-window',
         cache: false,
         type: 'post',
         data: data,
@@ -146,7 +146,7 @@ function setUserAdmin() {
         },
     };
     $.ajax({
-        url: '/profile-ajax/set-user-admin',
+        url: '/profile-ajax/set-user-as-admin',
         cache: false,
         type: 'post',
         data: data,

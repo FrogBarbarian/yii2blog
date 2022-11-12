@@ -13,7 +13,7 @@ declare(strict_types=1);
 use src\helpers\NormalizeData;
 
 ?>
-<a class="a-btn d-flex justify-content-between w-100" href="/profile/message/<?= $id ?>" target="_blank">
+<a class="a-btn d-flex justify-content-between w-100" href="/message?id=<?= $id ?>" target="_blank">
     <span>
         <?= $head ?>
         <span class="bg-black" style="padding-left: 1px; margin: 0 5px"></span>

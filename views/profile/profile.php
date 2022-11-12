@@ -55,7 +55,7 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                             <img src="<?= IMAGES ?>button-new-message.svg" width="24" alt="send message"/>
                         </button>
                         <?php if (!$visitor->getIsAdmin()): ?>
-                            <button onclick="createComplaint('user', <?= $user->getId() ?>, <?= $visitor->getId() ?>)"
+                            <button onclick="createComplaint('user', '<?= $user->getId() ?>')"
                                     class="btn-basic">
                                 <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
                             </button>
