@@ -7,6 +7,9 @@ namespace app\models;
 use app\models\queries\ComplaintQuery;
 use yii\db\ActiveRecord;
 
+/**
+ * Модель жалобы.
+ */
 class Complaint extends ActiveRecord
 {
     /**
@@ -36,6 +39,14 @@ class Complaint extends ActiveRecord
     }
 
     /**
+     * @return string Тип объекта.
+     */
+    public function getObject(): string
+    {
+        return $this->getAttribute('object');
+    }
+
+    /**
      * ID объекта.
      */
     public function setObjectId(int $objectId): self
@@ -46,23 +57,29 @@ class Complaint extends ActiveRecord
     }
 
     /**
-     * ID отправителя.
+     * @return int ID объекта.
      */
-    public function setSenderId(int $senderId): self
+    public function getObjectId(): int
     {
-        $this->setAttribute('sender_id', $senderId);
-
-        return $this;
+        return $this->getAttribute('object_id');
     }
 
     /**
-     * ID отправителя.
+     * Имя пользователя отправителя.
      */
     public function setSenderUsername(string $senderUsername): self
     {
         $this->setAttribute('sender_username', $senderUsername);
 
         return $this;
+    }
+
+    /**
+     * @return string Имя пользователя отправителя.
+     */
+    public function getSenderUsername(): string
+    {
+        return $this->getAttribute('sender_username');
     }
 
     /**
@@ -84,14 +101,6 @@ class Complaint extends ActiveRecord
     }
 
     /**
-     * @return string Объект.
-     */
-    public function getObject(): string
-    {
-        return $this->getAttribute('object');
-    }
-
-    /**
      * @return string Дата и время написания.
      */
     public function getDatetime(): string
@@ -105,29 +114,5 @@ class Complaint extends ActiveRecord
     public function getId(): int
     {
         return $this->getAttribute('id');
-    }
-
-    /**
-     * @return int ID объекта.
-     */
-    public function getObjectId(): int
-    {
-        return $this->getAttribute('object_id');
-    }
-
-    /**
-     * @return int ID отправителя.
-     */
-    public function getSenderId(): int
-    {
-        return $this->getAttribute('sender_id');
-    }
-
-    /**
-     * @return string  Имя пользователя отправителя.
-     */
-    public function getSenderUsername(): string
-    {
-        return $this->getAttribute('sender_username');
     }
 }

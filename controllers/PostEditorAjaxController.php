@@ -212,8 +212,6 @@ class PostEditorAjaxController extends Controller
                 ->setTags($model->tags)
                 ->setAuthor($user->getUsername())
                 ->setAuthorId($user->getId())
-                ->setOldTitle($post->getOldTitle())
-                ->setOldBody($post->getOldBody())
                 ->setOldTags($post->getOldTags())
                 ->setIsNew(false)
                 ->setUpdateId($post->getId())

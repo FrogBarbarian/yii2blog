@@ -6,6 +6,9 @@ namespace app\models;
 
 use yii\db\ActiveRecord;
 
+/**
+ * Форма пользователя.
+ */
 class UserForm extends ActiveRecord
 {
     /**
@@ -24,8 +27,17 @@ class UserForm extends ActiveRecord
      * @var string Подтверждение пароля.
      */
     public string $confirmPassword = '';
+    /**
+     * Сценарий: смена почты.
+     */
     const SCENARIO_CHANGE_EMAIL = 'change email';
+    /**
+     * Сценарий: сброс пароля.
+     */
     const SCENARIO_RESTORE_PASSWORD = 'restore password';
+    /**
+     * Сценарий: новый пароль.
+     */
     const SCENARIO_NEW_PASSWORD = 'new password';
 
     /**
@@ -74,7 +86,6 @@ class UserForm extends ActiveRecord
 
     /**
      * Проверяет на регистронезависимую уникальность введенный email/username при регистрации.
-     * @param string $attribute Проверяемый атрибут.
      */
     public function uniqueCaseInsensitiveValidation(string $attribute): void
     {

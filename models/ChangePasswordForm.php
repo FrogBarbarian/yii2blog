@@ -12,8 +12,17 @@ use Yii;
  */
 class ChangePasswordForm extends ActiveRecord
 {
+    /**
+     * @var string Старый пароль.
+     */
     public string $oldPassword = '';
+    /**
+     * @var string Новый пароль.
+     */
     public string $newPassword = '';
+    /**
+     * @var string Подтверждение нового пароля.
+     */
     public string $confirmNewPassword = '';
 
     /**

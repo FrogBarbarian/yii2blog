@@ -7,6 +7,9 @@ namespace app\models;
 use app\models\queries\StatisticQuery;
 use yii\db\ActiveRecord;
 
+/**
+ * Модель статистики.
+ */
 class Statistic extends ActiveRecord
 {
     /**
@@ -44,7 +47,7 @@ class Statistic extends ActiveRecord
     }
 
     /**
-     * ID пользователя, за которым ведется статистика.
+     * ID пользователя.
      */
     public function setOwnerId(int $ownerId): self
     {
@@ -54,15 +57,7 @@ class Statistic extends ActiveRecord
     }
 
     /**
-     * @return int ID пользователя, за которым ведется статистика.
-     */
-    public function getOwnerId(): int
-    {
-        return $this->getAttribute('owner_id');
-    }
-
-    /**
-     * Количество просмотров пользователя.
+     * Количество просмотров постов.
      */
     private function setViews(int $views)
     {
@@ -70,98 +65,7 @@ class Statistic extends ActiveRecord
     }
 
     /**
-     * Количество комментариев пользователя.
-     */
-    private function setComments(int $comments)
-    {
-        $this->setAttribute('comments', $comments);
-    }
-
-    /**
-     * Количество постов пользователя.
-     */
-    private function setPosts(int $posts)
-    {
-        $this->setAttribute('posts', $posts);
-    }
-
-    /**
-     * Количество лайков пользователя.
-     */
-    public function setLikes(int $likes)
-    {
-        $this->setAttribute('likes', $likes);
-    }
-
-    /**
-     * Количество дизлайков пользователя.
-     */
-    public function setDislikes(int $dislikes)
-    {
-        $this->setAttribute('dislikes', $dislikes);
-    }
-
-    /**
-     * Рейтинг пользователя.
-     */
-    private function setRating(int $rating)
-    {
-        $this->setAttribute('rating', $rating);
-    }
-
-    /**
-     * Количество просмотров пользователя
-     */
-    public function getViews(): int
-    {
-        return $this->getAttribute('views');
-    }
-
-    /**
-     * Количество комментариев пользователя
-     */
-    public function getComments(): int
-    {
-        return $this->getAttribute('comments');
-    }
-
-    /**
-     * Количество лайков пользователю.
-     */
-    public function getLikes(): int
-    {
-        return $this->getAttribute('likes');
-    }
-
-    /**
-     * Количество дизлайков пользователю.
-     */
-    public function getDislikes(): int
-    {
-        return $this->getAttribute('dislikes');
-    }
-
-
-    /**
-     * Рейтинг пользователя.
-     */
-    public function getRating(): int
-    {
-        return $this->getAttribute('rating');
-    }
-
-
-    /**
-     * Количество постов пользователя
-     */
-    public function getPosts(): int
-    {
-        return $this->getAttribute('posts');
-    }
-
-
-    /**
-     * Увеличивает количество просмотров в статистике на $int (по умолчанию 1).
+     * Увеличивает количество просмотров постов на $int (по умолчанию 1).
      */
     public function increaseViews(int $int = 1): self
     {
@@ -170,78 +74,56 @@ class Statistic extends ActiveRecord
         return $this;
     }
 
+    /**
+     * @return int Количество просмотров постов.
+     */
+    public function getViews(): int
+    {
+        return $this->getAttribute('views');
+    }
 
     /**
-     * Уменьшает количество просмотров в статистике на $int (по умолчанию 1).
+     * Количество комментариев.
      */
-    public function decreaseViews(int $int = 1): self
+    private function setComments(int $comments)
     {
-        $this->setViews($this->getViews() - $int);
+        $this->setAttribute('comments', $comments);
+    }
+
+    /**
+     * Увеличивает количество комментариев на $int (по умолчанию 1).
+     */
+    public function increaseComments(int $int = 1): self
+    {
+        $this->setComments($this->getComments() + $int);
 
         return $this;
     }
 
     /**
-     * Увеличивает рейтинг в статистике на $int (по умолчанию 1).
+     * Уменьшает количество комментариев на $int (по умолчанию 1).
      */
-    public function increaseRating(int $int = 1): self
+    public function decreaseComments(int $int = 1): self
     {
-        $this->setRating($this->getRating() + $int);
+        $this->setComments($this->getComments() - $int);
 
         return $this;
     }
 
     /**
-     * Уменьшает рейтинг в статистике на $int (по умолчанию 1).
+     * @return int Количество комментариев.
      */
-    public function decreaseRating(int $int = 1): self
+    public function getComments(): int
     {
-        $this->setRating($this->getRating() - $int);
-
-        return $this;
+        return $this->getAttribute('comments');
     }
-
-        /**
-     * Увеличивает количество лайков в статистике на $int (по умолчанию 1).
-     */
-    public function increaseLikes(int $int = 1): self
-    {
-        $this->setLikes($this->getLikes() + $int);
-
-        return $this;
-    }
-
 
     /**
-     * Уменьшает количество лайков в статистике на $int (по умолчанию 1).
+     * Количество постов.
      */
-    public function decreaseLikes(int $int = 1): self
+    private function setPosts(int $posts)
     {
-        $this->setLikes($this->getLikes() - $int);
-
-        return $this;
-    }
-
-
-    /**
-     * Увеличивает количество дизлайков в статистике на $int (по умолчанию 1).
-     */
-    public function increaseDislikes(int $int = 1): self
-    {
-        $this->setDislikes($this->getDislikes() + $int);
-
-        return $this;
-    }
-
-
-    /**
-     * Уменьшает количество дизлайков в статистике на $int (по умолчанию 1).
-     */
-    public function decreaseDislikes(int $int = 1): self
-    {
-        $this->setDislikes($this->getDislikes() - $int);
-
-        return $this;
+        $this->setAttribute('posts', $posts);
     }
 
     /**
@@ -265,23 +147,43 @@ class Statistic extends ActiveRecord
     }
 
     /**
-     * Увеличивает количество комментариев в статистике на $int (по умолчанию 1).
+     * @return int Количество постов
      */
-    public function increaseComments(int $int = 1): self
+    public function getPosts(): int
     {
-        $this->setComments($this->getComments() + $int);
-
-        return $this;
+        return $this->getAttribute('posts');
     }
 
     /**
-     * Уменьшает количество комментариев в статистике на $int (по умолчанию 1).
+     * Количество лайков пользователю.
      */
-    public function decreaseComments(int $int = 1): self
+    public function setLikes(int $likes)
     {
-        $this->setComments($this->getComments() - $int);
+        $this->setAttribute('likes', $likes);
+    }
 
-        return $this;
+    /**
+     * @return int Количество лайков пользователю.
+     */
+    public function getLikes(): int
+    {
+        return $this->getAttribute('likes');
+    }
+
+    /**
+     * Количество дизлайков пользователю.
+     */
+    public function setDislikes(int $dislikes)
+    {
+        $this->setAttribute('dislikes', $dislikes);
+    }
+
+    /**
+     * @return int Количество дизлайков пользователю.
+     */
+    public function getDislikes(): int
+    {
+        return $this->getAttribute('dislikes');
     }
 
     /**
@@ -289,7 +191,58 @@ class Statistic extends ActiveRecord
      */
     public function updateRating(): self
     {
-        $this->setRating($this->getLikes() - $this->getDislikes());
+        $this->setAttribute('rating',$this->getLikes() - $this->getDislikes());
+
+        return $this;
+    }
+
+    /**
+     * @return int Рейтинг пользователя.
+     */
+    public function getRating(): int
+    {
+        return $this->getAttribute('rating');
+    }
+
+        /**
+     * Увеличивает количество лайков на $int (по умолчанию 1).
+     */
+    public function increaseLikes(int $int = 1): self
+    {
+        $this->setLikes($this->getLikes() + $int);
+
+        return $this;
+    }
+
+
+    /**
+     * Уменьшает количество лайков на $int (по умолчанию 1).
+     */
+    public function decreaseLikes(int $int = 1): self
+    {
+        $this->setLikes($this->getLikes() - $int);
+
+        return $this;
+    }
+
+
+    /**
+     * Увеличивает количество дизлайков на $int (по умолчанию 1).
+     */
+    public function increaseDislikes(int $int = 1): self
+    {
+        $this->setDislikes($this->getDislikes() + $int);
+
+        return $this;
+    }
+
+
+    /**
+     * Уменьшает количество дизлайков на $int (по умолчанию 1).
+     */
+    public function decreaseDislikes(int $int = 1): self
+    {
+        $this->setDislikes($this->getDislikes() - $int);
 
         return $this;
     }

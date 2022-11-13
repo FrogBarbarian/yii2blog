@@ -166,28 +166,28 @@ class CommentAjaxController extends Controller
         if ($isAlreadyDisliked) {
             $comment
                 ->decreaseDislikes()
-                ->removeDislikedByUserId($userId);
+                ->removeDislikedCommentByUserId($userId);
             $ownerStatistics->decreaseDislikes();
         }
 
         if ($isAlreadyLiked) {
             $comment
                 ->decreaseLikes()
-                ->removeLikedByUserId($userId);
+                ->removeLikedCommentByUserId($userId);
             $ownerStatistics->decreaseLikes();
         }
 
         if ($isLike && !$isAlreadyLiked) {
             $comment
                 ->increaseLikes()
-                ->addLikedByUserId($userId);
+                ->addLikedCommentByUserId($userId);
             $ownerStatistics->increaseLikes();
         }
 
         if (!$isLike && !$isAlreadyDisliked) {
             $comment
                 ->increaseDislikes()
-                ->addDislikedByUserId($userId);
+                ->addDislikedCommentByUserId($userId);
             $ownerStatistics->increaseDislikes();
         }
 

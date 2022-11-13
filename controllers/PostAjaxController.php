@@ -177,28 +177,28 @@ class PostAjaxController extends Controller
         if ($isAlreadyDisliked) {
             $post
                 ->decreaseDislikes()
-                ->bateDislikedByUserId($userId);
+                ->removeDislikedPostByUserId($userId);
             $ownerStatistics->decreaseDislikes();
         }
 
         if ($isAlreadyLiked) {
             $post
                 ->decreaseLikes()
-                ->bateLikedByUserId($userId);
+                ->removeLikedPostByUserId($userId);
             $ownerStatistics->decreaseLikes();
         }
 
         if ($isLike && !$isAlreadyLiked) {
             $post
                 ->increaseLikes()
-                ->addLikedByUserId($userId);
+                ->addLikedPostByUserId($userId);
             $ownerStatistics->increaseLikes();
         }
 
         if (!$isLike && !$isAlreadyDisliked) {
             $post
                 ->increaseDislikes()
-                ->addDislikedByUserId($userId);
+                ->addDislikedPostByUserId($userId);
             $ownerStatistics->increaseDislikes();
         }
 

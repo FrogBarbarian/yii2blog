@@ -70,7 +70,6 @@ class ComplaintController extends Controller
             (new Complaint())
                 ->setObject($model->objectType)
                 ->setObjectId($model->objectId)
-                ->setSenderId($sender->getId())
                 ->setSenderUsername($sender->getUsername())
                 ->setComplaint($model->complaint)
                 ->save();

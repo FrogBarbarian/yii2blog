@@ -6,6 +6,9 @@ namespace app\models;
 
 use app\models\queries\TmpPostQuery;
 
+/**
+ * Модель временного поста.
+ */
 class TmpPost extends Post
 {
     /**
@@ -25,11 +28,31 @@ class TmpPost extends Post
     }
 
     /**
-     * @return bool Новый пост|редакция поста.
+     * Новый или отредактированный.
+     */
+    public function setIsNew(bool $isNew): self
+    {
+        $this->setAttribute('is_new', $isNew);
+
+        return $this;
+    }
+
+    /**
+     * @return bool Новый или отредактированный.
      */
     public function getIsNew(): bool
     {
         return $this->getAttribute('is_new');
+    }
+
+    /**
+     * ID оригинального поста.
+     */
+    public function setUpdateId(int $updateId): self
+    {
+        $this->setAttribute('update_id', $updateId);
+
+        return $this;
     }
 
     /**
@@ -41,50 +64,6 @@ class TmpPost extends Post
     }
 
     /**
-     * Устанавливает автора поста в таблице.
-     * @param int $updateId
-     * @return self
-     */
-    public function setUpdateId(int $updateId): self
-    {
-        $this->setAttribute('update_id', $updateId);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает новый или редактируемый пост в таблице.
-     * @param bool $isNew
-     * @return self
-     */
-    public function setIsNew(bool $isNew): self
-    {
-        $this->setAttribute('is_new', $isNew);
-
-        return $this;
-    }
-
-    /**
-     * Название до изменений.
-     */
-    public function setOldTitle(string $title): self
-    {
-        $this->setAttribute('old_title', $title);
-
-        return $this;
-    }
-
-    /**
-     * Содержание до изменений.
-     */
-    public function setOldBody(string $body): self
-    {
-        $this->setAttribute('old_body', $body);
-
-        return $this;
-    }
-
-    /**
      * Теги до изменений.
      */
     public function setOldTags(string $tags): self
@@ -92,5 +71,13 @@ class TmpPost extends Post
         $this->setAttribute('old_tags', $tags);
 
         return $this;
+    }
+
+    /**
+     * @return string Теги до сохранения формы.
+     */
+    public function getOldTags(): string
+    {
+        return $this->getAttribute('old_tags');
     }
 }

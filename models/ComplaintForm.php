@@ -8,15 +8,21 @@ use yii\db\ActiveRecord;
 use Yii;
 
 /**
- * Форма отправки жалобы.
+ * Форма жалобы.
  */
 class ComplaintForm extends ActiveRecord
 {
     /**
-     * @var string Текст жалобы.
+     * @var string Текст.
      */
     public string $complaint = '';
+    /**
+     * @var string Тип объекта.
+     */
     public string $objectType = '';
+    /**
+     * @var int ID объекта.
+     */
     public int $objectId = 0;
 
     /**
@@ -47,7 +53,10 @@ class ComplaintForm extends ActiveRecord
         ];
     }
 
-    public function checkComplaintForExist()
+    /**
+     * Проверка на существование подобной жалобы.
+     */
+    public function checkComplaintForExist(): void
     {
         $senderId = Yii::$app
             ->user

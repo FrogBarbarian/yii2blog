@@ -7,10 +7,13 @@ namespace app\models;
 use src\services\StringService;
 use yii\db\ActiveRecord;
 
+/**
+ * Форма комментария.
+ */
 class CommentForm extends ActiveRecord
 {
     /**
-     * @var string Текст комментария.
+     * @var string Содержание.
      */
     public string $comment = '';
 
@@ -40,14 +43,11 @@ class CommentForm extends ActiveRecord
     }
 
     /**
-     * Получает длину строки жалобы.
-     * @return int
+     * Получает длину строки комментария.
      */
     private function fieldLength(): int
     {
-        $attribute = $_POST['CommentForm']['comment'] ?? '';
-
-        return (new StringService($attribute))
+        return (new StringService($this->comment))
             ->getLength();
     }
 }

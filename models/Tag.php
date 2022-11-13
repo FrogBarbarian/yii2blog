@@ -8,7 +8,7 @@ use app\models\queries\TagQuery;
 use yii\db\ActiveRecord;
 
 /**
- * Тег.
+ * Модель тега.
  */
 class Tag extends ActiveRecord
 {
@@ -37,14 +37,6 @@ class Tag extends ActiveRecord
     }
 
     /**
-     * @return string Тег.
-     */
-    public function getTag(): string
-    {
-        return $this->getAttribute('tag');
-    }
-
-    /**
      * Тег.
      */
     public function setTag(string $tag): self
@@ -55,11 +47,11 @@ class Tag extends ActiveRecord
     }
 
     /**
-     * @return int Количество использования.
+     * @return string Тег.
      */
-    public function getAmountOfUses(): int
+    public function getTag(): string
     {
-        return $this->getAttribute('amount_of_uses');
+        return $this->getAttribute('tag');
     }
 
     /**
@@ -71,8 +63,7 @@ class Tag extends ActiveRecord
     }
 
     /**
-     * Увеличивает количество использований тега на $value.
-     * @param int $value = 1.
+     * Увеличивает количество использований тега на $value (по умолчанию = 1).
      */
     public function increaseAmountOfUse(int $value = 1): self
     {
@@ -82,14 +73,21 @@ class Tag extends ActiveRecord
     }
 
     /**
-     * Уменьшает количество использований тега на $value.
-     * @param int $value = 1.
+     * Уменьшает количество использований тега на $value (по умолчанию = 1).
      */
     public function decreaseAmountOfUse(int $value = 1): self
     {
         $this->setAmountOfUses($this->getAmountOfUses() - $value);
 
         return $this;
+    }
+
+    /**
+     * @return int Количество использования.
+     */
+    public function getAmountOfUses(): int
+    {
+        return $this->getAttribute('amount_of_uses');
     }
 
     /**

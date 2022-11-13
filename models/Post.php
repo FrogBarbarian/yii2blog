@@ -8,6 +8,9 @@ use app\models\queries\PostQuery;
 use src\services\StringService;
 use yii\db\ActiveRecord;
 
+/**
+ * Модель поста.
+ */
 class Post extends ActiveRecord
 {
     /**
@@ -35,11 +38,31 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Название.
+     */
+    public function setTitle(string $title): self
+    {
+        $this->setAttribute('title', (new StringService($title))->prepareToSave());
+
+        return $this;
+    }
+
+    /**
      * @return string Название.
      */
     public function getTitle(): string
     {
         return $this->getAttribute('title');
+    }
+
+    /**
+     * Содержание.
+     */
+    public function setBody(string $body): self
+    {
+        $this->setAttribute('body', (new StringService($body))->prepareToSave());
+
+        return $this;
     }
 
     /**
@@ -51,11 +74,31 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Увеличивает количество просмотров поста на 1.
+     */
+    public function increasePostViews(): self
+    {
+        $this->setAttribute('viewed', $this->getViews() + 1);
+
+        return $this;
+    }
+
+    /**
      * @return int Количество просмотров.
      */
     public function getViews(): int
     {
         return $this->getAttribute('viewed');
+    }
+
+    /**
+     * Автор.
+     */
+    public function setAuthor(string $author): self
+    {
+        $this->setAttribute('author', $author);
+
+        return $this;
     }
 
     /**
@@ -75,11 +118,31 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Теги.
+     */
+    public function setTags(string $tags): self
+    {
+        $this->setAttribute('tags', $tags);
+
+        return $this;
+    }
+
+    /**
      * @return string Теги.
      */
     public function getTags(): string
     {
         return $this->getAttribute('tags');
+    }
+
+    /**
+     * Доступность комментирования.
+     */
+    public function setIsCommentable(bool $isCommentable): self
+    {
+        $this->setAttribute('is_commentable', $isCommentable);
+
+        return $this;
     }
 
     /**
@@ -91,11 +154,131 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Дополняет список ID пользователей лайкнувших пост.
+     */
+    public function addLikedPostByUserId(int $id): self
+    {
+        $this->setAttribute('users_liked', "{$this->getUsersLiked()}$id ");
+
+        return $this;
+    }
+
+    /**
+     * Убирает ID из списка ID пользователей лайкнувших пост.
+     */
+    public function removeLikedPostByUserId(int $id): self
+    {
+        $usersIds = explode(' ', $this->getUsersLiked());
+        $usersIds = array_diff($usersIds, [$id]);
+        $this->setAttribute('users_liked', implode(' ', $usersIds));
+
+        return $this;
+    }
+
+    /**
+     * Список ID пользователей, лайкнувших пост.
+     */
+    private function getUsersLiked(): string
+    {
+        return $this->getAttribute('users_liked');
+    }
+
+    /**
+     * Проверяет, есть ли юзер в списке лайкнувших пост.
+     */
+    public function isUserAlreadyLikedPost(int $id): bool
+    {
+        $usersIds = explode(' ', $this->getUsersLiked());
+
+        return in_array($id, $usersIds);
+    }
+
+    /**
+     * Дополняет список ID пользователей дизлайкнувших пост.
+     */
+    public function addDislikedPostByUserId(int $id): self
+    {
+        $this->setAttribute('users_disliked', "{$this->getUsersDisliked()}$id ");
+
+        return $this;
+    }
+
+    /**
+     * Убирает ID из списка ID пользователей дизлайкнувших пост.
+     */
+    public function removeDislikedPostByUserId(int $id): self
+    {
+        $usersIds = explode(' ', $this->getUsersDisliked());
+        $usersIds = array_diff($usersIds, [$id]);
+        $this->setAttribute('users_disliked', implode(' ', $usersIds));
+
+        return $this;
+    }
+
+    /**
+     * Список ID пользователей, дизлайкнувших пост.
+     */
+    private function getUsersDisliked(): string
+    {
+        return $this->getAttribute('users_disliked');
+    }
+
+    /**
+     * Проверяет, есть ли юзер в списке дизлайкнувших пост.
+     */
+    public function isUserAlreadyDislikedPost(int $id): bool
+    {
+        $usersIds = explode(' ', $this->getUsersDisliked());
+
+        return in_array($id, $usersIds);
+    }
+
+    /**
+     * Увеличивает количество лайков поста на $int (по умолчанию 1).
+     */
+    public function increaseLikes(int $int = 1): self
+    {
+        $this->setAttribute('likes', $this->getLikes() + $int);
+
+        return $this;
+    }
+
+    /**
+     * Уменьшает количество лайков поста на $int (по умолчанию 1).
+     */
+    public function decreaseLikes(int $int = 1): self
+    {
+        $this->setAttribute('likes', $this->getLikes() - $int);
+
+        return $this;
+    }
+
+    /**
      * @return int Количество лайков.
      */
     public function getLikes(): int
     {
         return $this->getAttribute('likes');
+    }
+
+    /**
+     * Увеличивает количество дизлайков поста на $int (по умолчанию 1).
+     */
+    public function increaseDislikes(int $int = 1): self
+    {
+        $this->setAttribute('dislikes',$this->getDislikes() + $int);
+
+        return $this;
+    }
+
+    /**
+     * Уменьшает количество дизлайков поста на $int (по умолчанию 1).
+     */
+    public function decreaseDislikes(int $int = 1): self
+    {
+        $this->setAttribute('dislikes',$this->getDislikes() - $int);
+
+        return $this;
     }
 
     /**
@@ -107,81 +290,21 @@ class Post extends ActiveRecord
     }
 
     /**
+     * Обновляет рейтинг на основе общего количества лайков и дизлайков.
+     */
+    public function updateRating(): self
+    {
+        $this->setAttribute('rating', $this->getLikes() - $this->getDislikes());
+
+        return $this;
+    }
+
+    /**
      * @return int Рейтинг.
      */
     public function getRating(): int
     {
         return $this->getAttribute('rating');
-    }
-
-    /**
-     * Название.
-     */
-    public function setTitle(string $title): self
-    {
-        $this->setAttribute('title', (new StringService($title))->prepareToSave());
-
-        return $this;
-    }
-
-    /**
-     * Содержание.
-     */
-    public function setBody(string $body): self
-    {
-        $this->setAttribute('body', (new StringService($body))->prepareToSave());
-
-        return $this;
-    }
-
-    /**
-     * Количество просмотров.
-     */
-    private function setViews(int $views)
-    {
-        $this->setAttribute('viewed', $views);
-    }
-
-    /**
-     * Количество лайков.
-     */
-    private function setLikes(int $likes)
-    {
-        $this->setAttribute('likes', $likes);
-    }
-
-    /**
-     * Количество дизлайков.
-     */
-    private function setDislikes(int $dislikes)
-    {
-        $this->setAttribute('dislikes', $dislikes);
-    }
-
-    /**
-     * Автор.
-     */
-    public function setAuthor(string $author): self
-    {
-        $this->setAttribute('author', $author);
-
-        return $this;
-    }
-
-    /**
-     * @return string  Название до сохранения формы.
-     */
-    public function getOldTitle(): string
-    {
-        return $this->getOldAttribute('title');
-    }
-
-    /**
-     * @return string Содержание до сохранения формы.
-     */
-    public function getOldBody(): string
-    {
-        return $this->getOldAttribute('body');
     }
 
     /**
@@ -204,26 +327,6 @@ class Post extends ActiveRecord
         unset($array[0]);
 
         return $array;
-    }
-
-    /**
-     * Теги.
-     */
-    public function setTags(string $tags): self
-    {
-        $this->setAttribute('tags', $tags);
-
-        return $this;
-    }
-
-    /**
-     * Доступность комментирования.
-     */
-    public function setIsCommentable(bool $isCommentable): self
-    {
-        $this->setAttribute('is_commentable', $isCommentable);
-
-        return $this;
     }
 
     /**
@@ -253,154 +356,6 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Увеличивает количество просмотров поста на 1.
-     */
-    public function increasePostViews(): self
-    {
-        $this->setViews($this->getViews() + 1);
-
-        return $this;
-    }
-
-    /**
-     * Увеличивает количество лайков поста на $int (по умолчанию 1).
-     */
-    public function increaseLikes(int $int = 1): self
-    {
-        $this->setLikes($this->getLikes() + $int);
-
-        return $this;
-    }
-
-    /**
-     * Уменьшает количество лайков поста на $int (по умолчанию 1).
-     */
-    public function decreaseLikes(int $int = 1): self
-    {
-        $this->setLikes($this->getLikes() - $int);
-
-        return $this;
-    }
-
-    /**
-     * Увеличивает количество дизлайков поста на $int (по умолчанию 1).
-     */
-    public function increaseDislikes(int $int = 1): self
-    {
-        $this->setDislikes($this->getDislikes() + $int);
-
-        return $this;
-    }
-
-    /**
-     * Уменьшает количество дизлайков поста на $int (по умолчанию 1).
-     */
-    public function decreaseDislikes(int $int = 1): self
-    {
-        $this->setDislikes($this->getDislikes() - $int);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает рейтинг поста.
-     */
-    private function setRating(int $int)
-    {
-        $this->setAttribute('rating', $int);
-    }
-
-    /**
-     * Обновляет рейтинг на основе общего количества лайков и дизлайков.
-     */
-    public function updateRating(): self
-    {
-        $this->setRating($this->getLikes() - $this->getDislikes());
-
-        return $this;
-    }
-
-    /**
-     * Список ID пользователей, лайкнувших пост.
-     */
-    public function getLikedByUsers(): string
-    {
-        return $this->getAttribute('users_liked');
-    }
-
-    /**
-     * Список ID пользователей, дизлайкнувших пост.
-     */
-    public function getDislikedByUsers(): string
-    {
-        return $this->getAttribute('users_disliked');
-    }
-
-    /**
-     * Дополняет список ID пользователей лайкнувших пост.
-     */
-    public function addLikedByUserId(int $id): self
-    {
-        $this->setAttribute('users_liked', "{$this->getLikedByUsers()}$id ");
-
-        return $this;
-    }
-
-    /**
-     * Убирает ID из списка ID пользователей лайкнувших пост.
-     */
-    public function bateLikedByUserId(int $id): self
-    {
-        $usersIds = explode(' ', $this->getLikedByUsers());
-        $usersIds = array_diff($usersIds, [$id]);
-        $this->setAttribute('users_liked', implode(' ', $usersIds));
-
-        return $this;
-    }
-
-    /**
-     * Убирает ID из списка ID пользователей дизлайкнувших пост.
-     */
-    public function bateDislikedByUserId(int $id): self
-    {
-        $usersIds = explode(' ', $this->getDislikedByUsers());
-        $usersIds = array_diff($usersIds, [$id]);
-        $this->setAttribute('users_disliked', implode(' ', $usersIds));
-
-        return $this;
-    }
-
-    /**
-     * Дополняет список ID пользователей дизлайкнувших пост.
-     */
-    public function addDislikedByUserId(int $id): self
-    {
-        $this->setAttribute('users_disliked', "{$this->getDislikedByUsers()}$id ");
-
-        return $this;
-    }
-
-    /**
-     * Проверяет, есть ли юзер в писке лайкнувших пост.
-     */
-    public function isUserAlreadyLikedPost(int $id): bool
-    {
-        $usersIds = explode(' ', $this->getLikedByUsers());
-
-        return in_array($id, $usersIds);
-    }
-
-    /**
-     * Проверяет, есть ли юзер в писке дизлайкнувших пост.
-     */
-    public function isUserAlreadyDislikedPost(int $id): bool
-    {
-        $usersIds = explode(' ', $this->getDislikedByUsers());
-
-        return in_array($id, $usersIds);
-    }
-
-    /**
      * ID автора.
      */
     public function setAuthorId(int $authorId):self
@@ -419,11 +374,13 @@ class Post extends ActiveRecord
     }
 
     /**
-     * Записывает количество комментариев.
+     * Увеличивает количество комментариев на 1.
      */
-    private function setCommentsAmount(int $amount)
+    public function increaseCommentsAmount(): self
     {
-        $this->setAttribute('comments_amount', $amount);
+        $this->setAttribute('comments_amount', $this->getCommentsAmount() + 1);
+
+        return $this;
     }
 
     /**
@@ -432,15 +389,5 @@ class Post extends ActiveRecord
     public function getCommentsAmount(): int
     {
         return $this->getAttribute('comments_amount');
-    }
-
-    /**
-     * Увеличивает количество комментариев на 1.
-     */
-    public function increaseCommentsAmount(): self
-    {
-        $this->setCommentsAmount($this->getCommentsAmount() + 1);
-
-        return $this;
     }
 }

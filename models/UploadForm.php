@@ -13,8 +13,17 @@ use Yii;
  */
 class UploadForm extends Model
 {
+    /**
+     * @var UploadedFile|null Изображение.
+     */
     public ?UploadedFile $image = null;
+    /**
+     * @var string Подпись.
+     */
     public string $signature = '';
+    /**
+     * @var string Имя файла.
+     */
     public string $imageName = '';
 
     /**

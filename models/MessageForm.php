@@ -8,7 +8,7 @@ use Yii;
 use yii\db\ActiveRecord;
 
 /**
- * Форма набора сообщения.
+ * Форма сообщения.
  */
 class MessageForm extends ActiveRecord
 {
@@ -42,19 +42,11 @@ class MessageForm extends ActiveRecord
             [['recipientUsername', 'subject', 'content'], 'trim'],
             ['recipientUsername', 'required', 'message' => 'Выберите отправителя'],
             ['subject', 'required', 'message' => 'Заполните тему'],
-            ['subject', function (string $attribute) {
-                if (empty(strip_tags($this->subject))) {
-                    $this->addError($attribute, 'Введен некорректный текст');
-                }
-            }],
+            ['subject', 'checkForTags'],
             ['subject', 'string', 'max' => 100, 'tooLong' => 'Тема письма должна быть не более 100 символов'],
             ['content', 'checkCanUserWrite'],
             ['content', 'required', 'message' => 'Напишите что-нибудь'],
-            ['content', function (string $attribute) {
-                if (empty(strip_tags($this->content))) {
-                    $this->addError($attribute, 'Введен некорректный текст');
-                }
-            }],
+            ['content', 'checkForTags'],
             ['recipientUsername', 'checkUserExist'],
             ['recipientUsername', 'checkYourselfSending'],
             ['recipientUsername', 'checkRecipientIsOpenMessages'],
@@ -62,9 +54,19 @@ class MessageForm extends ActiveRecord
     }
 
     /**
+     * Проверка на наличие одних лишь тегов.
+     */
+    public function checkForTags(string $attribute): void
+    {
+        if (empty(strip_tags($this->$attribute))) {
+            $this->addError($attribute, 'Введен некорректный текст');
+        }
+    }
+
+    /**
      * Проверка на существование пользователя.
      */
-    public function checkUserExist(string $attribute)
+    public function checkUserExist(string $attribute): void
     {
         $user = User::find()
             ->where(['LIKE', 'username', "%$this->recipientUsername", false])
@@ -78,7 +80,7 @@ class MessageForm extends ActiveRecord
     /**
      * Проверка на отправку самому себе.
      */
-    public function checkYourselfSending(string $attribute)
+    public function checkYourselfSending(string $attribute): void
     {
         $sender = Yii::$app
             ->user
@@ -95,7 +97,7 @@ class MessageForm extends ActiveRecord
     /**
      * Проверка может ли пользователь писать сообщения.
      */
-    public function checkCanUserWrite(string $attribute)
+    public function checkCanUserWrite(string $attribute): void
     {
         $user = Yii::$app
             ->user
@@ -109,7 +111,7 @@ class MessageForm extends ActiveRecord
     /**
      * Проверка, открыты ли сообщения у получателя.
      */
-    public function checkRecipientIsOpenMessages(string $attribute)
+    public function checkRecipientIsOpenMessages(string $attribute): void
     {
         $sender = Yii::$app
             ->user

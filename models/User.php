@@ -11,14 +11,27 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 
+/**
+ * Модель пользователя.
+ */
 class User extends ActiveRecord implements IdentityInterface
 {
+    /**
+     * Статус: удален.
+     */
     const STATUS_DELETED = 0;
+    /**
+     * Статус: активен.
+     */
     const STATUS_ACTIVE = 10;
+    /**
+     * Статус: забанен.
+     */
     const STATUS_BANNED = 20;
 
     /**
      * {@inheritDoc}
+     *
      * @throws Exception
      */
     public function beforeSave($insert): bool
@@ -69,19 +82,31 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Ключ аутентификации.
+     */
+    private function setAuthKey(string $authKey)
+    {
+        $this->setAttribute('auth_key', $authKey);
+    }
+
+    /**
+     * Генерирует аутентификационный ключ.
+     *
+     * @throws Exception
+     */
+    public function generateAuthKey(): self
+    {
+        $this->setAuthKey(Yii::$app->security->generateRandomString());
+
+        return $this;
+    }
+
+    /**
      * @return string Ключ аутентификации.
      */
     public function getAuthKey(): string
     {
         return $this->getAttribute('auth_key');
-    }
-
-    /**
-     * Записывает ключ аутентификации.
-     */
-    private function setAuthKey(string $authKey)
-    {
-        $this->setAttribute('auth_key', $authKey);
     }
 
     /**
@@ -120,7 +145,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Статус пользователя.
+     * Статус.
      */
     public function setStatus(int $status): self
     {
@@ -138,7 +163,17 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return string Имя пользователя.
+     * Имя.
+     */
+    public function setUsername(string $username): self
+    {
+        $this->setAttribute('username', $username);
+
+        return $this;
+    }
+
+    /**
+     * @return string Имя.
      */
     public function getUsername(): string
     {
@@ -146,11 +181,31 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return string Email пользователя.
+     * Почта.
+     */
+    public function setEmail(string $email): self
+    {
+        $this->setAttribute('email', $email);
+
+        return $this;
+    }
+
+    /**
+     * @return string Почта.
      */
     public function getEmail(): string
     {
         return $this->getAttribute('email');
+    }
+
+    /**
+     * Является ли пользователь админом.
+     */
+    public function setIsAdmin(bool $isAdmin): self
+    {
+        $this->setAttribute('is_admin', $isAdmin);
+
+        return $this;
     }
 
     /**
@@ -162,11 +217,31 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Скрыт ли профиль пользователя.
+     */
+    public function setIsHidden(bool $isHidden): self
+    {
+        $this->setAttribute('is_hidden', $isHidden);
+
+        return $this;
+    }
+
+    /**
      * @return bool Скрыт ли профиль пользователя.
      */
     public function getIsHidden(): bool
     {
         return $this->getAttribute('is_hidden');
+    }
+
+    /**
+     * Есть ли право комментировать.
+     */
+    public function setCanComment(bool $canComment): self
+    {
+        $this->setAttribute('can_comment', $canComment);
+
+        return $this;
     }
 
     /**
@@ -178,11 +253,31 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * Есть ли право писать ЛС.
+     */
+    public function setCanWriteMessages(bool $canWriteMessages): self
+    {
+        $this->setAttribute('can_write_messages', $canWriteMessages);
+
+        return $this;
+    }
+
+    /**
      * @return bool Есть ли право писать ЛС.
      */
     public function getCanWriteMessages(): bool
     {
         return $this->getAttribute('can_write_messages');
+    }
+
+    /**
+     * Есть ли право писать посты.
+     */
+    public function setCanWritePosts(bool $canWritePosts): self
+    {
+        $this->setAttribute('can_write_posts', $canWritePosts);
+
+        return $this;
     }
 
     /**
@@ -194,31 +289,8 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Записывает имя пользователя.
-     * @param string $username
-     * @return self
-     */
-    public function setUsername(string $username): self
-    {
-        $this->setAttribute('username', $username);
-
-        return $this;
-    }
-
-    /**
-     * Записывает email пользователя.
-     * @param string $email
-     * @return self
-     */
-    public function setEmail(string $email): self
-    {
-        $this->setAttribute('email', $email);
-
-        return $this;
-    }
-
-    /**
      * Записывает пароль пользователя.
+     *
      * @throws Exception
      */
     public function setPassword(string $password): self
@@ -251,71 +323,6 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * Генерирует аутентификационный ключ.
-     * @throws Exception
-     */
-    public function generateAuthKey(): self
-    {
-        $this->setAuthKey(Yii::$app->security->generateRandomString());
-
-        return $this;
-    }
-
-    /**
-     * Принимает значение, является ли пользователь админом.
-     * @param bool $isAdmin
-     * @return self
-     */
-    public function setIsAdmin(bool $isAdmin): self
-    {
-        $this->setAttribute('is_admin', $isAdmin);
-
-        return $this;
-    }
-
-    /**
-     * Скрывает/показывает профиль пользователя.
-     * @param bool $isHidden
-     * @return self
-     */
-    public function setIsHidden(bool $isHidden): self
-    {
-        $this->setAttribute('is_hidden', $isHidden);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает, может ли пользователь комментировать посты.
-     */
-    public function setCanComment(bool $canComment): self
-    {
-        $this->setAttribute('can_comment', $canComment);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает, может ли пользователь писать ЛС.
-     */
-    public function setCanWriteMessages(bool $canWriteMessages): self
-    {
-        $this->setAttribute('can_write_messages', $canWriteMessages);
-
-        return $this;
-    }
-
-    /**
-     * Устанавливает, может ли пользователь писать посты.
-     */
-    public function setCanWritePosts(bool $canWritePosts): self
-    {
-        $this->setAttribute('can_write_posts', $canWritePosts);
-
-        return $this;
-    }
-
-    /**
      * Забанен ли пользователь.
      */
     public function setIsBanned(bool $isBanned): self
@@ -326,7 +333,7 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
-     * @return bool Забнен ли пользователь.
+     * @return bool Забанен ли пользователь.
      */
     public function getIsBanned(): bool
     {
@@ -384,6 +391,7 @@ class User extends ActiveRecord implements IdentityInterface
 
     /**
      * Генерирует токен восстановления пароля.
+     *
      * @throws Exception
      */
     public function generatePasswordResetToken(): self

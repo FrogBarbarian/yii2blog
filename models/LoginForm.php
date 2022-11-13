@@ -5,38 +5,43 @@ declare(strict_types = 1);
 namespace app\models;
 
 use yii\db\ActiveRecord;
-use yii\db\Exception;
 
+/**
+ * Форма входа.
+ */
 class LoginForm extends ActiveRecord
 {
     /**
-     * @var string Email.
+     * @var string Почта.
      */
     public string $email = '';
     /**
      * @var string Пароль.
      */
     public string $password = '';
+    /**
+     * @var bool Чекбокс 'запомнить меня'.
+     */
     public bool $rememberMe = true;
 
     /**
-     * @return array Правила валидации входа юзера.
+     * {@inheritDoc}
      */
     public function rules(): array
     {
         return [
             [['email', 'password'], 'trim'],
-            ['email', 'checkUserBan'],
             ['email', 'required', 'message' => 'Заполните поле почта'],
             ['email' , 'email', 'message' => 'Введенный email не корректный'],
             ['password', 'required', 'message' => 'Заполните поле пароль'],
-            [['email', 'password'], 'checkData'],
+            ['password', 'checkData'],
             ['rememberMe', 'boolean'],
+            ['email', 'checkUserBan'],
         ];
     }
 
     /**
-     * @return string Название таблицы с пользователями.
+     * {@inheritDoc}
      */
     public static function tableName(): string
     {
@@ -45,9 +50,6 @@ class LoginForm extends ActiveRecord
 
     /**
      * Проверяет на корректность введенные данные для входа.
-     * @param string $attribute Проверяемый аттрибут.
-     * @return void
-     * @throws Exception
      */
     public function checkData(string $attribute): void
     {
@@ -69,7 +71,7 @@ class LoginForm extends ActiveRecord
             ->byEmail($this->email)
             ->one();
 
-        if ($user->getIsBanned()) {
+        if ($user !== null && $user->getIsBanned()) {
             $this->addError($attribute, "Ваша учетная запись заблокирована");
         }
     }

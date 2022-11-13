@@ -45,7 +45,6 @@ class TestController extends Controller
             $complaint
                 ->setObject($objectType)
                 ->setObjectId($object->getId())
-                ->setSenderId($sender->getId())
                 ->setSenderUsername($sender->getUsername())
                 ->setComplaint($content)
                 ->save();

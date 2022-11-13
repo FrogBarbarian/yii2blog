@@ -7,6 +7,9 @@ namespace app\models;
 use src\helpers\NormalizeData;
 use yii\db\ActiveRecord;
 
+/**
+ * Форма редактора поста.
+ */
 class PostEditorForm extends ActiveRecord
 {
     /**
@@ -14,7 +17,7 @@ class PostEditorForm extends ActiveRecord
      */
     public string $title = '';
     /**
-     * @var string Текст.
+     * @var string Содержание.
      */
     public string $body = '';
     /**
@@ -22,7 +25,7 @@ class PostEditorForm extends ActiveRecord
      */
     public string $tags = '';
     /**
-     * @var bool
+     * @var bool Новый или редактируемый.
      */
     public bool $isNew = true;
 
@@ -59,7 +62,7 @@ class PostEditorForm extends ActiveRecord
     /**
      * Проверка на уникальность имени, если пост новый.
      */
-    public function checkNameIfPostIsNew()
+    public function checkNameIfPostIsNew(): void
     {
         if ($this->isNew) {
             $post = self::find()
@@ -75,7 +78,8 @@ class PostEditorForm extends ActiveRecord
     /**
      * Проверяет длину строки атрибута 'body' без учета HTML тегов.
      */
-    public function checkBodyTextLength() {
+    public function checkBodyTextLength(): void
+    {
         $length = mb_strlen(strip_tags($this->body));
 
         if ($length === 0) {

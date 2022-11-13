@@ -8,6 +8,9 @@ use app\models\queries\MessageQuery;
 use src\services\StringService;
 use yii\db\ActiveRecord;
 
+/**
+ * Модель сообщения.
+ */
 class Message extends ActiveRecord
 {
     /**

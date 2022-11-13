@@ -18,18 +18,10 @@ class m221009_123414_create_complaints_table extends Migration
             'id' => $this->primaryKey(),
             'object' => 'objects NOT NULL',
             'object_id' => $this->integer()->notNull(),
-            'sender_id' => $this->integer()->notNull(),
             'sender_username' => $this->string(30)->notNull(),
             'complaint' => $this->string(250)->notNull(),
             'datetime' => $this->timestamp()->defaultValue(new Expression("NOW()")),
         ]);
-        $this->addForeignKey(
-            'sender_id_fk',
-            'complaints',
-            'sender_id',
-            'users',
-            'id',
-        );
         $this->addForeignKey(
             'sender_username_fk',
             'complaints',
@@ -45,7 +37,6 @@ class m221009_123414_create_complaints_table extends Migration
     public function down()
     {
         $this->dropForeignKey('sender_username_fk', 'complaints');
-        $this->dropForeignKey('sender_id_fk', 'complaints');
         $this->dropTable('complaints');
         $this->execute('DROP TYPE objects');
     }
