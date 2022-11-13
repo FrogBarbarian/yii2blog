@@ -17,7 +17,7 @@ $options = [
         ],
 ];
 
-$this->registerJsFile('@js/password-visibility.js');
+$this->registerJsFile('@js/utilities/password-visibility.js');
 $this->registerJsFile('@js/modals/change-password-form.js');
 $this->registerJs(<<<JS
     setupPasswordFormJsData();

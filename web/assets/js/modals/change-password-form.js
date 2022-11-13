@@ -3,6 +3,9 @@
  */
 let changePasswordButton;
 
+/**
+ * Изменения пароля
+ */
 function changePassword() {
     let form = $('#changePasswordForm')
     let formData = form.serialize()
@@ -22,6 +25,9 @@ function changePassword() {
     });
 }
 
+/**
+ * Записывает данные с модального окна.
+ */
 function setupPasswordFormJsData() {
     changePasswordButton = document.getElementById('changePasswordButton');
     changePasswordButton.addEventListener('click', changePassword);

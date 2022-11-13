@@ -1,5 +1,14 @@
+/**
+ * Div контейнер для ввода текста сообщения.
+ * Скрытый input для передачи текста сообщения.
+ * Input поля для ввода получателя.
+ * Input поле для ввода темы сообщения.
+ */
 let contentInputField, contentHiddenInput, recipientInputField, subjectInputField;
 
+/**
+ * Записывает данные с модального окна.
+ */
 function setMessageFormData() {
     contentInputField = document.getElementById('contentInputField');
     contentHiddenInput = document.getElementById('contentHiddenInput');
@@ -15,7 +24,7 @@ function setMessageFormData() {
     contentInputField.oninput = () => {
         contentHiddenInput.value = contentInputField.innerText;
     }
-    const blur = new Event('blur');
+    let blur = new Event('blur');
     contentInputField.onblur = () => {
         contentHiddenInput.dispatchEvent(blur)
     }
@@ -47,7 +56,6 @@ function sendMessage() {
 
 /**
  * Вставляет имя пользователя в поле получателя.
- * @param {String} username
  */
 function addRecipient(username) {
     $('#suggestedRecipients').html('');

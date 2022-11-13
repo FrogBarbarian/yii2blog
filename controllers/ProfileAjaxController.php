@@ -91,24 +91,6 @@ class ProfileAjaxController extends Controller
     }
 
     /**
-     * Отрисовывает модальное окно для подтверждения назначения пользователя администратором.
-     *
-     * @throws NotFoundHttpException
-     */
-    public function actionCreateSetUserAsAdminWindow(): string
-    {
-        $request = Yii::$app->getRequest();
-
-        if (!$request->isAjax) {
-            throw new NotFoundHttpException();
-        }
-
-        $username = $request->post('username');
-
-        return $this->renderAjax('/ui/_user-to-admin-modal', ['username' => $username]);
-    }
-
-    /**
      * Делает пользователя администратором.
      *
      * @throws NotFoundHttpException

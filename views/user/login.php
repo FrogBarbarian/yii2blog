@@ -13,7 +13,7 @@ $this->title = 'Вход';
 $options = [
     'errorOptions' => ['class' => 'text-danger small'],
 ];
-$this->registerJsFile('@js/password-visibility.js');
+$this->registerJsFile('@js/utilities/password-visibility.js');
 ?>
 
 <div class="align-items-center vstack justify-content-center vh-90">

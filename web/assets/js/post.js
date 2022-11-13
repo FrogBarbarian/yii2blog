@@ -2,47 +2,46 @@
  * ID поста.
  */
 const postId = params.get('id');
-
 let data = {
     _csrf: token,
     postId: postId,
 };
 
 $(document).ready(function () {
-    /**
-     * Меняет правила комментирования поста.
-     * Отрисовывает соответствующие элементы.
-     */
-    $('#commentsButton').click(function () {
-        $.ajax({
-            url: '/post-ajax/comment-permissions',
-            cache: false,
-            type: 'post',
-            data: data,
-            success: function (response) {
-                if (response === true) {
-                    $("#comments-permissions").html('');
-                    $("#commentsButton").html(
-                        "<img src='../../assets/images/comment-enabled.svg' alt='comment enabled' width='24'>"
-                    );
-                } else {
-                    $("#comments-permissions").html(
-                        "<div class='alert alert-danger text-center' role='alert'>" +
-                        'Комментарии запрещены.' +
-                        '</div>'
-                    );
-                    $("#commentsButton").html(
-                        "<img src='../../assets/images/comment-disabled.svg' alt='comment disabled' width='24'>"
-                    );
-                }
-
-            },
-        });
-    });
-
     setInterval(updatePostRating, 2000, data);
     setInterval(updateComments, 2000);
 });
+
+/**
+ * Меняет правила комментирования поста.
+ * Отрисовывает соответствующие элементы.
+ */
+document.getElementById('commentsButton').onclick = () => {
+    $.ajax({
+        url: '/post-ajax/comment-permissions',
+        cache: false,
+        type: 'post',
+        data: data,
+        success: function (response) {
+            if (response === true) {
+                $("#comments-permissions").html('');
+                $("#commentsButton").html(
+                    "<img src='../../assets/images/comment-enabled.svg' alt='comment enabled' width='24'>"
+                );
+            } else {
+                $("#comments-permissions").html(
+                    "<div class='alert alert-danger text-center' role='alert'>" +
+                    'Комментарии запрещены.' +
+                    '</div>'
+                );
+                $("#commentsButton").html(
+                    "<img src='../../assets/images/comment-disabled.svg' alt='comment disabled' width='24'>"
+                );
+            }
+
+        },
+    });
+}
 
 /**
  * Ставит лайк/дизлайк посту.
@@ -53,7 +52,7 @@ function likeOrDislikePost(isLike) {
         url: '/post-ajax/like-or-dislike',
         type: 'post',
         data: data,
-        success: function (response) {
+        success: function () {
             updatePostRating(data);
             updateRatingButtons();
         }
@@ -83,11 +82,7 @@ function updatePostRating(data) {
  * Обновляет комментарии к посту.
  */
 function updateComments() {
-    let data = {
-        _csrf: token,
-        postId: postId,
-        curCommentsAmount: comments.children('li').length,
-    }
+    data['curCommentsAmount'] = comments.children('li').length;
     $.ajax({
         url: '/post-ajax/update-comments',
         type: 'post',
@@ -135,7 +130,7 @@ function updateRatingButtons() {
 /**
  * Удаляет пост.
  */
-const deletePostButton = document.getElementById('deletePostButton');
+let deletePostButton = document.getElementById('deletePostButton');
 if (deletePostButton !== null) {
     deletePostButton.addEventListener('click', () => {
         $.ajax({

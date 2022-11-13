@@ -1,19 +1,22 @@
 /**
- * Поле содержащее значение поля 'комментарий'.
+ * Скрытый input для передачи текста комментария..
  */
-const commentValueHiddenInput = document.getElementById('commentValue');
+let commentValueHiddenInput = document.getElementById('commentValue');
+
 /**
  * Div контейнер для ввода комментария.
  */
-const commentInput = document.getElementById('commentInput');
+let commentInput = document.getElementById('commentInput');
+
 /**
  * Кнопка скрытия комментариев.
  */
-const hideCommentsButton = document.getElementById('hideComments');
+let hideCommentsButton = document.getElementById('hideComments');
+
 /**
  * Контейнер с комментариями.
  */
-const comments = $('#comments');
+let comments = $('#comments');
 
 /**
  * Добавляет комментарий.
@@ -45,15 +48,15 @@ document.getElementById('addComment').onclick = () => {
 /**
  * Заполняет значение скрытого поля 'commentValue' вводом в div 'commentInput'.
  */
-commentInput.addEventListener('input', (e) => {
+commentInput.oninput = (e) => {
     commentValueHiddenInput.value = e.target.innerText;
-});
+}
 
 /**
  * Скрывает/отображает комментарии.
  */
 if (hideCommentsButton !== null) {
-    hideCommentsButton.addEventListener('click', () => {
+    hideCommentsButton.onclick = () => {
         if (comments.css('display') === 'none') {
             comments.show();
             hideCommentsButton.innerText = 'Скрыть комментарии';
@@ -61,8 +64,7 @@ if (hideCommentsButton !== null) {
             comments.hide();
             hideCommentsButton.innerText = 'Показать комментарии';
         }
-
-    });
+    }
 }
 
 /**
@@ -120,18 +122,17 @@ function updateCommentRatingButtons(data) {
 function updateCommentsRating() {
     let commentBlock = document.getElementById('comments');
     let commentsRatingElements = commentBlock.querySelectorAll('div.comment-rating');
-    let comments = [];
+    let overallRating = 0;
 
     for (let i = 0; i < commentsRatingElements.length; i++) {
-        comments.push({
-            id: parseInt(commentsRatingElements[i].id.match(/\d+/).toString()),
-            rating: commentsRatingElements[i].textContent,
-        });
+        overallRating += parseInt(commentsRatingElements[i].textContent);
+
     }
 
     let data = {
         _csrf: token,
-        comments: comments,
+        postId: postId,
+        overallRating: overallRating,
     }
     $.ajax({
         url: '/comment-ajax/update-rating',
@@ -140,8 +141,8 @@ function updateCommentsRating() {
         data: data,
         success: function (response) {
             if (response !== false) {
-                for (let i = 0; i < commentsRatingElements.length; i++) {
-                    $(commentsRatingElements[i]).html(response[i]['html'])
+                for (let id in response) {
+                    $('#commentRating' + id).html(response[id])
                 }
             }
         }
@@ -150,7 +151,6 @@ function updateCommentsRating() {
 
 /**
  * Удаляет/восстанавливает комментарий.
- * @param {String} id ID комментария.
  */
 function deleteComment(id) {
     let data = {

@@ -2,14 +2,21 @@ $(document).ready(function () {
     getObjects(construct);
 });
 
+/**
+ * @see table
+ */
 table = 'users';
+
+/**
+ * @see model
+ */
 model = 'User';
 
 /**
  * Отрисовывает пользователей.
  */
 function construct(users) {
-    const usersDiv = $('#objects');
+    let usersDiv = $('#objects');
     usersDiv.html('');
 
     users.forEach((user) => {

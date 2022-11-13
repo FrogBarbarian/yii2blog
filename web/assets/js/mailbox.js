@@ -3,37 +3,55 @@ $(document).ready(() => {
 })
 
 /**
- * @type {string} Открытая вкладка с письмами.
+ * @type Открытая вкладка с письмами.
  */
 let tab = 'inbox';
-/**
- * @type {Element} Контейнер с письмами.
- */
-const mails = document.querySelector('[id="mails"]');
 
-document.querySelector('[name="inboxMails"]').addEventListener('click', () => {
+/**
+ * @type Контейнер с письмами.
+ */
+let mails = document.getElementById('mails');
+
+/**
+ * Входящие сообщения.
+ */
+document.querySelector('[name="inboxMails"]').onclick = () => {
     tab = 'inbox';
     renderMails();
-});
-document.querySelector('[name="sentMails"]').addEventListener('click', () => {
+}
+
+/**
+ * Отправленные сообщения.
+ */
+document.querySelector('[name="sentMails"]').onclick = () => {
     tab = 'sent';
     renderMails();
-});
-document.querySelector('[name="spamMails"]').addEventListener('click', () => {
+}
+
+/**
+ * Папка спам.
+ */
+document.querySelector('[name="spamMails"]').onclick = () => {
     tab = 'spam';
     renderMails();
-});
-document.querySelector('[name="newMessage"]').addEventListener('click', () => {
-    createMessageModal();
-});
-document.querySelector('[name="refreshMessages"]').addEventListener('click', () => {
-    renderMails();
+}
 
-});
+/**
+ * Создает модальное окно для написания сообщения.
+ */
+document.querySelector('[name="newMessage"]').onclick = () => {
+    createMessageModal();
+}
+
+/**
+ * Обновляет список сообщений.
+ */
+document.querySelector('[name="refreshMessages"]').onclick = () => {
+    renderMails();
+}
 
 /**
  * Отрисовывает список писем.
- * @param page Текущая страница.
  */
 function renderMails(page = 1) {
     let data = {

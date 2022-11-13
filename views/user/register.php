@@ -8,7 +8,7 @@ use yii\widgets\ActiveForm;
 
 $this->title = 'Регистрация';
 $errorOptions = ['class' => 'text-danger small help-block'];
-$this->registerJsFile('@js/password-visibility.js');
+$this->registerJsFile('@js/utilities/password-visibility.js');
 ?>
 <div class="align-items-center vstack justify-content-center vh-90">
     <div class="window-basic">

@@ -1,49 +1,31 @@
 /**
- * Кнопка изменения прав комментировать пользователю.
- */
-const changeCommentPermissionsButton = document.getElementById('changeCommentPermissionsButton');
-/**
  * Поле <span> с информацией о разрешении комментировать пользователю.
  */
-const commentPermissionsField = document.getElementById('commentPermissions');
-/**
- * Кнопка изменения прав создавать посты пользователю.
- */
-const changePostPermissionsButton = document.getElementById('changePostPermissionsButton');
+let commentPermissionsField = document.getElementById('commentPermissions');
+
 /**
  * Поле <span> с информацией о разрешении создавать посты пользователю.
  */
-const postPermissionsField = document.getElementById('postPermissions');
-/**
- * Кнопка изменения прав создавать посты пользователю.
- */
-const changeMessagesPermissionsButton = document.getElementById('changeMessagesPermissionsButton');
+let postPermissionsField = document.getElementById('postPermissions');
+
 /**
  * Поле <span> с информацией о разрешении писать сообщения пользователю.
  */
-const messagePermissionsField = document.getElementById('messagePermissions');
-/**
- * Кнопка отрисовки модального окна с назначением пользователя администратором.
- */
-const createAdminModalButton = document.getElementById('createAdminModalButton');
-/**
- * Кнопка для бана/разбана пользователя.
- */
-const banUserButton = document.getElementById('banUserButton');
+let messagePermissionsField = document.getElementById('messagePermissions');
+
 /**
  * Имя пользователя профиля.
  */
-const username = decodeURI(url.pathname.slice(7));
+let username = decodeURI(url.pathname.slice(7));
+let data = {
+    _csrf: token,
+    username: username,
+}
 
 /**
  * Меняет права пользователя на написание комментариев.
  */
-changeCommentPermissionsButton.onclick = () => {
-    let data = {
-        _csrf: token,
-        username: username,
-    }
-
+document.getElementById('changeCommentPermissionsButton').onclick = () => {
     $.ajax({
         url: '/profile-ajax/set-comments-permissions',
         type: 'post',
@@ -66,12 +48,7 @@ changeCommentPermissionsButton.onclick = () => {
 /**
  * Меняет права пользователя на написание постов.
  */
-changePostPermissionsButton.addEventListener('click', () => {
-    let data = {
-        _csrf: token,
-        username: username,
-    }
-
+document.getElementById('changePostPermissionsButton').onclick = () => {
     $.ajax({
         url: '/profile-ajax/set-create-posts-permissions',
         type: 'post',
@@ -89,17 +66,12 @@ changePostPermissionsButton.addEventListener('click', () => {
             return false;
         }
     });
-});
+}
 
 /**
  * Меняет права пользователя на написание личных сообщений.
  */
-changeMessagesPermissionsButton.addEventListener('click', () => {
-    let data = {
-        _csrf: token,
-        username: username,
-    }
-
+document.getElementById('changeMessagesPermissionsButton').onclick = () => {
     $.ajax({
         url: '/profile-ajax/set-private-messages-permissions',
         type: 'post',
@@ -117,34 +89,43 @@ changeMessagesPermissionsButton.addEventListener('click', () => {
             return false;
         }
     });
-});
+}
 
-createAdminModalButton.addEventListener('click', () => {
-    let data = {
-        _csrf: token,
-        username: username,
-    };
-    $.ajax({
-        url: '/profile-ajax/create-set-user-as-admin-window',
-        cache: false,
-        type: 'post',
-        data: data,
-        success: function (response) {
-            $('#modalDiv').html(response);
-        }
-    });
-});
+/**
+ * Рисует модальное окно для передачи пользователю прав администратора.
+ */
+document.getElementById('createAdminModalButton').onclick = () => {
+    $('#modalDiv').html(
+        '<div id="modalWindow" class="modal-window-back" tabindex="-1">' +
+        '<div class="modal-window">' +
+        '<div class="modal-window-header">' +
+        '<b>Вы уверены?</b>' +
+        '<button type="button" class="btn-close" onclick="closeModalDiv()">' +
+        '</button>' +
+        '</div>' +
+        ' Это назначит пользователя' +
+        ' <b>' +
+        username +
+        '</b>' +
+        ' администратором.' +
+        ' Отменить возможно через прямой доступ к БД.' +
+        ' <div class="modal-window-footer">' +
+        '<button type="button" class="btn-basic" onclick="closeModalDiv()">' +
+        'Отмена' +
+        '</button>' +
+        '<button onclick="setUserAdmin()" type="button" class="btn-basic">' +
+        'Подтвердить' +
+        '</button>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    );
+}
 
 /**
  * Делает пользователя админом.
  */
 function setUserAdmin() {
-    let data = {
-        _csrf: token,
-        ajax: {
-            username: username,
-        },
-    };
     $.ajax({
         url: '/profile-ajax/set-user-as-admin',
         cache: false,
@@ -159,11 +140,7 @@ function setUserAdmin() {
 /**
  * Отправляет запрос на бан/разбан пользователя.
  */
-banUserButton.addEventListener('click', () => {
-    let data = {
-        _csrf: token,
-        username: username,
-    };
+document.getElementById('banUserButton').onclick = () => {
     $.ajax({
         url: '/profile-ajax/set-user-ban',
         cache: false,
@@ -173,4 +150,4 @@ banUserButton.addEventListener('click', () => {
             location.href = window.location;
         },
     });
-});
+}

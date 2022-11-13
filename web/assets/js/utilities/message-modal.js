@@ -1,3 +1,8 @@
+/**
+ * Получатель сообщения.
+ * Тема сообщения.
+ * Текст сообщения.
+ */
 let messageRecipient, messageSubject, messageContent;
 
 /**

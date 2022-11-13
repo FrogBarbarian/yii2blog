@@ -1,12 +1,16 @@
-const noticeHeader = 'Настройки применены';
+/**
+ * Заголовок для окна оповещений при изменении настроек.
+ */
+let noticeHeader = 'Настройки применены';
+
 /**
  * Переключатель видимости профиля.
  */
-const visibilitySwitcher = document.getElementById('profileVisibility');
-visibilitySwitcher.addEventListener('change', () => {
+let visibilitySwitcher = document.getElementById('profileVisibility');
+visibilitySwitcher.onchange = () => {
     let data = {
         _csrf: token,
-            isVisible: visibilitySwitcher.checked,
+        isVisible: visibilitySwitcher.checked,
     };
     $.ajax({
         url: '/settings/change-visibility',
@@ -19,16 +23,16 @@ visibilitySwitcher.addEventListener('change', () => {
             );
         }
     });
-});
+}
 
 /**
  * Переключатель открытости сообщений.
  */
-const messagesSwitcher = document.getElementById('messagesStatus');
-messagesSwitcher.addEventListener('change', () => {
+let messagesSwitcher = document.getElementById('messagesStatus');
+messagesSwitcher.onchange = () => {
     let data = {
         _csrf: token,
-            isOpen: messagesSwitcher.checked,
+        isOpen: messagesSwitcher.checked,
     };
     $.ajax({
         url: '/settings/open-close-messages',
@@ -42,13 +46,13 @@ messagesSwitcher.addEventListener('change', () => {
             );
         }
     });
-});
+}
 
 /**
  * Кнопка отрисовки модального окна для смены пароля.
  */
-const createPasswordModalButton = document.getElementById('createPasswordModalButton');
-createPasswordModalButton.addEventListener('click', () => {
+let createPasswordModalButton = document.getElementById('createPasswordModalButton');
+document.getElementById('createPasswordModalButton').onclick = () => {
     $.ajax({
         url: '/settings/create-password-modal-window',
         cache: false,
@@ -56,13 +60,13 @@ createPasswordModalButton.addEventListener('click', () => {
             $('#modalDiv').html(response);
         }
     });
-});
+}
 
 /**
  * Кнопка отрисовки модального окна для смены почты.
  */
-const createEmailModalButton = document.getElementById('createEmailModalButton');
-createEmailModalButton.addEventListener('click', () => {
+let createEmailModalButton = document.getElementById('createEmailModalButton');
+document.getElementById('createEmailModalButton').onclick = () => {
     $.ajax({
         url: '/settings/create-email-modal-window',
         cache: false,
@@ -70,4 +74,4 @@ createEmailModalButton.addEventListener('click', () => {
             $('#modalDiv').html(response);
         }
     });
-});
+}

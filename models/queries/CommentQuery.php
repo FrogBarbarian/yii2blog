@@ -34,4 +34,12 @@ class CommentQuery extends ActiveQuery
     {
         return $this->orderBy(['id' => SORT_DESC]);
     }
+
+    /**
+     * Фильтр по статусу удаления.
+     */
+    public function filterNotDeleted(): self
+    {
+        return $this->andWhere(['is_deleted' => false]);
+    }
 }

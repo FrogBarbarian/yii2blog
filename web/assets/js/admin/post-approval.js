@@ -1,4 +1,11 @@
+/**
+ * ID поста.
+ */
 const id = params.get('id');
+
+/**
+ * Утверждает пост.
+ */
 document.getElementById('postApproveButton').onclick = () => {
     $.ajax({
         url: '/admin-ajax/approve-post',
@@ -6,7 +13,10 @@ document.getElementById('postApproveButton').onclick = () => {
         cache: false,
         data: {_csrf: token, id: id},
         success: function (response) {
-            if (response === true) {
+
+/**
+ * Записывает данные с модального окна.
+ */         if (response === true) {
                 location.href = '/';
             }
 
@@ -14,6 +24,10 @@ document.getElementById('postApproveButton').onclick = () => {
         }
     });
 }
+
+/**
+ * Рисует модальное окно для отказа в утверждении поста.
+ */
 document.getElementById('postDisapproveButton').onclick = () => {
     $('#modalDiv').html(
         '<div id="modalWindow" class="modal-window-back">' +
@@ -36,8 +50,12 @@ document.getElementById('postDisapproveButton').onclick = () => {
         '</div>' +
         '</div>'
     );
+
+    /**
+     * Отказ в утверждении поста.
+     */
     document.getElementById('disapproveButton').onclick = () => {
-        const comment = document.getElementById('disapproveTextField').innerText;
+        let comment = document.getElementById('disapproveTextField').innerText;
         $.ajax({
             url: '/admin-ajax/disapprove-post',
             method: 'post',

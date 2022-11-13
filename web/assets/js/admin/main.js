@@ -1,8 +1,31 @@
+/**
+ *Количество элементов на страницу пагинации.
+ */
 let offset = params.get("offset") > 0 ? params.get("offset") : '-1';
+
+/**
+ * Текущая страница
+ */
 let page = params.get("page") ?? '1';
+
+/**
+ * Параметр сортировки.
+ */
 let sortParam = params.get("sortParam") ?? 'id';
+
+/**
+ * Порядок сортировки.
+ */
 let sortOrder = params.get("sortOrder") ?? '4';
+
+/**
+ * Таблица для сортировки.
+ */
 let table = '';
+
+/**
+ * Модель для сортировки.
+ */
 let model = '';
 
 $(document).ready(function () {
@@ -64,6 +87,9 @@ function setOffsetInput(offset) {
     $('#setOffset').val(offset);
 }
 
+/**
+ * Чистит папку /uploads.
+ */
 document.getElementById('clearStorageButton').onclick = () => {
     $.ajax({
         url: '/admin-ajax/clear-images',

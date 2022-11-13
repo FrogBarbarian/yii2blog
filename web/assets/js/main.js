@@ -1,37 +1,37 @@
+/**
+ * Текущий URL.
+ */
 let url = (new URL(document.location));
+
+/**
+ * GET параметры.
+ */
 let params = url.searchParams;
+
+/**
+ * _csrf токен.
+ */
 const token = $('meta[name=csrf-token]').attr("content");
 
 window.onload = () => {
-    const arrowTop = document.getElementById('arrowTop');
+    /**
+     * Кнопка прокрутки страницы наверх.
+     */
+    let arrowTop = document.getElementById('arrowTop');
 
     /**
      * Скроллит страницу на самый верх.
      */
-    arrowTop.addEventListener('click', () => {
+    arrowTop.onclick = () => {
         window.scrollTo(0, 0);
-    });
+    }
 
     /**
      * Прячет и показывает стрелку для прокрутки страницы вверх.
      */
-    window.addEventListener('scroll', function () {
+    window.onscroll = () => {
         arrowTop.hidden = (pageYOffset < (document.documentElement.clientHeight / 2));
-    })
-}
-
-
-
-/**
- * Открывает страницу с рандомным постом.
- */
-function randomPost() {
-    $.ajax({
-        url: '/u-i/random-post',
-        success: function (response) {
-            location.href = (response);
-        },
-    });
+    }
 }
 
 /**
@@ -59,4 +59,3 @@ function shakeModal() {
     window.animate({left: '+=2rem'}, 100);
     window.animate({left: '-=1rem'}, 50);
 }
-

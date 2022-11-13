@@ -100,6 +100,7 @@ class CommentAjaxController extends Controller
 
     /**
      * Сверяет текущий рейтинг комментариев с рейтингом в БД.
+     * Обновляет, если есть разница.
      *
      * @throws NotFoundHttpException
      */
@@ -111,31 +112,25 @@ class CommentAjaxController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $commentsData = $request->post('comments') ?? null;
+        $commentsOverallRating = (int)$request->post('overallRating');
+        $postId = (int)$request->post('postId');
+        $comments = Comment::find()->byPostId($postId)->filterNotDeleted()->all();
+        $curCommentsOverallRank = 0;
+        $data = [];
 
-        if ($commentsData === null) {
+        foreach ($comments as $comment) {
+            $curCommentsOverallRank += $comment->getRating();
+        }
+
+        if ($commentsOverallRating === $curCommentsOverallRank) {
             return $this->asJson(false);
         }
 
-        $newCommentData = [];
-        $dataIsDiff = false;
-
-        foreach ($commentsData as $commentData) {
-            $id = $commentData['id'];
-            $rating = (int)$commentData['rating'];
-            $comment = Comment::findOne($id);
-            $newCommentData[] = ['html' => ConstructHtml::rating($comment->getRating())];
-
-            if ($comment->getRating() !== $rating) {
-                $dataIsDiff = true;
-            }
+        foreach ($comments as $comment) {
+            $data[$comment->getId()] = ConstructHtml::rating($comment->getRating());
         }
 
-        if ($dataIsDiff) {
-            return $this->asJson($newCommentData);
-        }
-
-        return $this->asJson(false);
+        return $this->asJson($data);
     }
 
     /**

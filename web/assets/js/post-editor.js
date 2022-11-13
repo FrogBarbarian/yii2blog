@@ -1,7 +1,6 @@
 $(document).ready(function () {
-    const tagsArea = $('#tagsArea');
-    const tags = $('#tagsInput').val();
-    const tagsArray = tags.split('#');
+    let tagsVal = tags.val();
+    let tagsArray = tagsVal.split('#');
     tagsArray.shift();
 
     tagsArray.forEach((tag) => {
@@ -12,13 +11,13 @@ $(document).ready(function () {
         );
     });
 
-    const options = {
+    let options = {
         root: null,
         rootMargin: '0px',
         threshold: 1,
     }
 
-    const observer = new IntersectionObserver((entries) => {
+    let observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 buttonsPanel.removeAttribute('class');
@@ -30,32 +29,50 @@ $(document).ready(function () {
         });
     }, options);
 
-    const target = document.querySelector('#toolbar');
-    const buttonsPanel = document.querySelector('#buttons');
+    let target = document.getElementById('toolbar');
+    let buttonsPanel = document.getElementById('buttons');
     observer.observe(target);
 });
 
+/**
+ * Поле отображающее уже выбранные теги.
+ */
+let tagsArea = $('#tagsArea');
+
+/**
+ * Скрытый input для передачи в модель.
+ */
+let tags = $('#tagsInput');
+
+/**
+ * Поле для отображения предложенных вариантов с тегами.
+ */
+let suggestedTags = $('#suggestedTags');
 
 /**
  * Выделенный текст.
  */
 let selection = null;
+
 /**
  * Адрес выделения.
  */
 let range = null;
+
 /**
  * Событие потери фокуса.
  */
-const blurEvent = new Event ('blur');
+let blurEvent = new Event ('blur');
+
 /**
  * Div контейнер для ввода содержания поста.
  */
-const inputBodyContainer = document.getElementById('inputBody');
+let inputBodyContainer = document.getElementById('inputBody');
+
 /**
  * Поле ввода для поиска тегов.
  */
-const inputTagContainer = document.getElementById('tagField');
+let inputTagContainer = document.getElementById('tagField');
 inputBodyContainer.onblur = () => {
     document.getElementById('bodyInput').dispatchEvent(blurEvent)
 }
@@ -68,7 +85,6 @@ inputTagContainer.onblur = () => {
  */
 function removeTag(tag) {
     document.getElementById('tagsInput').dispatchEvent(blurEvent)
-    const tags = $('#tagsInput');
     tag.remove();
     tag = '#' + tag.innerHTML;
     tags.val(tags.val().replace(tag, ''));
@@ -79,7 +95,7 @@ function removeTag(tag) {
  */
 function addTag(tag = '') {
     document.getElementById('tagsInput').dispatchEvent(blurEvent)
-    $('#suggestedTags').html('');
+    suggestedTags.html('');
     if (inputTagContainer.value === '' && tag === '') {
         return false;
     }
@@ -88,8 +104,6 @@ function addTag(tag = '') {
         tag = inputTagContainer.value;
     }
 
-    const tagsArea = $('#tagsArea');
-    const tags = $('#tagsInput');
     tags.val(`${tags.val()}#${tag}`);
     tagsArea.html(
         tagsArea.html() +
@@ -104,8 +118,6 @@ function addTag(tag = '') {
  * Отображает список предложенных тегов.
  */
 function fillTagField(field) {
-    const suggestedTags = $('#suggestedTags');
-
     if (field.value === '') {
         suggestedTags.html('')
 
@@ -295,7 +307,7 @@ function clearFormat() {
  * Создает ссылку.
  */
 function createUrl() {
-    const text = document.getElementById('textUrlInput').value.trim();
+    let text = document.getElementById('textUrlInput').value.trim();
 
     if (text === '') {
         alert('Текст ссылки не может быть пустым')
@@ -303,7 +315,7 @@ function createUrl() {
         return false;
     }
 
-    const url = document.getElementById('urlInput').value.trim();
+    let url = document.getElementById('urlInput').value.trim();
 
     if (url === '') {
         alert('Ссылка не может быть пустой')
@@ -311,7 +323,7 @@ function createUrl() {
         return false;
     }
 
-    const html = '<a class="post-body-link" href="' +
+    let html = '<a class="post-body-link" href="' +
         url +
         '" target="_blank">' +
         text +
@@ -327,7 +339,7 @@ function createUrl() {
  * Удаляет ссылку.
  */
 function removeLink() {
-    const text = window.getSelection().toString();
+    let text = window.getSelection().toString();
     formatting('unlink', false, text);
     clearFormat();
 }
@@ -382,7 +394,7 @@ function checkParent(element) {
  */
 function setRange() {
     selection = window.getSelection();
-    const anchor = selection.anchorNode;
+    let anchor = selection.anchorNode;
 
     if (checkParent(anchor) !== true) {
         range = new Range();
@@ -451,8 +463,8 @@ function uploadImage() {
  * Отправляет пост на проверку.
  */
 function submitPost() {
-    const form = $('#postEditorForm');
-    const formData = new FormData(form[0]);
+    let form = $('#postEditorForm');
+    let formData = new FormData(form[0]);
     $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),

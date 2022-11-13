@@ -1,6 +1,9 @@
+/**
+ * Создает токен сброса пароля и отправляет письмо пользователю.
+ */
 document.getElementById('sendResetTokenButton').onclick = () => {
-    const form = $('#sendResetTokenForm');
-    const formData = form.serialize();
+    let form = $('#sendResetTokenForm');
+    let formData = form.serialize();
     $.ajax({
         url: form.attr('action'),
         type: form.attr('method'),

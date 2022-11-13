@@ -2,12 +2,16 @@
  * Все <input> поля с типом данных 'password'.
  */
 let passwordFields = document.querySelectorAll('[type=password]');
+
 /**
  * Кнопка для смены видимости вводимого пароля.
  */
 let togglePasswordButton = document.getElementById('togglePasswordButton');
 togglePasswordButton.addEventListener('click', showingPassword);
 
+/**
+ * Показывает/скрывает вводимые символы в поле пароля.
+ */
 function showingPassword() {
     let typeIsPassword = passwordFields[0].getAttribute('type') === 'password';
     let imageElement = togglePasswordButton.getElementsByTagName('img')[0];

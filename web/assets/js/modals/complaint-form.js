@@ -1,5 +1,12 @@
+/**
+ * Div контейнер для ввода текста жалобы.
+ * Скрытый input для передачи текста жалобы.
+ */
 let complaintInputField, complaintHiddenInput;
 
+/**
+ * Записывает данные с модального окна.
+ */
 function setComplaintFormData() {
     complaintInputField = document.getElementById('complaintInputField');
     complaintHiddenInput = document.getElementById('complaintHiddenInput');

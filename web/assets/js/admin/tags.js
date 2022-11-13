@@ -2,7 +2,14 @@ $(document).ready(function () {
     getObjects(construct);
 });
 
+/**
+ *@see table
+ */
 table = 'tags';
+
+/**
+ * @see model
+ */
 model = 'Tag';
 
 /**
@@ -23,7 +30,7 @@ function deleteTag(id) {
  * Отрисовывает теги.
  */
 function construct(tags) {
-    const tagsDiv = $('#objects');
+    let tagsDiv = $('#objects');
     tagsDiv.html('');
 
     tags.forEach((tag) => {

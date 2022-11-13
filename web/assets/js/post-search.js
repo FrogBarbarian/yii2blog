@@ -1,8 +1,12 @@
 /**
+ * Поле для вывода предложений по поиску постов.
+ */
+let searchSuggest = $('#suggestedForSearch');
+
+/**
  * Выводит предложения по поиску.
  */
 function suggestSearch(field) {
-    const searchSuggest = $('#suggestedForSearch');
 
     if (field.value === '') {
         searchSuggest.html('')
@@ -45,7 +49,7 @@ function suggestSearch(field) {
  */
 function removeSuggest() {
     setTimeout(function () {
-        $('#suggestedForSearch').html('');
+        searchSuggest.html('');
     }, 150);
 }
 

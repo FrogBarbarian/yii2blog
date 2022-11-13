@@ -11,7 +11,7 @@ declare(strict_types=1);
 use yii\widgets\ActiveForm;
 
 $this->title = 'Восстановление пароля';
-$this->registerJsFile('@js/password-visibility.js');
+$this->registerJsFile('@js/utilities/password-visibility.js');
 $this->registerJsFile('@js/mini/change-password.js');
 ?>
 

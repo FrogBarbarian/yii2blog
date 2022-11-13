@@ -1,9 +1,15 @@
+/**
+ * Кнопка для отправки нового пароля.
+ */
 let setNewPasswordButton = document.getElementById('setNewPasswordButton');
 
 if (setNewPasswordButton !== null) {
+    /**
+     * Отправка формы с новым паролем.
+     */
     setNewPasswordButton.onclick = () => {
-        const form = $('#newPasswordForm');
-        const formData = form.serialize();
+        let form = $('#newPasswordForm');
+        let formData = form.serialize();
         $.ajax({
             url: form.attr('action'),
             type: form.attr('method'),
