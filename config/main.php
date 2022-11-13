@@ -26,11 +26,11 @@ return [
             'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.yandex.ru', //TODO CHANGE
-                'username' => 'noreply.fatfrog@yandex.ru', //TODO CHANGE
-                'password' => 'auhfboxpzeortlub', //TODO CHANGE
-                'port' => '465', //TODO CHANGE
-                'encryption' => 'ssl', //TODO CHANGE
+                'host' => '', //Хост
+                'username' => '', //Имя пользователя для логина на почтовом хосте
+                'password' => '', //Пароль для логина на почтовом хосте
+                'port' => '465', //Порт хоста
+                'encryption' => 'ssl', //Тип шифрования
             ],
         ],
         'request' => [

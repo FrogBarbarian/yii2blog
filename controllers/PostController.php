@@ -8,6 +8,7 @@ use app\models\Comment;
 use app\models\CommentForm;
 use app\models\Post;
 use app\models\Statistic;
+use app\models\TmpPost;
 use app\models\User;
 use Yii;
 use yii\base\InvalidConfigException;
@@ -236,5 +237,25 @@ class PostController extends Controller
             'curPage' => $curPage,
             'search' => null,
         ]);
+    }
+
+    /**
+     * Страница с постом ожидающим одобрения администрации.
+     *
+     * @throws NotFoundHttpException
+     */
+    public function actionTempPost(string $id = null): string
+    {
+        $id = (int)$id;
+        $tmpPost = TmpPost::findOne($id);
+        $user = Yii::$app
+            ->user
+            ->getIdentity();
+
+        if ($user === null || $tmpPost === null || $user->getUsername() !== $tmpPost->getAuthor()) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->render('tmp-post', ['tmpPost' => $tmpPost]);
     }
 }

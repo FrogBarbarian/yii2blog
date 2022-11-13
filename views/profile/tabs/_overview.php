@@ -93,11 +93,10 @@ use src\helpers\NormalizeData;
 <hr>
     <h5 class="text-center">Посты, ожидающие проверки администрацией.</h5>
 <div class="list-group">
-    <?php foreach ($tmpPosts as $postTmp): ?>
-    <!--TODO: Ссылка на tmp пост-->
-    <a href="#" class="list-group-item list-group-item-action">
-        <?= $postTmp->getTitle() ?>
-            | <?= $postTmp->getIsNew() ? 'Новый' : 'Отредактированный' ?>
+    <?php foreach ($tmpPosts as $tmpPost): ?>
+    <a href="/post/temp-post?id=<?= $tmpPost->getId() ?>" class="list-group-item list-group-item-action">
+        <?= $tmpPost->getTitle() ?>
+            | <?= $tmpPost->getIsNew() ? 'Новый' : 'Отредактированный' ?>
     </a>
     <?php endforeach ?>
 </div>

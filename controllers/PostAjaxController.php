@@ -9,6 +9,7 @@ use app\models\Comment;
 use app\models\Post;
 use app\models\Statistic;
 use app\models\Tag;
+use app\models\TmpPost;
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
 use yii\db\StaleObjectException;
@@ -256,5 +257,23 @@ class PostAjaxController extends Controller
         }
 
         return $this->asJson(ConstructHtml::rating($post->getRating()));
+    }
+
+    /**
+     * Удаляет пост, ожидающий проверки администратора.
+     *
+     * @throws NotFoundHttpException
+     * @throws StaleObjectException
+     * @throws \Throwable
+     */
+    public function actionTempDelete(string $postId): void
+    {
+        $request = Yii::$app->getRequest();
+
+        if (!$request->isAjax) {
+            throw new NotFoundHttpException();
+        }
+
+        TmpPost::findOne($postId)->delete();
     }
 }
