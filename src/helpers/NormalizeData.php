@@ -44,7 +44,6 @@ class NormalizeData
     {
         $curDatetime = getdate();
         $compareDateTime = getdate(strtotime($datetime));
-
         $diff = [];
 
         foreach ($curDatetime as $key => $value) {
@@ -67,7 +66,7 @@ class NormalizeData
                                 'часа'
                             ) . ' назад';
                     } elseif ($diff['minutes'] != 0) {
-                        $minutes = $diff['minutes'] < 0 ? $diff['minutes']+ 60 : $diff['minutes'];
+                        $minutes = $diff['minutes'] < 0 ? $diff['minutes'] + 60 : $diff['minutes'];
                         $res = "$minutes " . self::wordForm(
                                 $minutes,
                                 'минут',

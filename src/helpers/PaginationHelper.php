@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace src\helpers;
 
@@ -21,22 +21,29 @@ class PaginationHelper
     public function getNavPages(int $curPage, int $pages, int $leftArm = 3, int $rightArm = 3): array
     {
         $maxSize = $leftArm + $rightArm + 1;
+
         for ($i = $curPage - $leftArm; $i < $curPage; $i++) {
             if ($i < 1) {
                 continue;
             }
+
             $buttons[] = $i;
+
             if (count($buttons) === $leftArm) {
                 break;
             }
         }
+
         $buttons[] = $curPage;
+
         for ($i = $curPage + 1; $i < $curPage + $rightArm + 1; $i++) {
             if ($i === $pages + 1 || count($buttons) === $maxSize) {
                 break;
             }
+
             $buttons[] = $i;
         }
+
         return $buttons;
     }
 }

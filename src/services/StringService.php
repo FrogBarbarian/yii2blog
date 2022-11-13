@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace src\services;
 
@@ -43,7 +43,7 @@ class StringService
 
     /**
      * Делает из строки массив.
-     * @param string $separator Искомый символ для разделения (по умолчанию ';').
+     * @param string $separator Искомый символ для разделения (по умолчанию '#').
      * @param int $limit Лимит элементов в массиве (по умолчанию PHP_INT_MAX).
      * @return array
      */
