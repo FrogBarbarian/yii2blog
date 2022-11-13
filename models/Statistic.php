@@ -75,6 +75,16 @@ class Statistic extends ActiveRecord
     }
 
     /**
+     * Уменьшает количество просмотров постов на $int (по умолчанию 1).
+     */
+    public function decreaseViews(int $int = 1): self
+    {
+        $this->setViews($this->getViews() - $int);
+
+        return $this;
+    }
+
+    /**
      * @return int Количество просмотров постов.
      */
     public function getViews(): int

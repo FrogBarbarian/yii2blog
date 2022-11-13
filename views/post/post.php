@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\Post $post
  * @var \app\models\User $owner
@@ -57,10 +60,10 @@ $views = "{$post->getViews()} " .
         </div>
         <div class="card-footer">
             <div class="hstack">
-                <div class="col text-start" style="font-size: small">
+                <div class="col text-start small">
                     <?= $views ?>
                 </div>
-                <div class="col text-end" style="font-size: small">
+                <div class="col text-end small">
                     <?= NormalizeData::passedTime($post->getDatetime()) ?>
                     &nbsp;
                     <a class="author-link" href="/users/<?= $owner->getUsername() ?>">
@@ -93,22 +96,21 @@ $views = "{$post->getViews()} " .
                         <!--Кнопки управления-->
                         <div class="btn-group">
                             <?php if ($userIsAuthor): ?>
-                                <a class="btn btn-light"
+                                <a class="btn-w-img"
                                    href="/edit-post?id=<?= $post->getId() ?>"
-                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Отредактировать"
-                                   style="width: auto">
+                                   data-bs-toggle="tooltip" data-bs-placement="top" title="Отредактировать">
                                     <img src="<?= IMAGES ?>post-edit.svg" alt="edit" width="24"
                                          class="d-inline-block">
                                 </a>
                             <?php endif ?>
                             <?php if ($userIsAdmin): ?>
-                                <button type="button" id="commentsButton" class="btn btn-light">
+                                <button type="button" id="commentsButton" class="btn-w-img">
                                     <img src=".<?= IMAGES ?><?= $postIsCommentable ? 'comment-enabled' : 'comment-disabled' ?>.svg"
-                                         alt="comments" width="24">
+                                         alt="comments">
                                 </button>
                             <?php endif ?>
                             <?php if ($userIsAdmin || $userIsAuthor): ?>
-                                <button class="btn btn-light" type="button" style="width: auto" data-bs-toggle="modal"
+                                <button class="btn-w-img" type="button" data-bs-toggle="modal"
                                         data-bs-target="#deletePostModal">
                                     <img src="<?= IMAGES ?>post-delete.svg"
                                          alt="delete" width="24"
@@ -121,11 +123,13 @@ $views = "{$post->getViews()} " .
                                                 <h5 class="modal-title">
                                                     Вы уверены, что хотите удалить пост?
                                                 </h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                <button type="button" class="btn-close"
+                                                        data-bs-dismiss="modal"></button>
                                             </div>
                                             <div class="modal-body text-start">
                                                 <p class="text-danger small fst-italic">
-                                                    Будет удален пост и все комментарии, а также будет изменена соответствующим образом статистика всех затронутых пользователей.
+                                                    Будет удален пост и все комментарии, а также будет изменена
+                                                    соответствующим образом статистика всех затронутых пользователей.
                                                 </p>
                                             </div>
                                             <div class="modal-footer">
@@ -143,7 +147,7 @@ $views = "{$post->getViews()} " .
                             <?php if (!$userIsAuthor && !$userIsAdmin): ?>
                                 <button type="button"
                                         onclick="createComplaint('post', '<?= $post->getId() ?>')"
-                                        class="btn btn-light rounded-end">
+                                        class="btn-w-img">
                                     <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
                                 </button>
                             <?php endif ?>
@@ -169,7 +173,7 @@ $views = "{$post->getViews()} " .
             </div>
         <?php endif ?>
     </div>
-    <h5 class="mt-2" id="commentsAmount" style="padding-left: 5%;color: #000000">
+    <h5 class="mt-2 px-5 text-black" id="commentsAmount">
         <?= count($comments) . ' ' . NormalizeData::wordForm(
             count($comments),
             'комментариев',
@@ -183,12 +187,11 @@ $views = "{$post->getViews()} " .
             'errorOptions' => ['class' => 'text-danger small', 'id' => 'commentErrorLabel'],
             'template' => "{input}\n{label}\n{error}",
         ]; ?>
-        <div class="window-basic"
-             style="background-color: white;margin-left: 5%;margin-right: 5%;margin-bottom: 1%">
+        <div class="window-basic mx-5 mb-2">
             <?php $activeForm = ActiveForm::begin([
                 'id' => 'comment-form',
                 'options' => [
-                    'style' => 'padding: 1%',
+                    'class' => 'p-1',
                 ],
             ]) ?>
             <label for="commentInput">Напишите комментарий</label>
@@ -200,7 +203,7 @@ $views = "{$post->getViews()} " .
                 ])
                 ->label(false)
             ?>
-            <div class="d-flex justify-content-end" >
+            <div class="d-flex justify-content-end">
                 <button type="button" id="addComment" class="btn-basic">
                     Отправить
                 </button>
@@ -208,16 +211,16 @@ $views = "{$post->getViews()} " .
             <?php ActiveForm::end() ?>
         </div>
     <?php endif ?>
-    <ul class="list-group" id="comments" style="padding-left: 5%;padding-right: 5%">
+    <ul class="list-group px-5" id="comments">
         <?php if ($comments): ?>
-        <?php foreach ($comments as $comment) {
-            echo CommentWidget::widget(['user' => $user, 'comment' => $comment]);
+            <?php foreach ($comments as $comment) {
+                echo CommentWidget::widget(['user' => $user, 'comment' => $comment]);
             }
             ?>
         <?php endif ?>
     </ul>
     <?php if ($comments): ?>
-    <span id="hideComments">
+        <span id="hideComments">
         Скрыть комментарии
     </span>
     <?php endif ?>

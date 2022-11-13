@@ -11,7 +11,8 @@ declare(strict_types=1);
 use yii\widgets\ActiveForm;
 
 $this->title = 'Восстановление пароля';
-$this->registerJsFile('@js/password-visibility.js')
+$this->registerJsFile('@js/password-visibility.js');
+$this->registerJsFile('@js/mini/change-password.js');
 ?>
 
 <div class="modal-window window-basic">
@@ -42,23 +43,3 @@ $this->registerJsFile('@js/password-visibility.js')
         <?php endif ?>
     </div>
 </div>
-<script>
-    //TODO првоерка на существование элементов
-    document.getElementById('setNewPasswordButton').onclick = () => {
-        const form = $('#newPasswordForm');
-        const formData = form.serialize();
-        $.ajax({
-            url: form.attr('action'),
-            type: form.attr('method'),
-            cache: false,
-            data: formData,
-            success: function (response) {
-                if (response === true) {
-                    $('#newPasswordWindowContent').html(
-                        'Пароль успешно изменен.'
-                    );
-                }
-            }
-        });
-    }
-</script>

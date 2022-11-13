@@ -16,7 +16,6 @@ use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
 
 ?>
-
 <?php if ($isOwn): ?>
     <div class="card-text">
         Профиль <?= $user->getIsHidden() ? 'скрытый' : 'публичный' ?>
@@ -57,7 +56,6 @@ use src\helpers\NormalizeData;
                 Последние опубликованные посты
             </a>
         </h4>
-        <!--TODO: Добавить пагинацию-->
     <div class="list-group">
         <?php foreach ($posts as $post): ?>
             <a href="/post?id=<?= $post->getId() ?>" target="_blank" class="list-group-item list-group-item-action"
@@ -67,10 +65,10 @@ use src\helpers\NormalizeData;
 
                 </div>
                 <small class="hstack">
-                        <span style="font-style: italic">
+                        <span class="fst-italic">
                         <?= NormalizeData::passedTime($post->getDatetime()) ?>
                         </span>
-                    <div class="col text-muted" style="font-size:small;text-align:end;">
+                    <span class="col text-muted small text-end">
                         <?= ConstructHtml::rating($post->getRating()) ?>
                         <span>
                             <?= $post->getViews() ?>
@@ -80,7 +78,7 @@ use src\helpers\NormalizeData;
                             <?= $post->getCommentsAmount() ?>
                             <img src="<?= IMAGES ?>comments.svg" width="16" alt="comments"/>
                         </span>
-                    </div>
+                    </span>
                 </small>
             </a>
         <?php endforeach ?>
@@ -157,7 +155,7 @@ use src\helpers\NormalizeData;
         <span class="badge bg-primary rounded-pill"><?= $complaints ? count($complaints) : '' ?></span>
     </li>
 </ul>
-<a href="<?= ADMIN_PANEL ?>" class="btn btn-outline-dark">Админ-панель</a>
+<a href="<?= ADMIN_PANEL ?>" class="btn-basic">Админ-панель</a>
 <br>
 <?php endif ?>
 <?php endif ?>

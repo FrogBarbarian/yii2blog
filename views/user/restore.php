@@ -11,8 +11,8 @@ declare(strict_types=1);
 use yii\widgets\ActiveForm;
 
 $this->title = 'Восстановление пароля';
+$this->registerJsFile('@js/mini/reset-token.js');
 ?>
-
 <div class="modal-window window-basic">
     <div class="modal-window-header">Восстановление пароля</div>
     <div id="restoreWindowContent">
@@ -36,23 +36,3 @@ $this->title = 'Восстановление пароля';
         <?php ActiveForm::end() ?>
     </div>
 </div>
-<script>
-    document.getElementById('sendResetTokenButton').onclick = () => {
-        const form = $('#sendResetTokenForm');
-        const formData = form.serialize();
-        $.ajax({
-            url: form.attr('action'),
-            type: form.attr('method'),
-            cache: false,
-            data: formData,
-            success: function (response) {
-                if (response === true) {
-                    $('#restoreWindowContent').html(
-                        'Вам отправлено письмо со ссылкой для восстановления пароля.'
-                    );
-                }
-
-            }
-        });
-    }
-</script>

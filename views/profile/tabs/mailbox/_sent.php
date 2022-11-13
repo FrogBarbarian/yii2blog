@@ -37,11 +37,11 @@ use app\components\PageSwitcherWidget;
         </div>
     <?php endforeach ?>
 <?php else: ?>
-    <p style="text-align: center;color: grey">
+    <p class="text-center text-secondary">
         У вас пока нет сообщений, но вы можете кому-нибудь
         <button class="btn-basic" onclick="createMessageModal()">
             написать
         </button>
     </p>
-    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages" style="max-width: 100%">
+    <img class="w-100" src="<?= IMAGES ?>empty-box.webp" alt="no messages">
 <?php endif ?>

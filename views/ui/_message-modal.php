@@ -1,10 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\MessageForm $model
  * @var \yii\web\View $this
  */
-
-declare(strict_types=1);
 
 use yii\widgets\ActiveForm;
 use yii\helpers\Url;
@@ -16,11 +17,9 @@ $this->registerJs(<<<JS
     setMessageFormData();
 JS
 );
-
 ?>
-
 <div id="modalWindow" class="modal-window-back" tabindex="-1">
-    <div class="modal-window" style="width: 450px; max-width: 90vw">
+    <div class="modal-window">
         <div class="modal-window-header">
             Отправить сообщение
             <button type="button" class="btn-close" onclick="closeModalDiv()">

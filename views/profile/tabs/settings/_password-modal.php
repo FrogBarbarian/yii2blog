@@ -7,8 +7,8 @@ declare(strict_types=1);
  * @var \yii\web\View $this
  */
 
-use \yii\widgets\ActiveForm;
-use \yii\helpers\Url;
+use yii\widgets\ActiveForm;
+use yii\helpers\Url;
 
 $options = [
     'errorOptions' =>
@@ -23,9 +23,7 @@ $this->registerJs(<<<JS
     setupPasswordFormJsData();
 JS
 );
-
 ?>
-
 <div class='modal-window-back' id='modalWindow' tabindex='-1'>
     <div class='modal-window'>
         <div class='modal-window-header'>

@@ -8,6 +8,7 @@ declare(strict_types=1);
  * @var int $curPage
  * @var string $search
  * @var \app\models\User $user
+ * @var \yii\web\View $this
  */
 
 use src\helpers\ConstructHtml;
@@ -16,40 +17,39 @@ use src\helpers\PaginationHelper;
 
 $this->title = 'Главная страница';
 $session = Yii::$app->session;
-
 ?>
 <?php if ($session->hasFlash('messageForIndex')): ?>
-    <div class="alert alert-warning rounded-4" role="alert" style="margin-left: 10%;margin-right: 10%;margin-top: 1%">
+    <div class="alert alert-warning rounded-4 text-break mx-3" role="alert">
         <?= $session->getFlash('messageForIndex') ?>
     </div>
 <?php endif ?>
 <?php if ($posts): ?>
-    <div style="margin-left: 5%;margin-right: 5%;">
+    <div class="mx-3">
         <?php if ($pages > 1): ?>
             <nav>
                 <ul class="pagination">
                     <?php if ($curPage > 1): ?>
                         <li class="page-item">
-                            <a class="page-link" style="background-color: rgba(0,0,0,0);color: #000000;font-size: small"
+                            <a class="page-link bg-transparent text-black x-small"
                                href="?<?php if ($search !== null) echo "search=$search&" ?>page=<?= $curPage - 1 ?>">Назад</a>
                         </li>
                     <?php endif ?>
-                    <?php foreach ((new PaginationHelper())->getNavPages($curPage, $pages) as $page): ?>
+                    <?php foreach ((new PaginationHelper())->getNavPages($curPage, $pages,1,3) as $page): ?>
                         <?php if ($page === $curPage): ?>
                             <li class="page-item disabled">
-                                <a class="page-link"
-                                   style="background-color: rgba(0,0,0,0);color: #888888;font-size: small"><?= $page ?></a>
+                                <a class="page-link bg-secondary text-black x-small"><?= $page ?></a>
                             </li>
                             <?php continue; endif; ?>
-                        <li class="page-item"><a class="page-link"
-                                                 style="background-color: rgba(0,0,0,0);color: #000000;font-size: small"
-                                                 href="?<?php if ($search !== null) echo "search=$search&" ?>page=<?= $page ?>"><?= $page ?></a>
+                        <li class="page-item">
+                            <a class="page-link bg-transparent text-black x-small"
+                               href="?<?php if ($search !== null) echo "search=$search&" ?>page=<?= $page ?>">
+                                <?= $page ?>
+                            </a>
                         </li>
                     <?php endforeach ?>
                     <?php if ($curPage !== $pages): ?>
                         <li class="page-item">
-                            <a class="page-link rounded-end"
-                               style="background-color: rgba(0,0,0,0);color: #000000;font-size: small"
+                            <a class="page-link rounded-end bg-transparent text-black x-small"
                                href="?<?php if ($search !== null) echo "search=$search&" ?>page=<?= $curPage + 1 ?>">
                                 Вперед
                             </a>
@@ -61,13 +61,11 @@ $session = Yii::$app->session;
                             <?php if ($search !== null): ?>
                                 <input type="hidden" name="search" value="<?= $search ?>">
                             <?php endif ?>
-                            <input class="form-control ms-2 me-1" name="page" type="search" placeholder="Страница"
+                            <input class="txt-input-basic ms-2 me-1 x-small w-50" name="page" type="search" placeholder="Страница"
                                    aria-label="Search"
-                                   style="max-width: 85px;background-color: rgba(0,0,0,0);color: #000000;font-size: small;border-color: #dee2e6"
                                    required>
-                            <button class="page-link" type="submit"
-                                    style="background-color: rgba(0,0,0,0);color: #000000;font-size: small">
-                                <img src="/assets/images/arrow-right.svg" alt="Page open" width="16" height="16">
+                            <button class="btn-basic" type="submit">
+                                &#62;
                             </button>
                         </form>
                     </li>
@@ -77,7 +75,7 @@ $session = Yii::$app->session;
         <?php foreach ($posts as $post): ?>
             <div class="card rounded-0 mx-auto mb-1">
                 <div class="card-header hstack">
-                    <div class="col text-muted" style="font-size:small;text-align:start;">
+                    <div class="col text-muted small">
                         <?= $post->getViews() ?>
                         <img src="/assets/images/views.svg" width="18" alt="views">
                         &nbsp;
@@ -85,7 +83,7 @@ $session = Yii::$app->session;
                         <img src="/assets/images/comments.svg" width="18" alt="comments"/>
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </div>
-                    <div class="col" style="font-size:small;text-align:end;">
+                    <div class="col small text-end">
                         <a class="author-link" href="/users/<?= $post->getAuthor() ?>">
                             <?= $post->getAuthor() ?>
                         </a>
@@ -103,12 +101,12 @@ $session = Yii::$app->session;
                         </a>
                     </div>
                 </div>
-                <div class="hstack card-footer" style="font-size: small">
+                <div class="hstack card-footer small">
                     <?php if ($user !== null && !$user->getIsAdmin()): ?>
-                        <button type="button" style="max-width: 48px"
+                        <button type="button"
                                 onclick="createComplaint('post', '<?= $post->getId() ?>')"
-                                class="btn btn-light col">
-                            <img src="/assets/images/create-complaint.svg" width="24" alt="create complaint"/>
+                                class="btn-w-img col">
+                            <img src="<?= IMAGES ?>create-complaint.svg" alt="create complaint"/>
                         </button>
                     <?php endif ?>
                     <span class="text-end col">

@@ -54,7 +54,7 @@ class ProfileController extends Controller
                     ->byAuthor($user->getUsername())
                     ->all();
                 $complaints = Complaint::find()
-                    ->bySenderId($user->getId())
+                    ->bySenderUsername($user->getUsername())
                     ->all();
             }
         } else {

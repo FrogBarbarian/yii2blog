@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\User $user
  * @var \app\models\User $visitor
@@ -38,14 +41,14 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                 </div>
             </div>
         <?php endif ?>
-        <div class="card mb-3 mx-auto rounded-4" style="border-color: #656560;border-width: medium;">
+        <div class="card mb-3 mx-auto window-basic">
             <div class="card-body">
                 <div class="hstack card-title">
                     <div class="col">
-                        <h5 style="text-align: left">
+                        <h5 class="text-start">
                             <?= $user->getUsername() ?>
-                            <span style="font-size: x-small"><?= !$isOwn ? ($user->getIsAdmin() ? '(администратор)' : '(пользователь)') : '' ?></span>
-                            <?= (!$isOwn && $visitor !== null && $visitor->getIsAdmin() && $user->getIsHidden()) ? '<span class="text-danger" style="font-size: x-small">(профиль скрыт)</span>' : '' ?>
+                            <span class="x-small"><?= !$isOwn ? ($user->getIsAdmin() ? '(администратор)' : '(пользователь)') : '' ?></span>
+                            <?= (!$isOwn && $visitor !== null && $visitor->getIsAdmin() && $user->getIsHidden()) ? '<span class="text-danger x-small">(профиль скрыт)</span>' : '' ?>
                         </h5>
                         <?= ConstructHtml::rating($statistics->getRating()) ?>
                     </div>

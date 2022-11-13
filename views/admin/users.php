@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -13,17 +14,18 @@ declare(strict_types=1);
 use app\components\AdminFilterOptionsWidget;
 use app\components\AdminMenuWidget;
 
+$this->title = 'Пользователи';
 echo AdminMenuWidget::widget();
 $this->registerJsFile('@js/admin/users.js');
 ?>
 <span class="admin-panel-header">Пользователи</span>
-<hr style="color: #14376c">
+<hr>
 <h6>
     На этой странице представлен список всех пользователей.
 </h6>
 <hr>
 <div class="sort-panel">
-    <span style="padding-right: 10px">Сортировать по:</span>
+    <span class="pe-2">Сортировать по:</span>
     <span class="sort" onclick="sort('id')">
         Дате регистрации
         <span id="arrow_id">

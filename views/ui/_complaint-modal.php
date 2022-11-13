@@ -18,9 +18,7 @@ $this->registerJS(<<<JS
     setComplaintFormData();
 JS
 );
-
 ?>
-
 <div class='modal-window-back' id='modalWindow' tabindex='-1'>
     <div class='modal-window'>
         <div class='modal-window-header'>

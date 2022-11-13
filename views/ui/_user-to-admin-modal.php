@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 ?>
 <div id="modalWindow" class="modal-window-back" tabindex="-1">
-    <div class="modal-window" style="width: 350px; max-width: 90vw">
+    <div class="modal-window">
         <div class="modal-window-header">
             <b>Вы уверены?</b>
             <button type="button" class="btn-close" onclick="closeModalDiv()">

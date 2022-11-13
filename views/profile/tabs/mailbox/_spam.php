@@ -12,7 +12,7 @@ use app\components\MessageWidget;
 use app\components\PageSwitcherWidget;
 
 ?>
-<h5 style="text-align: center;display: block">Спам</h5>
+<h5 class="text-center">Спам</h5>
 <hr>
 <?php if ($messages !== []): ?>
     <?php
@@ -37,8 +37,8 @@ use app\components\PageSwitcherWidget;
         </div>
     <?php endforeach ?>
 <?php else: ?>
-    <p style="text-align: center;color: grey">
+    <p class="text-center text-secondary">
         Вы еще не отметили ни одно сообщение как спам.
     </p>
-    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages" style="max-width: 100%">
+    <img class="w-100" src="<?= IMAGES ?>empty-box.webp" alt="no messages">
 <?php endif ?>

@@ -14,8 +14,8 @@ class ComplaintQuery extends ActiveQuery
     /**
      * Поиск по ID отправителя.
      */
-    public function bySenderId(int $id): self
+    public function bySenderUsername(string $username): self
     {
-        return $this->where(['sender_id' => $id]);
+        return $this->where(['sender_username' => $username]);
     }
 }

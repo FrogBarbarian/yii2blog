@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 /**
  * @var \app\models\User $user
+ * @var \yii\web\View $this
  */
 
 $this->registerJsFile('@js/profile-admin.js')
@@ -12,7 +13,7 @@ $this->registerJsFile('@js/profile-admin.js')
 <div class="window-basic">
     <p class="p-2">Управление настройками доступа пользователя, будьте аккуратны на данной панели</p>
     <hr>
-    <div class="grid-repeat justify-content-around">
+    <div class="d-md-inline-flex justify-content-around">
         <div class="window-lite justify-content-between">
             <span class="small fw-lighter fst-italic">
                 Это обычный пользователь, его можно назначить администратором

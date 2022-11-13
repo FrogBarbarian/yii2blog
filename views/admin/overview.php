@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var int $postsAmount
  * @var \app\models\Post $mostViewedPost
@@ -16,20 +19,20 @@
  * @var int $amountLikes
  * @var int $amountDislikes
  * @var int $amountViews
+ * @var \yii\web\View $this
  */
-
-declare(strict_types=1);
 
 use app\components\AdminMenuWidget;
 use src\helpers\ConstructHtml;
 use src\helpers\NormalizeData;
 
+$this->title = 'Статистика';
 echo AdminMenuWidget::widget();
 ?>
 <span class="admin-panel-header">Статистика</span>
-<hr style="color: #14376c">
+<hr>
 <h5>Статистика постов</h5>
-<div class="mb-3" style="justify-content: space-around;display: grid;grid-template-columns: repeat(auto-fill, 10rem);">
+<div class="mb-3 justify-content-around d-grid grid-repeat-10rem">
     <div class="stat-card">
         <?= "$postsAmount " . NormalizeData::wordForm(
             $postsAmount,
@@ -39,7 +42,7 @@ echo AdminMenuWidget::widget();
         ) ?>
     </div>
     <div class="stat-card">
-        <a href="/post?id=<?= $mostViewedPost->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/post?id=<?= $mostViewedPost->getId() ?>" target="_blank" class="author-link smaller">
             <h6>
                 ID: <?= $mostViewedPost->getId() ?>
             </h6>
@@ -47,7 +50,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/post?id=<?= $mostCommentablePost->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/post?id=<?= $mostCommentablePost->getId() ?>" target="_blank" class="author-link smaller">
             <h6>
                 ID: <?= $mostCommentablePost->getId() ?>
             </h6>
@@ -55,7 +58,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/post?id=<?= $highestRatingPost->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/post?id=<?= $highestRatingPost->getId() ?>" target="_blank" class="author-link smaller">
             <h6>
                 ID: <?= $highestRatingPost->getId() ?>
             </h6>
@@ -63,7 +66,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/post?id=<?= $lowestRatingPost->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/post?id=<?= $lowestRatingPost->getId() ?>" target="_blank" class="author-link smaller">
             <h6>
                 ID: <?= $lowestRatingPost->getId() ?>
             </h6>
@@ -73,7 +76,7 @@ echo AdminMenuWidget::widget();
 </div>
 <hr>
 <h5 class="mt-3">Статистика пользователей</h5>
-<div class="mb-3" style="justify-content: space-around;display: grid;grid-template-columns: repeat(auto-fill, 10rem);">
+<div class="mb-3 justify-content-around d-grid grid-repeat-10rem">
     <div class="stat-card">
         <?= "$usersAmount " . NormalizeData::wordForm(
             $usersAmount,
@@ -83,7 +86,7 @@ echo AdminMenuWidget::widget();
         ) ?>
     </div>
     <div class="stat-card">
-        <a href="/users/<?= $mostPostUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $mostPostUser->getOwner() ?>" target="_blank" class="author-link smaller">
             <h6>
                 <?= $mostPostUser->getOwner() ?>
             </h6>
@@ -91,7 +94,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/users/<?= $mostCommentUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $mostCommentUser->getOwner() ?>" target="_blank" class="author-link smaller">
             <h6>
                 <?= $mostCommentUser->getOwner() ?>
             </h6>
@@ -99,7 +102,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/users/<?= $highestRatingUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $highestRatingUser->getOwner() ?>" target="_blank" class="author-link smaller">
             <h6>
                 <?= $highestRatingUser->getOwner() ?>
             </h6>
@@ -107,7 +110,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/users/<?= $lowestRatingUser->getOwner() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/users/<?= $lowestRatingUser->getOwner() ?>" target="_blank" class="author-link smaller">
             <h6>
                 <?= $lowestRatingUser->getOwner() ?>
             </h6>
@@ -117,7 +120,7 @@ echo AdminMenuWidget::widget();
 </div>
 <hr>
 <h5 class="mt-3">Статистика комментариев</h5>
-<div class="mb-3" style="justify-content: space-around;display: grid;grid-template-columns: repeat(auto-fill, 10rem);">
+<div class="mb-3 justify-content-around d-grid grid-repeat-10rem">
     <div class="stat-card">
         <?= "$commentsAmount " . NormalizeData::wordForm(
             $commentsAmount,
@@ -127,7 +130,7 @@ echo AdminMenuWidget::widget();
         ) ?>
     </div>
     <div class="stat-card">
-        <a href="/site/find-comment?id=<?= $highestRatingComment->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/site/find-comment?id=<?= $highestRatingComment->getId() ?>" target="_blank" class="author-link smaller">
             <h6>
                 ID: <?= $highestRatingComment->getId() ?>
             </h6>
@@ -135,7 +138,7 @@ echo AdminMenuWidget::widget();
         </a>
     </div>
     <div class="stat-card">
-        <a href="/site/find-comment?id=<?= $lowestRatingComment->getId() ?>" target="_blank" class="author-link" style="font-size: small">
+        <a href="/site/find-comment?id=<?= $lowestRatingComment->getId() ?>" target="_blank" class="author-link smaller">
             <h6>
                 ID: <?= $lowestRatingComment->getId() ?>
             </h6>
@@ -145,7 +148,7 @@ echo AdminMenuWidget::widget();
 </div>
 <hr>
 <h5>Общая статистика</h5>
-<div class="mb-3" style="justify-content: space-around;display: grid;grid-template-columns: repeat(auto-fill, 10rem);">
+<div class="mb-3 justify-content-around d-grid grid-repeat-10rem">
     <div class="stat-card">
         <?= "$amountLikes " . NormalizeData::wordForm(
             $amountLikes,
@@ -171,4 +174,3 @@ echo AdminMenuWidget::widget();
         ) ?>
     </div>
 </div>
-

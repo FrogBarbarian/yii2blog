@@ -1,7 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
+/**
+ * @var \yii\web\View $this
+ */
+
 use app\assets\AppAsset;
 use app\components\SearchWidget;
+use yii\helpers\Html;
 
 AppAsset::register($this);
 ?>
@@ -13,11 +20,11 @@ AppAsset::register($this);
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <?= yii\helpers\Html::csrfMetaTags() ?>
+    <?= Html::csrfMetaTags() ?>
     <title><?= $this->title ?? 'Need to setup name' ?></title>
     <?php $this->head() ?>
 </head>
-<body style="background-image: url(<?= IMAGES ?>bg.jpg);height: 100%">
+<body class="h-100" style="background-image: url(<?= IMAGES ?>bg.jpg);">
 <?php $this->beginBody() ?>
 <header class="sticky-top">
     <?php
@@ -29,12 +36,12 @@ AppAsset::register($this);
         $admin = $user->getIsAdmin();
     }
     ?>
-    <nav class="navbar navbar-expand-lg" style="background-color: rgb(104,102,104);">
+    <nav class="navbar navbar-expand-lg bg-secondary">
         <div class="container-fluid">
             <a class="nav-button d-flex justify-content-between mx-1 my-auto" href="/">
                 <img src="<?= IMAGES ?>logo.svg" alt="logo" width="30"
                      class="d-inline-block align-text-top">
-                <span class="m-auto" style="font-size: x-large">Блог</span>
+                <span class="m-auto x-large">Блог</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -44,7 +51,7 @@ AppAsset::register($this);
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item mx-1 my-auto">
-                        <a class="nav-button" href="/site/random" target="_blank" style="cursor: pointer">
+                        <a class="nav-button" href="/site/random" target="_blank">
                             Случайная статья
                         </a>
                     </li>
@@ -93,8 +100,8 @@ AppAsset::register($this);
         </div>
     </nav>
 </header>
-<div style="max-width: 960px;margin: auto">
-    <div id="content" class="py-1" style="background-color:rgba(0,0,0,0);">
+<div class="content m-auto">
+    <div id="content" class="py-1">
         <?= $content ?? '' ?>
     </div>
     <div id="modalDiv"></div>
@@ -102,9 +109,6 @@ AppAsset::register($this);
 <button id="arrowTop" hidden>
     &#8593;
 </button>
-<!--<footer class="fixed-bottom mt-auto py-3 bg-light">-->
-<!--    <span class="text-muted">Place sticky footer content here.</span>-->
-<!--</footer>-->
 <?php $this->endBody() ?>
 </body>
 </html>

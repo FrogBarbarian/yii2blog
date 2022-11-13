@@ -105,7 +105,7 @@ class ProfileAjaxController extends Controller
 
         $username = $request->post('username');
 
-        return $this->renderAjax('/ui/uta-modal', ['username' => $username]);
+        return $this->renderAjax('/ui/_user-to-admin-modal', ['username' => $username]);
     }
 
     /**

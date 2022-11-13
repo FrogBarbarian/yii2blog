@@ -1,11 +1,14 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\PostEditorForm $model
  * @var \app\models\Post $post
  * @var bool $isNew
+ * @var \yii\web\View $this
  */
 
-declare(strict_types=1);
 
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;

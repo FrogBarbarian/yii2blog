@@ -1,9 +1,11 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @var \app\models\UploadForm $model
  */
 
-declare(strict_types=1);
 
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;

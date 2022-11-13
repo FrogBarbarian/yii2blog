@@ -12,7 +12,7 @@ use app\components\MessageWidget;
 use app\components\PageSwitcherWidget;
 
 ?>
-<h5 style="text-align: center">Входящие сообщения</h5>
+<h5 class="text-center">Входящие сообщения</h5>
 <hr>
 <?php if ($messages !== []): ?>
     <?php
@@ -37,6 +37,6 @@ use app\components\PageSwitcherWidget;
         </div>
     <?php endforeach ?>
 <?php else: ?>
-    <p style="text-align: center;color: grey">У вас пока нет сообщений</p>
-    <img src="<?= IMAGES ?>empty-box.webp" alt="no messages" style="max-width: 100%">
+    <p class="text-center text-secondary">У вас пока нет сообщений</p>
+    <img class="w-100" src="<?= IMAGES ?>empty-box.webp">
 <?php endif ?>

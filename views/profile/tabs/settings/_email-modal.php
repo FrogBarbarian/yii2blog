@@ -20,10 +20,9 @@ $options = [
 $this->registerJsFile('@js/modals/change-email-form.js');
 $this->registerJs(<<<JS
     setupEmailFormJsData();
-JS);
-
+JS
+);
 ?>
-
 <div class='modal-window-back' id='modalWindow' tabindex='-1'>
     <div class='modal-window'>
         <div class='modal-window-header'>
@@ -45,7 +44,6 @@ JS);
                 'placeholder' => 'Новый email',
             ])
             ->label(false) ?>
-
         <?php ActiveForm::end() ?>
         <div class='modal-window-footer'>
             <button type='button' onclick='closeModalDiv()' class='btn-basic'>

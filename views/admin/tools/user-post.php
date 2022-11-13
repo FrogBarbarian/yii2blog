@@ -30,7 +30,6 @@ $this->registerJsFile('@js/admin/post-approval.js');
                 <?= $post->getAuthor() ?>
             </a>
             отправил <?= NormalizeData::passedTime($post->getDatetime()) ?>
-
         </div>
         <hr>
         <button id="postApproveButton" class="btn-basic">Одобрить</button>
