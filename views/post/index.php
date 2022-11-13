@@ -77,10 +77,10 @@ $session = Yii::$app->session;
                 <div class="card-header hstack">
                     <div class="col text-muted small">
                         <?= $post->getViews() ?>
-                        <img src="/assets/images/views.svg" width="18" alt="views">
+                        <img src="<?= IMAGES ?>icons/views.svg" width="18" alt="views">
                         &nbsp;
                         <?= $post->getCommentsAmount() ?>
-                        <img src="/assets/images/comments.svg" width="18" alt="comments"/>
+                        <img src="<?= IMAGES ?>icons/comments.svg" width="18" alt="comments"/>
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </div>
                     <div class="col small text-end">
@@ -106,7 +106,7 @@ $session = Yii::$app->session;
                         <button type="button"
                                 onclick="createComplaint('post', '<?= $post->getId() ?>')"
                                 class="btn-w-img col">
-                            <img src="<?= IMAGES ?>create-complaint.svg" alt="create complaint"/>
+                            <img src="<?= IMAGES ?>other-buttons/create-complaint.svg" alt="create complaint"/>
                         </button>
                     <?php endif ?>
                     <span class="text-end col">

@@ -63,7 +63,7 @@ JS
         <?php ActiveForm::end() ?>
         <div class="d-flex justify-content-between">
             <button type="button" id="togglePasswordButton" class="btn-basic">
-                <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
+                <img src="<?= IMAGES ?>icons/password-hide.svg" alt="show password">
             </button>
             <a href="<?= USER_PASSWORD_RESTORE_PAGE ?>">Забыли пароль?</a>
         </div>

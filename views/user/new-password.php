@@ -36,7 +36,7 @@ $this->registerJsFile('@js/mini/change-password.js');
                 ->label(false)
                 ->error(['class' => 'text-danger small help-block']) ?>
             <button type="button" class="btn-basic" id="togglePasswordButton">
-                <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
+                <img src="<?= IMAGES ?>icons/password-hide.svg" alt="show password">
             </button>
             <button type="button" id="setNewPasswordButton" class="btn-basic">Изменить</button>
             <?php ActiveForm::end() ?>

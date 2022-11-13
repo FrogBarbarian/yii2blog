@@ -5,7 +5,7 @@
                    oninput="suggestSearch(this)" type="text" placeholder="Поиск" name="search">
         </label>
         <button type="submit">
-            <img src="<?= IMAGES ?>search.svg" alt="search" width="16" height="16">
+            <img src="<?= IMAGES ?>icons/search.svg" alt="search" width="16" height="16">
         </button>
     </form>
     <ul id="suggestedForSearch" class="list-group" style=""></ul>

@@ -72,11 +72,11 @@ use src\helpers\NormalizeData;
                         <?= ConstructHtml::rating($post->getRating()) ?>
                         <span>
                             <?= $post->getViews() ?>
-                            <img src="<?= IMAGES ?>views.svg" width="16" alt="views"/>
+                            <img src="<?= IMAGES ?>icons/views.svg" width="16" alt="views"/>
                         </span>
                         <span>
                             <?= $post->getCommentsAmount() ?>
-                            <img src="<?= IMAGES ?>comments.svg" width="16" alt="comments"/>
+                            <img src="<?= IMAGES ?>icons/comments.svg" width="16" alt="comments"/>
                         </span>
                     </span>
                 </small>

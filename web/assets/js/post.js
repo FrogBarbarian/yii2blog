@@ -26,7 +26,7 @@ document.getElementById('commentsButton').onclick = () => {
             if (response === true) {
                 $("#comments-permissions").html('');
                 $("#commentsButton").html(
-                    "<img src='../../assets/images/comment-enabled.svg' alt='comment enabled' width='24'>"
+                    "<img src='../../assets/images/other-buttons/comment-enabled.svg' alt='comment enabled' width='24'>"
                 );
             } else {
                 $("#comments-permissions").html(
@@ -35,7 +35,7 @@ document.getElementById('commentsButton').onclick = () => {
                     '</div>'
                 );
                 $("#commentsButton").html(
-                    "<img src='../../assets/images/comment-disabled.svg' alt='comment disabled' width='24'>"
+                    "<img src='../../assets/images/other-buttons/comment-disabled.svg' alt='comment disabled' width='24'>"
                 );
             }
 
@@ -113,15 +113,15 @@ function updateRatingButtons() {
             let dislikeImg = document.getElementById('dislikePost');
 
             if (response[0] === true) {
-                likeImg.src = '/assets/images/liked.svg';
+                likeImg.src = '/assets/images/other-buttons/liked.svg';
             } else {
-                likeImg.src = '/assets/images/like.svg';
+                likeImg.src = '/assets/images/other-buttons/like.svg';
             }
 
             if (response[1] === true) {
-                dislikeImg.src = '/assets/images/disliked.svg';
+                dislikeImg.src = '/assets/images/other-buttons/disliked.svg';
             } else {
-                dislikeImg.src = '/assets/images/dislike.svg';
+                dislikeImg.src = '/assets/images/other-buttons/dislike.svg';
             }
         }
     });

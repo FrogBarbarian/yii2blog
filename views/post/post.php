@@ -76,7 +76,7 @@ $views = "{$post->getViews()} " .
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
                         <button class="like-button" type="button" onclick="likeOrDislikePost(true)">
                             <img id="likePost"
-                                 src="/assets/images/like<?= $post->isUserAlreadyLikedPost($user->getId()) ? 'd' : '' ?>.svg"
+                                 src="<?= IMAGES ?>other-buttons/like<?= $post->isUserAlreadyLikedPost($user->getId()) ? 'd' : '' ?>.svg"
                                  width="24" alt="like"/>
                         </button>
                     <?php endif ?>
@@ -86,7 +86,7 @@ $views = "{$post->getViews()} " .
                     <?php if ($visitorIsLogin && !$userIsAuthor): ?>
                         <button class="like-button" onclick="likeOrDislikePost(false)">
                             <img id="dislikePost"
-                                 src="/assets/images/dislike<?= $post->isUserAlreadyDislikedPost($user->getId()) ? 'd' : '' ?>.svg"
+                                 src="<?= IMAGES ?>other-buttons/dislike<?= $post->isUserAlreadyDislikedPost($user->getId()) ? 'd' : '' ?>.svg"
                                  width="24" alt="dislike"/>
                         </button>
                     <?php endif ?>
@@ -99,20 +99,20 @@ $views = "{$post->getViews()} " .
                                 <a class="btn-w-img"
                                    href="/edit-post?id=<?= $post->getId() ?>"
                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Отредактировать">
-                                    <img src="<?= IMAGES ?>post-edit.svg" alt="edit" width="24"
+                                    <img src="<?= IMAGES ?>other-buttons/post-edit.svg" alt="edit" width="24"
                                          class="d-inline-block">
                                 </a>
                             <?php endif ?>
                             <?php if ($userIsAdmin): ?>
                                 <button type="button" id="commentsButton" class="btn-w-img">
-                                    <img src=".<?= IMAGES ?><?= $postIsCommentable ? 'comment-enabled' : 'comment-disabled' ?>.svg"
+                                    <img src=".<?= IMAGES ?>other-buttons/<?= $postIsCommentable ? 'comment-enabled' : 'comment-disabled' ?>.svg"
                                          alt="comments">
                                 </button>
                             <?php endif ?>
                             <?php if ($userIsAdmin || $userIsAuthor): ?>
                                 <button class="btn-w-img" type="button" data-bs-toggle="modal"
                                         data-bs-target="#deletePostModal">
-                                    <img src="<?= IMAGES ?>post-delete.svg"
+                                    <img src="<?= IMAGES ?>other-buttons/trash.svg"
                                          alt="delete" width="24"
                                          class="d-inline-block">
                                 </button>
@@ -148,7 +148,7 @@ $views = "{$post->getViews()} " .
                                 <button type="button"
                                         onclick="createComplaint('post', '<?= $post->getId() ?>')"
                                         class="btn-w-img">
-                                    <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
+                                    <img src="<?= IMAGES ?>other-buttons/create-complaint.svg" width="24" alt="create complaint"/>
                                 </button>
                             <?php endif ?>
                         </div>

@@ -32,7 +32,7 @@ $timestamp = NormalizeData::passedTime($comment->getDate());
             <div class='d-flex justify-content-between'>
             <div class='d-flex justify-content-between'>
             <button class='like-button' onclick="likeOrDislikeComment('<?= $comment->getId() ?>', true)">
-                <img id='commentLike<?= $comment->getId() ?>' src='<?= IMAGES ?>like<?= $liked ?>.svg' width='24'
+                <img id='commentLike<?= $comment->getId() ?>' src='<?= IMAGES ?>other-buttons/like<?= $liked ?>.svg' width='24'
                      alt='like'/>
             </button>
         <?php endif ?>
@@ -42,7 +42,7 @@ $timestamp = NormalizeData::passedTime($comment->getDate());
         <?php if ($user !== null && $user->getId() !== $comment->getAuthorID()): ?>
             <?php $disliked = $comment->isUserAlreadyDislikedComment($user->getId()) ? 'd' : '' ?>
             <button class='like-button' onclick="likeOrDislikeComment('<?= $comment->getId() ?>', false)">
-                <img id='commentDislike<?= $comment->getId() ?>' src='<?= IMAGES ?>dislike<?= $disliked ?>.svg'
+                <img id='commentDislike<?= $comment->getId() ?>' src='<?= IMAGES ?>other-buttons/dislike<?= $disliked ?>.svg'
                      width='24' alt='dislike'/>
             </button>
             </div>
@@ -50,11 +50,11 @@ $timestamp = NormalizeData::passedTime($comment->getDate());
                 <button type='button'
                         onclick='createComplaint("comment", "<?= $comment->getId() ?>")'
                         class='btn btn-light'>
-                    <img src='<?= IMAGES ?>create-complaint.svg' width='24' alt='create complaint'/>
+                    <img src='<?= IMAGES ?>other-buttons/create-complaint.svg' width='24' alt='create complaint'/>
                 </button>
             <?php else: ?>
                 <button onclick="deleteComment('<?= $comment->getId() ?>')" type='button' class='btn-basic'>
-                    <img src='<?= IMAGES ?>button-trash.svg' width='24' alt='delete comment'/>
+                    <img src='<?= IMAGES ?>other-buttons/trash.svg' width='24' alt='delete comment'/>
                 </button>
             <?php endif ?>
             </div>

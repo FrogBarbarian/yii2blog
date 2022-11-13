@@ -102,15 +102,15 @@ function updateCommentRatingButtons(data) {
             let dislikeImg = document.getElementById('commentDislike' + id);
 
             if (response[0] === true) {
-                likeImg.src = '/assets/images/liked.svg';
+                likeImg.src = '/assets/images/other-buttons/liked.svg';
             } else {
-                likeImg.src = '/assets/images/like.svg';
+                likeImg.src = '/assets/images/other-buttons/like.svg';
             }
 
             if (response[1] === true) {
-                dislikeImg.src = '/assets/images/disliked.svg';
+                dislikeImg.src = '/assets/images/other-buttons/disliked.svg';
             } else {
-                dislikeImg.src = '/assets/images/dislike.svg';
+                dislikeImg.src = '/assets/images/other-buttons/dislike.svg';
             }
         }
     });

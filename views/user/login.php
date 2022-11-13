@@ -37,7 +37,7 @@ $this->registerJsFile('@js/utilities/password-visibility.js');
             ])
             ->label(false) ?>
         <button type="button" class="btn-basic" id="togglePasswordButton">
-            <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
+            <img src="<?= IMAGES ?>icons/password-hide.svg" alt="show password">
         </button>
         <div class="hstack justify-content-between my-2">
             <?= $form->field($model, 'rememberMe')->checkbox([

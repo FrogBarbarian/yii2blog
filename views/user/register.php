@@ -47,7 +47,7 @@ $this->registerJsFile('@js/utilities/password-visibility.js');
             ])->label(false)
             ->error($errorOptions) ?>
         <button type="button" id="togglePasswordButton" class="btn-basic">
-            <img src="<?= IMAGES ?>password-hide.svg" alt="show password">
+            <img src="<?= IMAGES ?>icons/password-hide.svg" alt="show password">
         </button>
         <button type="submit" class="btn-basic d-inline-flex w-100 justify-content-center">
             Зарегистрироваться

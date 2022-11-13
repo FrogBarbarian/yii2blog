@@ -55,12 +55,12 @@ $this->title = $isOwn ? 'Профиль' : $user->getUsername();
                     <?php if (!$isOwn && $visitor !== null): ?>
                         <button onclick="createMessageModal('<?= $user->getUsername() ?>')"
                                 class="btn-basic">
-                            <img src="<?= IMAGES ?>button-new-message.svg" width="24" alt="send message"/>
+                            <img src="<?= IMAGES ?>mailbox/button-new-message.svg" width="24" alt="send message"/>
                         </button>
                         <?php if (!$visitor->getIsAdmin()): ?>
                             <button onclick="createComplaint('user', '<?= $user->getId() ?>')"
                                     class="btn-basic">
-                                <img src="<?= IMAGES ?>create-complaint.svg" width="24" alt="create complaint"/>
+                                <img src="<?= IMAGES ?>other-buttons/create-complaint.svg" width="24" alt="create complaint"/>
                             </button>
                         <?php endif ?>
                     <?php endif ?>
