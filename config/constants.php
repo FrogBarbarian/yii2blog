@@ -10,3 +10,4 @@ const NO_REPLY_MAIL = ''; //Почти с которой отправляютс�
 const USER_PASSWORD_RESTORE_PAGE = '/user/restore';
 const HOST = 'localhost';
 const LIMIT_MESSAGE_ON_PROFILE = 20;
+const OWNER_EMAIL = 'ownermail@email.com';

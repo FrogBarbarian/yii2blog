@@ -91,4 +91,27 @@ class SiteController extends Controller
 
         return $this->asJson($post);
     }
+
+    public function actionAbout(): string
+    {
+        $request = Yii::$app->getRequest();
+
+        if ($request->isAjax) {
+            $feed = $request->post('feed');
+            $username = Yii::$app
+                ->user
+                ->getIdentity()
+                ->getUsername();
+
+            Yii::$app
+                ->mailer
+                ->compose('feedback', ['feed' => $feed, 'username' => $username])
+                ->setFrom(NO_REPLY_MAIL)
+                ->setTo(OWNER_EMAIL)
+                ->setSubject('Обратная связь')
+                ->send();
+        }
+
+        return $this->render('about');
+    }
 }
