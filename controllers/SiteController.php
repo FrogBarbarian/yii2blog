@@ -18,6 +18,18 @@ use Yii;
 class SiteController extends Controller
 {
     /**
+     * {@inheritdoc}
+     */
+    public function actions(): array
+    {
+        return [
+            'error' => [
+                'class' => \yii\web\ErrorAction::class,
+            ],
+        ];
+    }
+
+    /**
      * Перенаправляет на комментарий.
      *
      * @throws NotFoundHttpException
@@ -92,6 +104,9 @@ class SiteController extends Controller
         return $this->asJson($post);
     }
 
+    /**
+     * Страница с информацией о сайте и формой обратной связи.
+     */
     public function actionAbout(): string
     {
         $request = Yii::$app->getRequest();

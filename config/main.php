@@ -56,5 +56,8 @@ return [
                 'yii\web\HttpException:*',
             ],
         ],
+        'errorHandler' => [
+            'errorAction' => 'site/error',
+        ],
     ],
 ];
