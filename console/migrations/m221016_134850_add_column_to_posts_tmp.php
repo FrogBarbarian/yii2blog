@@ -12,7 +12,7 @@ class m221016_134850_add_column_to_posts_tmp extends Migration
      */
     public function up()
     {
-        $this->addColumn('tmp_posts', 'old_title', $this->string(150)->defaultValue(null));
+        $this->addColumn('tmp_posts', 'old_tags', $this->text()->notNull());
     }
 
     /**

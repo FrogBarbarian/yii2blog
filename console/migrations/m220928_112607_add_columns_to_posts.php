@@ -17,10 +17,8 @@ class m220928_112607_add_columns_to_posts extends Migration
         $posts = 'posts';
         $postsTmp = 'tmp_posts';
         $this->addColumn($posts, 'tags', $this->text()->notNull());
-        $this->addColumn($posts, 'main_image', $this->string()->defaultValue(null));
         $this->addColumn($posts, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
         $this->addColumn($postsTmp, 'tags', $this->text()->notNull());
-        $this->addColumn($postsTmp, 'main_image', $this->string()->defaultValue(null));
         $this->addColumn($postsTmp, 'datetime', $this->timestamp()->defaultValue(new Expression("NOW()")));
     }
 
@@ -32,10 +30,8 @@ class m220928_112607_add_columns_to_posts extends Migration
         $posts = 'posts';
         $postsTmp = 'tmp_posts';
         $this->dropColumn($posts, 'tags');
-        $this->dropColumn($posts, 'main_image');
         $this->dropColumn($posts, 'datetime');
         $this->dropColumn($postsTmp, 'tags');
-        $this->dropColumn($postsTmp, 'main_image');
         $this->dropColumn($postsTmp, 'datetime');
     }
 }
