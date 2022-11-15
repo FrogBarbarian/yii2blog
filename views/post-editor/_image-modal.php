@@ -60,7 +60,7 @@ use kartik\file\FileInput;
             <button type="button" class="btn-basic" onclick="closeModalDiv()">
                 Отмена
             </button>
-            <button type="submit" onclick="uploadImage()" class="btn-basic">
+            <button type="button" onclick="uploadImage()" class="btn-basic">
                 Добавить изображение
             </button>
         </div>

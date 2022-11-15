@@ -8,39 +8,42 @@ let data = {
 };
 
 $(document).ready(function () {
-    setInterval(updatePostRating, 2000, data);
-    setInterval(updateComments, 2000);
+    setInterval(updatePostRating, 3000, data);
+    setInterval(updateComments, 1000);
 });
 
 /**
  * Меняет правила комментирования поста.
  * Отрисовывает соответствующие элементы.
  */
-document.getElementById('commentsButton').onclick = () => {
-    $.ajax({
-        url: '/post-ajax/comment-permissions',
-        cache: false,
-        type: 'post',
-        data: data,
-        success: function (response) {
-            if (response === true) {
-                $("#comments-permissions").html('');
-                $("#commentsButton").html(
-                    "<img src='../../assets/images/other-buttons/comment-enabled.svg' alt='comment enabled' width='24'>"
-                );
-            } else {
-                $("#comments-permissions").html(
-                    "<div class='alert alert-danger text-center' role='alert'>" +
-                    'Комментарии запрещены.' +
-                    '</div>'
-                );
-                $("#commentsButton").html(
-                    "<img src='../../assets/images/other-buttons/comment-disabled.svg' alt='comment disabled' width='24'>"
-                );
-            }
+let commentPermissionsButton = document.getElementById('commentsButton');
+if (commentPermissionsButton !== null) {
+    commentPermissionsButton.onclick = () => {
+        $.ajax({
+            url: '/post-ajax/comment-permissions',
+            cache: false,
+            type: 'post',
+            data: data,
+            success: function (response) {
+                if (response === true) {
+                    $("#comments-permissions").html('');
+                    $("#commentsButton").html(
+                        "<img src='../../assets/images/other-buttons/comment-enabled.svg' alt='comment enabled' width='24'>"
+                    );
+                } else {
+                    $("#comments-permissions").html(
+                        "<div class='alert alert-danger text-center' role='alert'>" +
+                        'Комментарии запрещены.' +
+                        '</div>'
+                    );
+                    $("#commentsButton").html(
+                        "<img src='../../assets/images/other-buttons/comment-disabled.svg' alt='comment disabled' width='24'>"
+                    );
+                }
 
-        },
-    });
+            },
+        });
+    }
 }
 
 /**
@@ -79,10 +82,20 @@ function updatePostRating(data) {
 }
 
 /**
+ * Состояние выполнения обновления комментариев в текущий момент.
+ */
+let updateProcess = false;
+
+/**
  * Обновляет комментарии к посту.
  */
 function updateComments() {
-    data['curCommentsAmount'] = comments.children('li').length;
+    if (updateProcess === true) {
+        return false;
+    }
+
+    updateProcess = true;
+    data['curCommentsAmount'] = comments.children('li').length;;
     $.ajax({
         url: '/post-ajax/update-comments',
         type: 'post',
@@ -95,6 +108,9 @@ function updateComments() {
             }
 
             updateCommentsRating();
+            updateProcess = false;
+
+            return true;
         }
     });
 }

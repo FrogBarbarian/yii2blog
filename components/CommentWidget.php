@@ -14,9 +14,9 @@ use yii\base\Widget;
 class CommentWidget extends Widget
 {
     /**
-     * @var User Пользователь.
+     * @var ?User Пользователь.
      */
-    public User $user;
+    public ?User $user;
     /**
      * @var Comment Комментарий.
      */

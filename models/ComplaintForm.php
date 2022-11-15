@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace app\models;
 
@@ -58,11 +58,12 @@ class ComplaintForm extends ActiveRecord
      */
     public function checkComplaintForExist(): void
     {
-        $senderId = Yii::$app
+        $senderUsername = Yii::$app
             ->user
-            ->getId();
+            ->getIdentity()
+            ->getUsername();
         $complaint = Complaint::find()
-            ->where(['sender_id' => $senderId])
+            ->where(['sender_username' => $senderUsername])
             ->andWhere(['object' => $this->objectType])
             ->andWhere(['object_id' => $this->objectId])
             ->one();

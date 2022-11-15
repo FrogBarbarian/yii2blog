@@ -84,9 +84,7 @@ $session = Yii::$app->session;
                         <?= ConstructHtml::rating($post->getRating()) ?>
                     </div>
                     <div class="col small text-end">
-                        <a class="author-link" href="/users/<?= $post->getAuthor() ?>">
-                            <?= $post->getAuthor() ?>
-                        </a>
+                        <a href="/post?id=<?= $post->getId() ?>">Перейти к посту</a>
                     </div>
                 </div>
                 <div class="card-body">
@@ -96,9 +94,7 @@ $session = Yii::$app->session;
                         </a>
                     </h5>
                     <div class="card-text">
-                        <a class="nav-link" href="/post?id=<?= $post->getId() ?>">
-                            <?= $post->getPreview($post->getBody(), 1000, '') ?>
-                        </a>
+                        <?= $post->getPreview($post->getBody(), 1000, '') ?>
                     </div>
                 </div>
                 <div class="hstack card-footer small">
@@ -110,6 +106,9 @@ $session = Yii::$app->session;
                         </button>
                     <?php endif ?>
                     <span class="text-end col">
+                        <a class="author-link" href="/users/<?= $post->getAuthor() ?>">
+                            <?= $post->getAuthor() ?>
+                        </a>
                         <?= NormalizeData::passedTime($post->getDatetime()) ?>
                     </span>
                 </div>

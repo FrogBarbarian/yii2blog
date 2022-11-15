@@ -13,11 +13,10 @@ document.getElementById('postApproveButton').onclick = () => {
         cache: false,
         data: {_csrf: token, id: id},
         success: function (response) {
-
-/**
- * Записывает данные с модального окна.
- */         if (response === true) {
+            if (response === true) {
                 location.href = '/';
+
+                return true;
             }
 
             notice('Ошибка', response)

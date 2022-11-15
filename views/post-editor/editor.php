@@ -41,6 +41,7 @@ $errorOptions = ['class' => 'text-danger small help-block'];
             ->field($model, 'title')
             ->input('text', [
                 'class' => 'txt-input-basic',
+                'autofocus' => true,
                 'value' => $title,
             ])->label('Название')
             ->error($errorOptions) ?>
@@ -125,7 +126,7 @@ $errorOptions = ['class' => 'text-danger small help-block'];
     </div>
     <div class="card-footer">
         <div>
-            <input type="submit" onclick="submitPost()" class="btn-basic" value="Опубликовать">
+            <button type="submit" name="submitPost" class="btn-basic">Опубликовать</button>
         </div>
     </div>
     <?php ActiveForm::end() ?>

@@ -154,7 +154,7 @@ use src\helpers\NormalizeData;
         <span class="badge bg-primary rounded-pill"><?= $complaints ? count($complaints) : '' ?></span>
     </li>
 </ul>
-<a href="<?= ADMIN_PANEL ?>" class="btn-basic">Админ-панель</a>
+<a href="<?= ADMIN_PANEL ?>" class="btn-basic a-btn">Админ-панель</a>
 <br>
 <?php endif ?>
 <?php endif ?>

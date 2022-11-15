@@ -33,7 +33,7 @@ class CommentAjaxController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $commentForm = new CommentForm();
+        $model = new CommentForm();
         $postId = $request->post('postId');
         $post = Post::findOne($postId);
         $user = Yii::$app
@@ -41,23 +41,23 @@ class CommentAjaxController extends Controller
             ->getIdentity();
 
         if (!$user->getCanComment() || !$post->getIsCommentable()) {
-            $commentForm->addError(
+            $model->addError(
                 'comment',
                 'Что-то пошло не так, попробуйте обновить страницу',
             );
 
-            return $this->asJson($commentForm->errors);
+            return $this->asJson($model->errors);
         }
 
-        $commentForm->comment = $request->post('comment');
+        $model->comment = $request->post('comment');
 
-        if ($commentForm->validate()) {
+        if ($model->validate()) {
             $comment = new Comment();
             $comment
                 ->setPostId($post->getId())
                 ->setAuthor($user->getUsername())
                 ->setAuthorId($user->getId())
-                ->setComment($commentForm->comment)
+                ->setComment($model->comment)
                 ->save();
             Statistic::find()
                 ->byUsername($user->getUsername())
@@ -71,7 +71,7 @@ class CommentAjaxController extends Controller
             return $this->asJson(true);
         }
 
-        return $this->asJson($commentForm->errors);
+        return $this->asJson($model->errors);
     }
 
     /**

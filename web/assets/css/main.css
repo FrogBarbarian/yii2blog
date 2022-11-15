@@ -318,7 +318,7 @@
     flex-direction: column;
 }
 
-.post-image span {
+.post-image div.signature {
     color: grey;
     font-size: smaller;
 }

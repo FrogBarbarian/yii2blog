@@ -328,7 +328,8 @@ function createUrl() {
         '" target="_blank">' +
         text +
         '</a>';
-    selection.addRange(range)
+    selection.removeAllRanges();
+    selection.addRange(range);
     formatting('insertHtml', false, html);
     selection = null;
     range = null;
@@ -443,11 +444,12 @@ function uploadImage() {
                     '<img src="/uploads/' +
                     response[0] +
                     '" alt="">' +
-                    '<span>' +
+                    '<div class="signature">' +
                     response[1] +
-                    '</span>' +
+                    '</div>' +
                     '</div>' +
                     '<br>';
+                selection.removeAllRanges();
                 selection.addRange(range);
                 formatting('insertHtml', false, html);
                 selection = null;
@@ -462,7 +464,8 @@ function uploadImage() {
 /**
  * Отправляет пост на проверку.
  */
-function submitPost() {
+$('button[name=submitPost]').on('click', function (e) {
+    e.preventDefault();
     let form = $('#postEditorForm');
     let formData = new FormData(form[0]);
     $.ajax({
@@ -485,4 +488,4 @@ function submitPost() {
             return location.href = url;
         }
     });
-}
+});
